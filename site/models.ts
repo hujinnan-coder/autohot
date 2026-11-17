@@ -27,6 +27,21 @@ export const PRESETS: Record<string, ModelPreset> = {
   "deepseek-flash-think": {
     service: "deepseek", model: "deepseek-flash", baseUrlEnv: "DEEPSEEK_BASE_URL", apiKeyEnv: "DEEPSEEK_API_KEY", reasoningTokens: 4000, jsonMode: true,
   },
+  // DeepSeek V4 Pro 用 .env 里默认的那把 DeepSeek 密钥（LLM_API_KEY）。它默认先思考再回答：
+  // 结构化的短任务关掉思考；评分保留思考，并给思考留出输出额度。
+  "deepseek-v4-pro": {
+    service: "deepseek", model: "deepseek-v4-pro", baseUrlEnv: "LLM_BASE_URL", apiKeyEnv: "LLM_API_KEY",
+    extra: { thinking: { type: "disabled" } }, jsonMode: true,
+  },
+  "deepseek-v4-pro-think": {
+    service: "deepseek", model: "deepseek-v4-pro", baseUrlEnv: "LLM_BASE_URL", apiKeyEnv: "LLM_API_KEY", reasoningTokens: 4000, jsonMode: true,
+    // 实测带思考的评分一次 80–110 秒，默认 120 秒的超时太紧。
+    scoreCall: { temperature: 0.2, maxTokens: 1024, timeoutMs: 240_000 },
+  },
+  "mimo-v2.6-pro": {
+    service: "mimo", model: "mimo-v2.6-pro", baseUrlEnv: "XIAOMI_MIMO_BASE_URL", apiKeyEnv: "XIAOMI_MIMO_API_KEY",
+    extra: { thinking: { type: "disabled" } }, jsonMode: true,
+  },
   "qwen3.7-flash": {
     service: "dashscope", model: "qwen3.7-flash", baseUrlEnv: "DASHSCOPE_BASE_URL", apiKeyEnv: "DASHSCOPE_API_KEY",
     extra: { enable_thinking: false }, jsonMode: true,
@@ -49,4 +64,6 @@ export const PRESETS: Record<string, ModelPreset> = {
  * 每一步默认用的模型（步骤见后台“模型与评测”页），值是上面的名字或 default。没写的步骤用 default。
  * 例：{ score: "glm-5.3-flash-selection", groupReview: "mimo-v2.6-flash" }
  */
+// autohot 的分工（照 AIHOT 公开的流程：判断类步骤用 DeepSeek V4 Pro，其余用默认的 deepseek-flash，归组由小米 MiMo 复核）
+// 写在 .env 的 PREFILTER_MODEL、SCORE_MODEL 等环境变量里，这里保持空：测试按“每一步都用默认模型”来跑。
 export const DEFAULTS: Record<string, string> = {};

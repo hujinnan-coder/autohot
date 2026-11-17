@@ -20,7 +20,7 @@ const items: SiteItemDetail[] = [
   itemDetail({ id: "links-entry", title: "日报里的一条", daily: { key: "2026-11-07", lead: false } }),
   itemDetail({ id: "links-none", title: "没进日报" }),
   // Tagged with a company its title does not name: that company's topic is the tag's, not the article's.
-  itemDetail({ id: "links-tags", title: "带标签", topics: [agent], tags: ["Agent", "OpenAI", "框架"], tagTopics: { Agent: "agent", OpenAI: "openai" } }),
+  itemDetail({ id: "links-tags", title: "带标签", topics: [agent], tags: ["智能驾驶", "OpenAI", "框架"], tagTopics: { Agent: "agent", OpenAI: "openai" } }),
 ];
 // A minute ago: this year's, unless the test runs in the first minute of one.
 const recent = new Date(Date.now() - 60_000).toISOString();

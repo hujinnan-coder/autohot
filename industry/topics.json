@@ -2,192 +2,1908 @@
   "groups": [
     {
       "key": "company",
-      "name": "公司与模型",
-      "blurb": "按厂商追踪模型、产品与公司动态"
+      "name": "品牌与公司",
+      "blurb": "按品牌、集团和供应链公司追踪新车、价格、销量与企业动态"
     },
     {
       "key": "field",
-      "name": "技术方向",
-      "blurb": "按技术领域深挖：Agent、多模态、具身智能……"
+      "name": "方向",
+      "blurb": "按方向深挖：智能驾驶、动力电池、出海、价格战……"
     },
     {
       "key": "genre",
       "name": "内容类型",
-      "blurb": "按体裁浏览：论文、教程、观点、政策……"
+      "blurb": "按类型浏览：新车上市、政策法规、销量、舆情、人事……"
     }
   ],
   "topics": [
     {
-      "slug": "openai",
-      "name": "OpenAI / ChatGPT",
+      "slug": "byd",
+      "name": "比亚迪",
       "group": "company",
-      "entityId": "openai",
-      "definition": "OpenAI 的 GPT 系列模型、ChatGPT 与 Sora 产品更新，以及公司战略与人事变化。"
-    },
-    {
-      "slug": "anthropic",
-      "name": "Anthropic / Claude",
-      "group": "company",
-      "entityId": "anthropic",
-      "definition": "Anthropic 的 Claude 系列模型、Claude Code 更新，以及安全研究与公司动向。"
-    },
-    {
-      "slug": "google",
-      "name": "Google / Gemini",
-      "group": "company",
-      "entityId": "google",
+      "entityId": "byd",
       "aliases": [
-        "DeepMind"
+        "BYD",
+        "王朝网",
+        "海洋网"
       ],
-      "definition": "Google 与 DeepMind 的 Gemini 模型、Veo 视频生成、前沿研究与各条产品线的 AI 更新。"
+      "definition": "比亚迪王朝、海洋两网的新车、价格与销量，以及比亚迪的技术发布、出海和企业动态。"
     },
     {
-      "slug": "deepseek",
-      "name": "DeepSeek",
+      "slug": "denza",
+      "name": "腾势",
       "group": "company",
-      "entityId": "deepseek",
-      "definition": "DeepSeek（深度求索）的模型发布、开源权重、技术报告与 API 价格变化。"
+      "entityId": "denza",
+      "aliases": [
+        "DENZA",
+        "腾势汽车"
+      ],
+      "definition": "腾势的新车、价格、销量、营销与企业动态。"
     },
     {
-      "slug": "qwen",
-      "name": "千问 Qwen",
+      "slug": "fangchengbao",
+      "name": "方程豹",
       "group": "company",
-      "entityId": "qwen",
-      "definition": "阿里千问 Qwen 系列的模型发布与开源更新，从旗舰大模型到能装进手机的小模型。"
+      "entityId": "fangchengbao",
+      "aliases": [
+        "方程豹汽车"
+      ],
+      "definition": "方程豹的新车、价格、销量、营销与企业动态。"
     },
     {
-      "slug": "kimi",
-      "name": "月之暗面 / Kimi",
+      "slug": "yangwang",
+      "name": "仰望",
       "group": "company",
-      "entityId": "kimi",
-      "aliases": ["Kimi / 月之暗面"],
-      "definition": "月之暗面的 Kimi 产品更新、K 系列开源模型与长文本技术进展。"
+      "entityId": "yangwang",
+      "aliases": [
+        "YANGWANG",
+        "仰望汽车"
+      ],
+      "definition": "仰望的新车、价格、销量、营销与企业动态。"
     },
     {
-      "slug": "minimax",
-      "name": "MiniMax",
+      "slug": "geely",
+      "name": "吉利",
       "group": "company",
-      "entityId": "minimax",
-      "definition": "MiniMax 的 M 系列大模型、语音与多模态能力，以及开源与商业化进展。"
+      "entityId": "geely",
+      "aliases": [
+        "Geely",
+        "吉利银河",
+        "吉利控股",
+        "吉利汽车"
+      ],
+      "definition": "吉利的新车、价格、销量、营销与企业动态。"
     },
     {
-      "slug": "zhipu",
-      "name": "智谱 GLM",
+      "slug": "lynkco",
+      "name": "领克",
       "group": "company",
-      "entityId": "zhipu",
-      "definition": "智谱 GLM 系列模型的发布与开源更新，以及编程、推理能力和商业化进展。"
+      "entityId": "lynkco",
+      "aliases": [
+        "Lynk & Co",
+        "领克汽车"
+      ],
+      "definition": "领克的新车、价格、销量、营销与企业动态。"
     },
     {
-      "slug": "xai",
-      "name": "xAI / Grok",
+      "slug": "zeekr",
+      "name": "极氪",
       "group": "company",
-      "entityId": "xai",
-      "definition": "马斯克旗下 xAI 的 Grok 模型更新、算力集群建设与 X 平台整合。"
+      "entityId": "zeekr",
+      "aliases": [
+        "ZEEKR",
+        "极氪汽车",
+        "极氪科技"
+      ],
+      "definition": "极氪的新车、价格、销量、营销与企业动态。"
     },
     {
-      "slug": "meta",
-      "name": "Meta / Llama",
+      "slug": "volvo",
+      "name": "沃尔沃",
       "group": "company",
-      "entityId": "meta",
-      "definition": "Meta 的 Llama 与 Muse 系列模型、超级智能实验室与 Meta AI 产品。"
+      "entityId": "volvo",
+      "aliases": [
+        "Volvo",
+        "沃尔沃汽车",
+        "Volvo Cars"
+      ],
+      "definition": "沃尔沃的新车、价格、销量、营销与企业动态。"
     },
     {
-      "slug": "microsoft",
-      "name": "Microsoft / Copilot",
+      "slug": "polestar",
+      "name": "极星",
       "group": "company",
-      "entityId": "microsoft",
-      "definition": "微软的 Copilot 系列产品、Azure AI 云服务，以及与 OpenAI 的合作动向。"
+      "entityId": "polestar",
+      "aliases": [
+        "Polestar"
+      ],
+      "definition": "极星的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "lotus",
+      "name": "路特斯",
+      "group": "company",
+      "entityId": "lotus",
+      "aliases": [
+        "Lotus",
+        "莲花跑车"
+      ],
+      "definition": "路特斯的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "smart",
+      "name": "smart",
+      "group": "company",
+      "entityId": "smart",
+      "aliases": [
+        "smart 汽车",
+        "smart 精灵"
+      ],
+      "definition": "smart的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "radar",
+      "name": "雷达",
+      "group": "company",
+      "entityId": "radar",
+      "aliases": [
+        "吉利雷达",
+        "雷达汽车",
+        "RADAR 皮卡"
+      ],
+      "definition": "雷达的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "farizon",
+      "name": "远程",
+      "group": "company",
+      "entityId": "farizon",
+      "aliases": [
+        "远程新能源商用车",
+        "吉利远程",
+        "Farizon"
+      ],
+      "definition": "远程的商用车新品、销量、出海与企业动态。"
+    },
+    {
+      "slug": "chery",
+      "name": "奇瑞",
+      "group": "company",
+      "entityId": "chery",
+      "aliases": [
+        "Chery",
+        "奇瑞汽车",
+        "奇瑞控股"
+      ],
+      "definition": "奇瑞的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "exeed",
+      "name": "星途",
+      "group": "company",
+      "entityId": "exeed",
+      "aliases": [
+        "EXEED",
+        "星纪元"
+      ],
+      "definition": "星途的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "jetour",
+      "name": "捷途",
+      "group": "company",
+      "entityId": "jetour",
+      "aliases": [
+        "JETOUR",
+        "捷途汽车",
+        "捷途山海"
+      ],
+      "definition": "捷途的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "icar",
+      "name": "iCAR",
+      "group": "company",
+      "entityId": "icar",
+      "aliases": [
+        "奇瑞 iCAR",
+        "iCAUR"
+      ],
+      "definition": "iCAR的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "omoda",
+      "name": "欧萌达 / 捷酷",
+      "group": "company",
+      "entityId": "omoda",
+      "aliases": [
+        "OMODA",
+        "JAECOO",
+        "捷酷 / 欧萌达"
+      ],
+      "definition": "欧萌达 / 捷酷的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "gwm",
+      "name": "长城",
+      "group": "company",
+      "entityId": "gwm",
+      "aliases": [
+        "长城汽车",
+        "长城炮",
+        "Great Wall Motor"
+      ],
+      "definition": "长城的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "haval",
+      "name": "哈弗",
+      "group": "company",
+      "entityId": "haval",
+      "aliases": [
+        "HAVAL",
+        "哈弗汽车"
+      ],
+      "definition": "哈弗的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "wey",
+      "name": "魏牌",
+      "group": "company",
+      "entityId": "wey",
+      "aliases": [
+        "魏牌新能源"
+      ],
+      "definition": "魏牌的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "tank",
+      "name": "坦克",
+      "group": "company",
+      "entityId": "tank",
+      "aliases": [
+        "坦克品牌",
+        "坦克 SUV",
+        "TANK"
+      ],
+      "definition": "坦克的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "ora",
+      "name": "欧拉",
+      "group": "company",
+      "entityId": "ora",
+      "aliases": [
+        "欧拉汽车"
+      ],
+      "definition": "欧拉的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "changan",
+      "name": "长安",
+      "group": "company",
+      "entityId": "changan",
+      "aliases": [
+        "长安汽车",
+        "Changan",
+        "长安启源",
+        "中国长安汽车集团"
+      ],
+      "definition": "长安的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "deepal",
+      "name": "深蓝",
+      "group": "company",
+      "entityId": "deepal",
+      "aliases": [
+        "深蓝汽车",
+        "Deepal",
+        "长安深蓝"
+      ],
+      "definition": "深蓝的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "avatr",
+      "name": "阿维塔",
+      "group": "company",
+      "entityId": "avatr",
+      "aliases": [
+        "AVATR",
+        "阿维塔科技"
+      ],
+      "definition": "阿维塔的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "saic",
+      "name": "上汽",
+      "group": "company",
+      "entityId": "saic",
+      "aliases": [
+        "上汽集团",
+        "SAIC",
+        "上汽乘用车",
+        "上海汽车集团"
+      ],
+      "definition": "上汽的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "roewe",
+      "name": "荣威",
+      "group": "company",
+      "entityId": "roewe",
+      "aliases": [
+        "Roewe",
+        "上汽荣威"
+      ],
+      "definition": "荣威的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "mg",
+      "name": "MG 名爵",
+      "group": "company",
+      "entityId": "mg",
+      "aliases": [
+        "名爵",
+        "上汽名爵",
+        "MG Motor"
+      ],
+      "definition": "MG 名爵的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "im",
+      "name": "智己",
+      "group": "company",
+      "entityId": "im",
+      "aliases": [
+        "IM Motors",
+        "智己汽车"
+      ],
+      "definition": "智己的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "maxus",
+      "name": "上汽大通",
+      "group": "company",
+      "entityId": "maxus",
+      "aliases": [
+        "MAXUS",
+        "大通汽车"
+      ],
+      "definition": "上汽大通的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "wuling",
+      "name": "五菱",
+      "group": "company",
+      "entityId": "wuling",
+      "aliases": [
+        "上汽通用五菱",
+        "Wuling",
+        "五菱汽车"
+      ],
+      "definition": "五菱的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "baojun",
+      "name": "宝骏",
+      "group": "company",
+      "entityId": "baojun",
+      "aliases": [
+        "Baojun",
+        "宝骏汽车"
+      ],
+      "definition": "宝骏的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "shangjie",
+      "name": "尚界",
+      "group": "company",
+      "entityId": "shangjie",
+      "aliases": [
+        "SAIC 尚界",
+        "鸿蒙智行尚界"
+      ],
+      "definition": "尚界的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "gac",
+      "name": "广汽",
+      "group": "company",
+      "entityId": "gac",
+      "aliases": [
+        "广汽集团",
+        "广汽传祺",
+        "广州汽车集团"
+      ],
+      "definition": "广汽的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "aion",
+      "name": "埃安",
+      "group": "company",
+      "entityId": "aion",
+      "aliases": [
+        "AION",
+        "广汽埃安"
+      ],
+      "definition": "埃安的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "hyptec",
+      "name": "昊铂",
+      "group": "company",
+      "entityId": "hyptec",
+      "aliases": [
+        "Hyptec",
+        "广汽昊铂"
+      ],
+      "definition": "昊铂的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "faw",
+      "name": "一汽",
+      "group": "company",
+      "entityId": "faw",
+      "aliases": [
+        "中国一汽",
+        "一汽集团",
+        "第一汽车集团"
+      ],
+      "definition": "一汽的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "hongqi",
+      "name": "红旗",
+      "group": "company",
+      "entityId": "hongqi",
+      "aliases": [
+        "红旗品牌",
+        "一汽红旗",
+        "Hongqi",
+        "红旗汽车"
+      ],
+      "definition": "红旗的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "bestune",
+      "name": "奔腾",
+      "group": "company",
+      "entityId": "bestune",
+      "aliases": [
+        "一汽奔腾",
+        "奔腾汽车",
+        "Bestune"
+      ],
+      "definition": "奔腾的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "jiefang",
+      "name": "解放",
+      "group": "company",
+      "entityId": "jiefang",
+      "aliases": [
+        "一汽解放",
+        "解放卡车",
+        "FAW Jiefang"
+      ],
+      "definition": "解放的商用车新品、销量、出海与企业动态。"
+    },
+    {
+      "slug": "dongfeng",
+      "name": "东风",
+      "group": "company",
+      "entityId": "dongfeng",
+      "aliases": [
+        "东风汽车",
+        "Dongfeng",
+        "东风集团",
+        "东风公司"
+      ],
+      "definition": "东风的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "voyah",
+      "name": "岚图",
+      "group": "company",
+      "entityId": "voyah",
+      "aliases": [
+        "VOYAH",
+        "岚图汽车"
+      ],
+      "definition": "岚图的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "mengshi",
+      "name": "猛士",
+      "group": "company",
+      "entityId": "mengshi",
+      "aliases": [
+        "东风猛士",
+        "猛士科技",
+        "猛士 917"
+      ],
+      "definition": "猛士的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "baic",
+      "name": "北汽",
+      "group": "company",
+      "entityId": "baic",
+      "aliases": [
+        "北汽集团",
+        "BAIC",
+        "北京汽车",
+        "北汽新能源"
+      ],
+      "definition": "北汽的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "arcfox",
+      "name": "极狐",
+      "group": "company",
+      "entityId": "arcfox",
+      "aliases": [
+        "ARCFOX",
+        "极狐汽车"
+      ],
+      "definition": "极狐的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "xiangjie",
+      "name": "享界",
+      "group": "company",
+      "entityId": "xiangjie",
+      "aliases": [
+        "STELATO",
+        "鸿蒙智行享界"
+      ],
+      "definition": "享界的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "foton",
+      "name": "福田",
+      "group": "company",
+      "entityId": "foton",
+      "aliases": [
+        "福田汽车",
+        "北汽福田",
+        "Foton"
+      ],
+      "definition": "福田的商用车新品、销量、出海与企业动态。"
+    },
+    {
+      "slug": "huawei",
+      "name": "华为",
+      "group": "company",
+      "entityId": "huawei",
+      "aliases": [
+        "Huawei",
+        "鸿蒙智行",
+        "华为乾崑",
+        "引望"
+      ],
+      "definition": "华为乾崑智驾、鸿蒙座舱和鸿蒙智行的合作模式、技术发布与渠道动态。"
+    },
+    {
+      "slug": "aito",
+      "name": "问界",
+      "group": "company",
+      "entityId": "aito",
+      "aliases": [
+        "AITO",
+        "鸿蒙智行问界"
+      ],
+      "definition": "问界的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "seres",
+      "name": "赛力斯",
+      "group": "company",
+      "entityId": "seres",
+      "aliases": [
+        "SERES",
+        "赛力斯集团",
+        "赛力斯汽车"
+      ],
+      "definition": "赛力斯的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "luxeed",
+      "name": "智界",
+      "group": "company",
+      "entityId": "luxeed",
+      "aliases": [
+        "LUXEED",
+        "鸿蒙智行智界"
+      ],
+      "definition": "智界的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "maextro",
+      "name": "尊界",
+      "group": "company",
+      "entityId": "maextro",
+      "aliases": [
+        "MAEXTRO",
+        "鸿蒙智行尊界"
+      ],
+      "definition": "尊界的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "jac",
+      "name": "江淮",
+      "group": "company",
+      "entityId": "jac",
+      "aliases": [
+        "江淮汽车",
+        "江汽集团"
+      ],
+      "definition": "江淮的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "nio",
+      "name": "蔚来",
+      "group": "company",
+      "entityId": "nio",
+      "aliases": [
+        "NIO",
+        "乐道",
+        "蔚来汽车"
+      ],
+      "definition": "蔚来的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "xpeng",
+      "name": "小鹏",
+      "group": "company",
+      "entityId": "xpeng",
+      "aliases": [
+        "XPENG",
+        "小鹏汽车",
+        "小鹏汇天"
+      ],
+      "definition": "小鹏的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "li-auto",
+      "name": "理想",
+      "group": "company",
+      "entityId": "li-auto",
+      "aliases": [
+        "理想汽车",
+        "Li Auto",
+        "理想 L 系列",
+        "理想 MEGA"
+      ],
+      "definition": "理想的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "leapmotor",
+      "name": "零跑",
+      "group": "company",
+      "entityId": "leapmotor",
+      "aliases": [
+        "Leapmotor",
+        "零跑汽车",
+        "零跑科技"
+      ],
+      "definition": "零跑的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "xiaomi",
+      "name": "小米汽车",
+      "group": "company",
+      "entityId": "xiaomi",
+      "aliases": [
+        "Xiaomi EV",
+        "小米 SU7",
+        "小米 YU7",
+        "小米集团"
+      ],
+      "definition": "小米汽车的新车、交付、产能与舆情，以及雷军相关的营销与回应。"
+    },
+    {
+      "slug": "neta",
+      "name": "哪吒",
+      "group": "company",
+      "entityId": "neta",
+      "aliases": [
+        "哪吒汽车",
+        "NETA",
+        "合众新能源"
+      ],
+      "definition": "哪吒的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "jiyue",
+      "name": "极越",
+      "group": "company",
+      "entityId": "jiyue",
+      "aliases": [
+        "JIYUE",
+        "集度"
+      ],
+      "definition": "极越的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "jmc",
+      "name": "江铃",
+      "group": "company",
+      "entityId": "jmc",
+      "aliases": [
+        "江铃汽车",
+        "江铃集团"
+      ],
+      "definition": "江铃的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "sinotruk",
+      "name": "中国重汽",
+      "group": "company",
+      "entityId": "sinotruk",
+      "aliases": [
+        "Sinotruk",
+        "重汽集团"
+      ],
+      "definition": "中国重汽的商用车新品、销量、出海与企业动态。"
+    },
+    {
+      "slug": "shacman",
+      "name": "陕汽",
+      "group": "company",
+      "entityId": "shacman",
+      "aliases": [
+        "陕汽重卡",
+        "Shacman"
+      ],
+      "definition": "陕汽的商用车新品、销量、出海与企业动态。"
+    },
+    {
+      "slug": "yutong",
+      "name": "宇通",
+      "group": "company",
+      "entityId": "yutong",
+      "aliases": [
+        "宇通客车",
+        "宇通集团",
+        "Yutong"
+      ],
+      "definition": "宇通的商用车新品、销量、出海与企业动态。"
+    },
+    {
+      "slug": "volkswagen",
+      "name": "大众",
+      "group": "company",
+      "entityId": "volkswagen",
+      "aliases": [
+        "大众汽车",
+        "Volkswagen",
+        "上汽大众",
+        "一汽-大众",
+        "大众安徽",
+        "捷达"
+      ],
+      "definition": "大众的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "audi",
+      "name": "奥迪",
+      "group": "company",
+      "entityId": "audi",
+      "aliases": [
+        "Audi",
+        "一汽奥迪",
+        "上汽奥迪",
+        "AUDI"
+      ],
+      "definition": "奥迪的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "porsche",
+      "name": "保时捷",
+      "group": "company",
+      "entityId": "porsche",
+      "aliases": [
+        "Porsche",
+        "保时捷中国"
+      ],
+      "definition": "保时捷的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "bmw",
+      "name": "宝马",
+      "group": "company",
+      "entityId": "bmw",
+      "aliases": [
+        "BMW",
+        "华晨宝马",
+        "宝马集团"
+      ],
+      "definition": "宝马的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "mini",
+      "name": "MINI",
+      "group": "company",
+      "entityId": "mini",
+      "aliases": [
+        "MINI 品牌",
+        "宝马 MINI",
+        "MINI Cooper"
+      ],
+      "definition": "MINI的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "mercedes",
+      "name": "奔驰",
+      "group": "company",
+      "entityId": "mercedes",
+      "aliases": [
+        "梅赛德斯-奔驰",
+        "Mercedes-Benz",
+        "北京奔驰"
+      ],
+      "definition": "奔驰的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "toyota",
+      "name": "丰田",
+      "group": "company",
+      "entityId": "toyota",
+      "aliases": [
+        "Toyota",
+        "一汽丰田",
+        "广汽丰田"
+      ],
+      "definition": "丰田的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "lexus",
+      "name": "雷克萨斯",
+      "group": "company",
+      "entityId": "lexus",
+      "aliases": [
+        "Lexus",
+        "凌志"
+      ],
+      "definition": "雷克萨斯的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "honda",
+      "name": "本田",
+      "group": "company",
+      "entityId": "honda",
+      "aliases": [
+        "Honda",
+        "广汽本田",
+        "东风本田"
+      ],
+      "definition": "本田的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "nissan",
+      "name": "日产",
+      "group": "company",
+      "entityId": "nissan",
+      "aliases": [
+        "Nissan",
+        "东风日产",
+        "郑州日产"
+      ],
+      "definition": "日产的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "mazda",
+      "name": "马自达",
+      "group": "company",
+      "entityId": "mazda",
+      "aliases": [
+        "Mazda",
+        "长安马自达"
+      ],
+      "definition": "马自达的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "subaru",
+      "name": "斯巴鲁",
+      "group": "company",
+      "entityId": "subaru",
+      "aliases": [
+        "Subaru"
+      ],
+      "definition": "斯巴鲁的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "hyundai",
+      "name": "现代",
+      "group": "company",
+      "entityId": "hyundai",
+      "aliases": [
+        "现代汽车",
+        "Hyundai",
+        "北京现代",
+        "现代汽车集团"
+      ],
+      "definition": "现代的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "kia",
+      "name": "起亚",
+      "group": "company",
+      "entityId": "kia",
+      "aliases": [
+        "悦达起亚"
+      ],
+      "definition": "起亚的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "tesla",
+      "name": "特斯拉",
+      "group": "company",
+      "entityId": "tesla",
+      "aliases": [
+        "Tesla",
+        "特斯拉中国"
+      ],
+      "definition": "特斯拉的车型与价格调整、FSD 与 Robotaxi 进展、中国与全球市场表现，以及马斯克相关的公司动向。"
+    },
+    {
+      "slug": "gm",
+      "name": "通用汽车",
+      "group": "company",
+      "entityId": "gm",
+      "aliases": [
+        "General Motors",
+        "上汽通用"
+      ],
+      "definition": "通用汽车的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "buick",
+      "name": "别克",
+      "group": "company",
+      "entityId": "buick",
+      "aliases": [
+        "Buick",
+        "上汽通用别克"
+      ],
+      "definition": "别克的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "chevrolet",
+      "name": "雪佛兰",
+      "group": "company",
+      "entityId": "chevrolet",
+      "aliases": [
+        "Chevrolet",
+        "上汽通用雪佛兰"
+      ],
+      "definition": "雪佛兰的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "cadillac",
+      "name": "凯迪拉克",
+      "group": "company",
+      "entityId": "cadillac",
+      "aliases": [
+        "Cadillac",
+        "上汽通用凯迪拉克"
+      ],
+      "definition": "凯迪拉克的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "ford",
+      "name": "福特",
+      "group": "company",
+      "entityId": "ford",
+      "aliases": [
+        "Ford",
+        "长安福特",
+        "江铃福特"
+      ],
+      "definition": "福特的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "lincoln",
+      "name": "林肯",
+      "group": "company",
+      "entityId": "lincoln",
+      "aliases": [
+        "Lincoln",
+        "林肯中国"
+      ],
+      "definition": "林肯的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "stellantis",
+      "name": "Stellantis",
+      "group": "company",
+      "entityId": "stellantis",
+      "aliases": [
+        "斯特兰蒂斯",
+        "神龙汽车"
+      ],
+      "definition": "Stellantis的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "renault",
+      "name": "雷诺",
+      "group": "company",
+      "entityId": "renault",
+      "aliases": [
+        "Renault",
+        "雷诺集团"
+      ],
+      "definition": "雷诺的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "jlr",
+      "name": "捷豹路虎",
+      "group": "company",
+      "entityId": "jlr",
+      "aliases": [
+        "路虎",
+        "捷豹",
+        "奇瑞捷豹路虎"
+      ],
+      "definition": "捷豹路虎的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "ferrari",
+      "name": "法拉利",
+      "group": "company",
+      "entityId": "ferrari",
+      "aliases": [
+        "Ferrari"
+      ],
+      "definition": "法拉利的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "lamborghini",
+      "name": "兰博基尼",
+      "group": "company",
+      "entityId": "lamborghini",
+      "aliases": [
+        "Lamborghini"
+      ],
+      "definition": "兰博基尼的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "bentley",
+      "name": "宾利",
+      "group": "company",
+      "entityId": "bentley",
+      "aliases": [
+        "Bentley"
+      ],
+      "definition": "宾利的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "rolls-royce",
+      "name": "劳斯莱斯",
+      "group": "company",
+      "entityId": "rolls-royce",
+      "aliases": [
+        "Rolls-Royce"
+      ],
+      "definition": "劳斯莱斯的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "maserati",
+      "name": "玛莎拉蒂",
+      "group": "company",
+      "entityId": "maserati",
+      "aliases": [
+        "Maserati"
+      ],
+      "definition": "玛莎拉蒂的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "catl",
+      "name": "宁德时代",
+      "group": "company",
+      "entityId": "catl",
+      "aliases": [
+        "CATL",
+        "宁王"
+      ],
+      "definition": "宁德时代的电池技术、换电布局、客户定点、产能与财报。"
+    },
+    {
+      "slug": "fudi",
+      "name": "弗迪",
+      "group": "company",
+      "entityId": "fudi",
+      "aliases": [
+        "弗迪电池",
+        "弗迪科技",
+        "FinDreams"
+      ],
+      "definition": "弗迪的电池技术、客户定点、产能与企业动态。"
+    },
+    {
+      "slug": "calb",
+      "name": "中创新航",
+      "group": "company",
+      "entityId": "calb",
+      "aliases": [
+        "CALB"
+      ],
+      "definition": "中创新航的电池技术、客户定点、产能与企业动态。"
+    },
+    {
+      "slug": "gotion",
+      "name": "国轩高科",
+      "group": "company",
+      "entityId": "gotion",
+      "aliases": [
+        "Gotion"
+      ],
+      "definition": "国轩高科的电池技术、客户定点、产能与企业动态。"
+    },
+    {
+      "slug": "eve",
+      "name": "亿纬锂能",
+      "group": "company",
+      "entityId": "eve",
+      "aliases": [
+        "EVE Energy"
+      ],
+      "definition": "亿纬锂能的电池技术、客户定点、产能与企业动态。"
+    },
+    {
+      "slug": "sunwoda",
+      "name": "欣旺达",
+      "group": "company",
+      "entityId": "sunwoda",
+      "aliases": [
+        "Sunwoda"
+      ],
+      "definition": "欣旺达的电池技术、客户定点、产能与企业动态。"
+    },
+    {
+      "slug": "svolt",
+      "name": "蜂巢能源",
+      "group": "company",
+      "entityId": "svolt",
+      "aliases": [
+        "SVOLT"
+      ],
+      "definition": "蜂巢能源的电池技术、客户定点、产能与企业动态。"
+    },
+    {
+      "slug": "lg-energy",
+      "name": "LG 新能源",
+      "group": "company",
+      "entityId": "lg-energy",
+      "aliases": [
+        "LG Energy Solution",
+        "LGES"
+      ],
+      "definition": "LG 新能源的电池技术、客户定点、产能与企业动态。"
+    },
+    {
+      "slug": "momenta",
+      "name": "Momenta",
+      "group": "company",
+      "entityId": "momenta",
+      "aliases": [
+        "魔门塔"
+      ],
+      "definition": "Momenta在汽车智能化上的产品、量产定点、合作与企业动态。"
+    },
+    {
+      "slug": "horizon",
+      "name": "地平线",
+      "group": "company",
+      "entityId": "horizon",
+      "aliases": [
+        "Horizon Robotics",
+        "地平线机器人"
+      ],
+      "definition": "地平线在汽车智能化上的产品、量产定点、合作与企业动态。"
+    },
+    {
+      "slug": "black-sesame",
+      "name": "黑芝麻智能",
+      "group": "company",
+      "entityId": "black-sesame",
+      "aliases": [
+        "Black Sesame"
+      ],
+      "definition": "黑芝麻智能在汽车智能化上的产品、量产定点、合作与企业动态。"
+    },
+    {
+      "slug": "zhuoyu",
+      "name": "卓驭",
+      "group": "company",
+      "entityId": "zhuoyu",
+      "aliases": [
+        "卓驭科技",
+        "大疆车载"
+      ],
+      "definition": "卓驭在汽车智能化上的产品、量产定点、合作与企业动态。"
+    },
+    {
+      "slug": "deeproute",
+      "name": "元戎启行",
+      "group": "company",
+      "entityId": "deeproute",
+      "aliases": [
+        "DeepRoute"
+      ],
+      "definition": "元戎启行在汽车智能化上的产品、量产定点、合作与企业动态。"
+    },
+    {
+      "slug": "qcraft",
+      "name": "轻舟智航",
+      "group": "company",
+      "entityId": "qcraft",
+      "aliases": [
+        "QCraft"
+      ],
+      "definition": "轻舟智航在汽车智能化上的产品、量产定点、合作与企业动态。"
+    },
+    {
+      "slug": "hesai",
+      "name": "禾赛",
+      "group": "company",
+      "entityId": "hesai",
+      "aliases": [
+        "禾赛科技",
+        "Hesai"
+      ],
+      "definition": "禾赛在汽车智能化上的产品、量产定点、合作与企业动态。"
+    },
+    {
+      "slug": "robosense",
+      "name": "速腾聚创",
+      "group": "company",
+      "entityId": "robosense",
+      "aliases": [
+        "RoboSense"
+      ],
+      "definition": "速腾聚创在汽车智能化上的产品、量产定点、合作与企业动态。"
     },
     {
       "slug": "nvidia",
-      "name": "NVIDIA 英伟达",
+      "name": "英伟达",
       "group": "company",
       "entityId": "nvidia",
-      "definition": "英伟达的 GPU 新品、CUDA 软件生态、机器人平台与 AI 算力供需。"
+      "aliases": [
+        "NVIDIA",
+        "NVIDIA DRIVE"
+      ],
+      "definition": "英伟达在汽车智能化上的产品、量产定点、合作与企业动态。"
     },
     {
-      "slug": "hugging-face",
-      "name": "Hugging Face",
+      "slug": "qualcomm",
+      "name": "高通",
       "group": "company",
-      "entityId": "hugging-face",
-      "definition": "Hugging Face 社区的热门开源模型、数据集、工具与榜单变化。"
+      "entityId": "qualcomm",
+      "aliases": [
+        "Qualcomm",
+        "骁龙座舱"
+      ],
+      "definition": "高通在汽车智能化上的产品、量产定点、合作与企业动态。"
     },
     {
-      "slug": "cursor",
-      "name": "Cursor",
+      "slug": "mobileye",
+      "name": "Mobileye",
       "group": "company",
-      "entityId": "cursor",
-      "definition": "Cursor（Anysphere）的编辑器与编码 Agent 更新、自研模型与定价变化。"
+      "entityId": "mobileye",
+      "definition": "Mobileye在汽车智能化上的产品、量产定点、合作与企业动态。"
     },
     {
-      "slug": "openrouter",
-      "name": "OpenRouter",
+      "slug": "desay-sv",
+      "name": "德赛西威",
       "group": "company",
-      "entityId": "openrouter",
-      "definition": "OpenRouter 平台的新模型上架、价格变化与开发者调用量排行。"
+      "entityId": "desay-sv",
+      "aliases": [
+        "Desay SV"
+      ],
+      "definition": "德赛西威在汽车智能化上的产品、量产定点、合作与企业动态。"
     },
     {
-      "slug": "agent",
-      "name": "Agent 智能体",
-      "group": "field",
-      "tags": [
-        "Agent"
+      "slug": "ecarx",
+      "name": "亿咖通",
+      "group": "company",
+      "entityId": "ecarx",
+      "aliases": [
+        "ECARX"
       ],
-      "definition": "能自己拆解任务、调用工具、一步步把事办完的 AI 智能体：Claude Code、Manus 等应用，各家 Agent 框架与评测。"
+      "definition": "亿咖通在汽车智能化上的产品、量产定点、合作与企业动态。"
     },
     {
-      "slug": "coding",
-      "name": "AI 编码",
-      "group": "field",
-      "tags": [
-        "编码"
+      "slug": "thundersoft",
+      "name": "中科创达",
+      "group": "company",
+      "entityId": "thundersoft",
+      "aliases": [
+        "ThunderSoft"
       ],
-      "definition": "用 AI 写代码：编程助手、Vibe Coding、代码模型评测，以及开发方式的变化。"
+      "definition": "中科创达在汽车智能化上的产品、量产定点、合作与企业动态。"
     },
     {
-      "slug": "reasoning",
-      "name": "推理能力",
-      "group": "field",
-      "tags": [
-        "推理"
+      "slug": "apollo",
+      "name": "百度 Apollo",
+      "group": "company",
+      "entityId": "apollo",
+      "aliases": [
+        "萝卜快跑",
+        "Apollo Go",
+        "百度智驾"
       ],
-      "definition": "让大模型先想再答的能力：思维链、推理模型，数学与逻辑评测上的突破和争议。"
+      "definition": "百度 Apollo的无人驾驶与出行业务进展：运营范围、车队、牌照、事故与融资。"
     },
     {
-      "slug": "multimodal",
-      "name": "多模态",
-      "group": "field",
-      "tags": [
-        "多模态"
+      "slug": "pony",
+      "name": "小马智行",
+      "group": "company",
+      "entityId": "pony",
+      "aliases": [
+        "Pony.ai"
       ],
-      "definition": "文字之外的能力：看懂图片、图文混合理解、音视频输入输出的模型与产品进展。"
+      "definition": "小马智行的无人驾驶与出行业务进展：运营范围、车队、牌照、事故与融资。"
     },
     {
-      "slug": "image-gen",
-      "name": "图像生成",
-      "group": "field",
-      "tags": [
-        "图像生成"
+      "slug": "weride",
+      "name": "文远知行",
+      "group": "company",
+      "entityId": "weride",
+      "aliases": [
+        "WeRide"
       ],
-      "definition": "AI 画图与修图：文生图模型更新、图像编辑能力与创作工具。"
+      "definition": "文远知行的无人驾驶与出行业务进展：运营范围、车队、牌照、事故与融资。"
     },
     {
-      "slug": "video",
-      "name": "AI 视频",
-      "group": "field",
-      "tags": [
-        "视频"
-      ],
-      "definition": "AI 生成和理解视频：文生视频模型、视频编辑工具，以及影视创作的新做法。"
+      "slug": "waymo",
+      "name": "Waymo",
+      "group": "company",
+      "entityId": "waymo",
+      "definition": "Waymo的无人驾驶与出行业务进展：运营范围、车队、牌照、事故与融资。"
     },
     {
-      "slug": "voice",
-      "name": "语音与音频",
+      "slug": "didi",
+      "name": "滴滴",
+      "group": "company",
+      "entityId": "didi",
+      "aliases": [
+        "滴滴出行",
+        "DiDi"
+      ],
+      "definition": "滴滴的无人驾驶与出行业务进展：运营范围、车队、牌照、事故与融资。"
+    },
+    {
+      "slug": "ehang",
+      "name": "亿航",
+      "group": "company",
+      "entityId": "ehang",
+      "aliases": [
+        "亿航智能",
+        "EHang"
+      ],
+      "definition": "亿航的无人驾驶与出行业务进展：运营范围、车队、牌照、事故与融资。"
+    },
+    {
+      "slug": "bosch",
+      "name": "博世",
+      "group": "company",
+      "entityId": "bosch",
+      "aliases": [
+        "Bosch",
+        "博世中国"
+      ],
+      "definition": "博世的零部件产品、客户与产能、业绩与企业动态。"
+    },
+    {
+      "slug": "continental",
+      "name": "大陆集团",
+      "group": "company",
+      "entityId": "continental",
+      "aliases": [
+        "Continental AG",
+        "德国大陆"
+      ],
+      "definition": "大陆集团的零部件产品、客户与产能、业绩与企业动态。"
+    },
+    {
+      "slug": "zf",
+      "name": "采埃孚",
+      "group": "company",
+      "entityId": "zf",
+      "definition": "采埃孚的零部件产品、客户与产能、业绩与企业动态。"
+    },
+    {
+      "slug": "denso",
+      "name": "电装",
+      "group": "company",
+      "entityId": "denso",
+      "aliases": [
+        "Denso"
+      ],
+      "definition": "电装的零部件产品、客户与产能、业绩与企业动态。"
+    },
+    {
+      "slug": "magna",
+      "name": "麦格纳",
+      "group": "company",
+      "entityId": "magna",
+      "aliases": [
+        "Magna"
+      ],
+      "definition": "麦格纳的零部件产品、客户与产能、业绩与企业动态。"
+    },
+    {
+      "slug": "fuyao",
+      "name": "福耀玻璃",
+      "group": "company",
+      "entityId": "fuyao",
+      "aliases": [
+        "福耀集团",
+        "Fuyao"
+      ],
+      "definition": "福耀玻璃的零部件产品、客户与产能、业绩与企业动态。"
+    },
+    {
+      "slug": "joyson",
+      "name": "均胜电子",
+      "group": "company",
+      "entityId": "joyson",
+      "aliases": [
+        "Joyson"
+      ],
+      "definition": "均胜电子的零部件产品、客户与产能、业绩与企业动态。"
+    },
+    {
+      "slug": "tuopu",
+      "name": "拓普集团",
+      "group": "company",
+      "entityId": "tuopu",
+      "aliases": [
+        "Tuopu"
+      ],
+      "definition": "拓普集团的零部件产品、客户与产能、业绩与企业动态。"
+    },
+    {
+      "slug": "zhongsheng",
+      "name": "中升集团",
+      "group": "company",
+      "entityId": "zhongsheng",
+      "aliases": [
+        "中升控股",
+        "Zhongsheng"
+      ],
+      "definition": "中升集团的门店网络、经营业绩与渠道变化。"
+    },
+    {
+      "slug": "yongda",
+      "name": "永达汽车",
+      "group": "company",
+      "entityId": "yongda",
+      "aliases": [
+        "永达集团"
+      ],
+      "definition": "永达汽车的门店网络、经营业绩与渠道变化。"
+    },
+    {
+      "slug": "guanghui",
+      "name": "广汇汽车",
+      "group": "company",
+      "entityId": "guanghui",
+      "aliases": [
+        "广汇汽车服务"
+      ],
+      "definition": "广汇汽车的门店网络、经营业绩与渠道变化。"
+    },
+    {
+      "slug": "autohome",
+      "name": "汽车之家",
+      "group": "company",
+      "entityId": "autohome",
+      "aliases": [
+        "Autohome"
+      ],
+      "definition": "汽车之家的平台业务、数据榜单与企业动态。"
+    },
+    {
+      "slug": "dongchedi",
+      "name": "懂车帝",
+      "group": "company",
+      "entityId": "dongchedi",
+      "aliases": [
+        "Dongchedi"
+      ],
+      "definition": "懂车帝的平台业务、数据榜单与企业动态。"
+    },
+    {
+      "slug": "yiche",
+      "name": "易车",
+      "group": "company",
+      "entityId": "yiche",
+      "aliases": [
+        "Yiche",
+        "易车网"
+      ],
+      "definition": "易车的平台业务、数据榜单与企业动态。"
+    },
+    {
+      "slug": "guazi",
+      "name": "瓜子二手车",
+      "group": "company",
+      "entityId": "guazi",
+      "aliases": [
+        "车好多"
+      ],
+      "definition": "瓜子二手车的平台业务、数据榜单与企业动态。"
+    },
+    {
+      "slug": "teld",
+      "name": "特来电",
+      "group": "company",
+      "entityId": "teld",
+      "aliases": [
+        "特锐德"
+      ],
+      "definition": "特来电的充电网络、合作与企业动态。"
+    },
+    {
+      "slug": "star-charge",
+      "name": "星星充电",
+      "group": "company",
+      "entityId": "star-charge",
+      "aliases": [
+        "万帮数字能源"
+      ],
+      "definition": "星星充电的充电网络、合作与企业动态。"
+    },
+    {
+      "slug": "cpca",
+      "name": "乘联会",
+      "group": "company",
+      "entityId": "cpca",
+      "aliases": [
+        "乘联分会",
+        "乘用车市场信息联席会",
+        "CPCA"
+      ],
+      "definition": "乘联会发布的周度与月度乘用车销量、市场分析和行业观点。"
+    },
+    {
+      "slug": "caam",
+      "name": "中汽协",
+      "group": "company",
+      "entityId": "caam",
+      "aliases": [
+        "中国汽车工业协会",
+        "CAAM"
+      ],
+      "definition": "中汽协发布的产销数据、行业倡议与政策建议。"
+    },
+    {
+      "slug": "cada",
+      "name": "中国汽车流通协会",
+      "group": "company",
+      "entityId": "cada",
+      "aliases": [
+        "流通协会",
+        "CADA"
+      ],
+      "definition": "中国汽车流通协会发布的数据、标准、测评与行业观点。"
+    },
+    {
+      "slug": "catarc",
+      "name": "中汽中心",
+      "group": "company",
+      "entityId": "catarc",
+      "aliases": [
+        "中国汽车技术研究中心",
+        "CATARC",
+        "C-NCAP"
+      ],
+      "definition": "中汽中心发布的数据、标准、测评与行业观点。"
+    },
+    {
+      "slug": "byd-group",
+      "name": "比亚迪集团",
+      "group": "company",
+      "tags": [
+        "entity:byd",
+        "entity:denza",
+        "entity:fangchengbao",
+        "entity:yangwang",
+        "entity:fudi"
+      ],
+      "definition": "比亚迪集团全貌：比亚迪、腾势、方程豹、仰望和弗迪的全部动态。"
+    },
+    {
+      "slug": "geely-group",
+      "name": "吉利系",
+      "group": "company",
+      "tags": [
+        "entity:geely",
+        "entity:lynkco",
+        "entity:zeekr",
+        "entity:volvo",
+        "entity:polestar",
+        "entity:lotus",
+        "entity:smart",
+        "entity:radar",
+        "entity:farizon"
+      ],
+      "definition": "吉利控股旗下品牌全貌：吉利、领克、极氪、沃尔沃、极星、路特斯、smart 等。"
+    },
+    {
+      "slug": "chery-group",
+      "name": "奇瑞集团",
+      "group": "company",
+      "tags": [
+        "entity:chery",
+        "entity:exeed",
+        "entity:jetour",
+        "entity:icar",
+        "entity:omoda",
+        "entity:luxeed"
+      ],
+      "definition": "奇瑞集团全貌：奇瑞、星途、捷途、iCAR、欧萌达与智界。"
+    },
+    {
+      "slug": "gwm-group",
+      "name": "长城汽车集团",
+      "group": "company",
+      "tags": [
+        "entity:gwm",
+        "entity:haval",
+        "entity:wey",
+        "entity:tank",
+        "entity:ora"
+      ],
+      "definition": "长城汽车旗下品牌全貌：哈弗、魏牌、坦克、欧拉与长城皮卡。"
+    },
+    {
+      "slug": "changan-group",
+      "name": "长安系",
+      "group": "company",
+      "tags": [
+        "entity:changan",
+        "entity:deepal",
+        "entity:avatr"
+      ],
+      "definition": "长安汽车旗下品牌全貌：长安、启源、深蓝与阿维塔。"
+    },
+    {
+      "slug": "saic-group",
+      "name": "上汽集团",
+      "group": "company",
+      "tags": [
+        "entity:saic",
+        "entity:roewe",
+        "entity:mg",
+        "entity:im",
+        "entity:maxus",
+        "entity:wuling",
+        "entity:baojun",
+        "entity:shangjie"
+      ],
+      "definition": "上汽集团全貌：荣威、MG、智己、大通、五菱、宝骏与尚界。"
+    },
+    {
+      "slug": "gac-group",
+      "name": "广汽集团",
+      "group": "company",
+      "tags": [
+        "entity:gac",
+        "entity:aion",
+        "entity:hyptec"
+      ],
+      "definition": "广汽集团全貌：传祺、埃安与昊铂。"
+    },
+    {
+      "slug": "faw-group",
+      "name": "一汽集团",
+      "group": "company",
+      "tags": [
+        "entity:faw",
+        "entity:hongqi",
+        "entity:bestune",
+        "entity:jiefang"
+      ],
+      "definition": "中国一汽全貌：红旗、奔腾与解放。"
+    },
+    {
+      "slug": "dongfeng-group",
+      "name": "东风集团",
+      "group": "company",
+      "tags": [
+        "entity:dongfeng",
+        "entity:voyah",
+        "entity:mengshi"
+      ],
+      "definition": "东风汽车集团全貌：东风各品牌、岚图与猛士。"
+    },
+    {
+      "slug": "baic-group",
+      "name": "北汽集团",
+      "group": "company",
+      "tags": [
+        "entity:baic",
+        "entity:arcfox",
+        "entity:xiangjie",
+        "entity:foton"
+      ],
+      "definition": "北汽集团全貌：北京汽车、极狐、享界与福田。"
+    },
+    {
+      "slug": "hima",
+      "name": "鸿蒙智行",
+      "group": "company",
+      "tags": [
+        "entity:huawei",
+        "entity:aito",
+        "entity:luxeed",
+        "entity:xiangjie",
+        "entity:maextro",
+        "entity:shangjie"
+      ],
+      "definition": "华为与鸿蒙智行“五界”：问界、智界、享界、尊界、尚界，以及乾崑智驾和鸿蒙座舱。"
+    },
+    {
+      "slug": "vw-group",
+      "name": "大众集团",
+      "group": "company",
+      "tags": [
+        "entity:volkswagen",
+        "entity:audi",
+        "entity:porsche",
+        "entity:bentley",
+        "entity:lamborghini"
+      ],
+      "definition": "大众汽车集团全貌：大众、奥迪、保时捷、宾利与兰博基尼。"
+    },
+    {
+      "slug": "bmw-group",
+      "name": "宝马集团",
+      "group": "company",
+      "tags": [
+        "entity:bmw",
+        "entity:mini",
+        "entity:rolls-royce"
+      ],
+      "definition": "宝马集团全貌：宝马、MINI 与劳斯莱斯。"
+    },
+    {
+      "slug": "toyota-group",
+      "name": "丰田集团",
+      "group": "company",
+      "tags": [
+        "entity:toyota",
+        "entity:lexus"
+      ],
+      "definition": "丰田与雷克萨斯的全部动态。"
+    },
+    {
+      "slug": "gm-group",
+      "name": "通用汽车集团",
+      "group": "company",
+      "tags": [
+        "entity:gm",
+        "entity:buick",
+        "entity:chevrolet",
+        "entity:cadillac"
+      ],
+      "definition": "通用汽车与上汽通用：别克、雪佛兰与凯迪拉克。"
+    },
+    {
+      "slug": "ford-group",
+      "name": "福特集团",
+      "group": "company",
+      "tags": [
+        "entity:ford",
+        "entity:lincoln"
+      ],
+      "definition": "福特与林肯的全部动态。"
+    },
+    {
+      "slug": "hyundai-group",
+      "name": "现代起亚",
+      "group": "company",
+      "tags": [
+        "entity:hyundai",
+        "entity:kia"
+      ],
+      "definition": "现代汽车集团：现代、起亚与捷尼赛思。"
+    },
+    {
+      "slug": "smart-driving",
+      "name": "智能驾驶",
       "group": "field",
       "tags": [
-        "语音"
+        "智能驾驶"
       ],
-      "definition": "AI 语音与音频：语音合成、实时语音对话、音乐生成与音频理解的模型与产品。"
+      "definition": "辅助驾驶与自动驾驶：城区 NOA、端到端、L3 准入、事故与监管口径。"
+    },
+    {
+      "slug": "cockpit",
+      "name": "智能座舱",
+      "group": "field",
+      "tags": [
+        "智能座舱"
+      ],
+      "definition": "车机系统、大模型上车、座舱芯片与交互体验的进展。"
+    },
+    {
+      "slug": "battery",
+      "name": "动力电池",
+      "group": "field",
+      "tags": [
+        "动力电池",
+        "固态电池"
+      ],
+      "definition": "电池技术与产业：快充、固态电池、成本、装机量与安全。"
+    },
+    {
+      "slug": "chips",
+      "name": "汽车芯片",
+      "group": "field",
+      "tags": [
+        "汽车芯片"
+      ],
+      "definition": "智驾与座舱芯片、自研芯片、供应与管制。"
+    },
+    {
+      "slug": "charging",
+      "name": "充电与换电",
+      "group": "field",
+      "tags": [
+        "充电/换电"
+      ],
+      "definition": "超充网络、换电站、充电标准与补能体验。"
+    },
+    {
+      "slug": "bev",
+      "name": "纯电",
+      "group": "field",
+      "tags": [
+        "纯电"
+      ],
+      "definition": "纯电车型与纯电市场的动态。"
+    },
+    {
+      "slug": "phev",
+      "name": "插混与增程",
+      "group": "field",
+      "tags": [
+        "插混/增程"
+      ],
+      "definition": "插电混动与增程车型、技术路线之争与市场份额。"
+    },
+    {
+      "slug": "ice",
+      "name": "燃油车",
+      "group": "field",
+      "tags": [
+        "燃油车"
+      ],
+      "definition": "燃油车的新品、价格、份额与转型。"
+    },
+    {
+      "slug": "robotaxi",
+      "name": "Robotaxi",
+      "group": "field",
+      "tags": [
+        "Robotaxi"
+      ],
+      "definition": "无人驾驶出租车的运营范围、车队规模、牌照、事故与商业化。"
+    },
+    {
+      "slug": "evtol",
+      "name": "飞行汽车",
+      "group": "field",
+      "tags": [
+        "飞行汽车"
+      ],
+      "definition": "飞行汽车与低空出行：适航取证、订单、试飞与量产。"
     },
     {
       "slug": "embodied",
@@ -196,143 +1912,260 @@
       "tags": [
         "具身智能"
       ],
-      "definition": "装进机器人身体里的 AI：人形机器人、具身基础模型，以及在真实环境里动手干活的能力。"
+      "definition": "车企造机器人：人形机器人发布、进厂与量产计划。"
     },
     {
-      "slug": "on-device",
-      "name": "端侧 AI",
+      "slug": "commercial",
+      "name": "商用车",
       "group": "field",
       "tags": [
-        "端侧"
+        "商用车",
+        "皮卡"
       ],
-      "definition": "直接跑在手机、电脑等设备上的 AI：小模型、在本机运行模型的工具与端侧芯片。"
+      "definition": "卡车、客车与皮卡：新品、销量、新能源化与出海。"
     },
     {
-      "slug": "open-source",
-      "name": "开源生态",
+      "slug": "two-wheelers",
+      "name": "两轮与摩托",
       "group": "field",
       "tags": [
-        "开源生态",
-        "开源/仓库"
+        "两轮/摩托"
       ],
-      "definition": "开放权重、能下载下来自己部署的模型，开源框架与 GitHub 上爆火的 AI 项目。"
+      "definition": "两轮电动车与摩托车行业的大事。"
     },
     {
-      "slug": "engineering",
-      "name": "部署工程",
+      "slug": "luxury",
+      "name": "豪华车",
       "group": "field",
       "tags": [
-        "部署/工程"
+        "豪华车"
       ],
-      "definition": "怎么把模型跑得更快更省钱：推理加速、显存与成本、服务部署与基础设施选型。"
+      "definition": "豪华品牌的新车、价格、份额与渠道变化。"
     },
     {
-      "slug": "data-training",
-      "name": "数据与训练",
+      "slug": "used-cars",
+      "name": "二手车",
       "group": "field",
       "tags": [
-        "数据/训练"
+        "二手车"
       ],
-      "definition": "大模型是怎么练出来的：数据集构建、合成数据、预训练与后训练方法、算力与训练成本。"
+      "definition": "二手车市场、保值率、平台与政策。"
+    },
+    {
+      "slug": "finance",
+      "name": "金融与保险",
+      "group": "field",
+      "tags": [
+        "金融/保险"
+      ],
+      "definition": "车贷政策、新能源车险、融资租赁与相关监管。"
+    },
+    {
+      "slug": "aftermarket",
+      "name": "后市场",
+      "group": "field",
+      "tags": [
+        "后市场"
+      ],
+      "definition": "维修保养、配件、改装与车主服务。"
+    },
+    {
+      "slug": "price-war",
+      "name": "价格战",
+      "group": "field",
+      "tags": [
+        "价格战"
+      ],
+      "definition": "降价、限时权益、行业“反内卷”与价格监管。"
+    },
+    {
+      "slug": "tariffs",
+      "name": "关税与贸易",
+      "group": "field",
+      "tags": [
+        "关税/贸易"
+      ],
+      "definition": "关税、反补贴调查、出口管制与本地化建厂。"
+    },
+    {
+      "slug": "subsidy",
+      "name": "购置税与补贴",
+      "group": "field",
+      "tags": [
+        "购置税/补贴"
+      ],
+      "definition": "购置税减免、以旧换新、地方消费补贴与目录调整。"
+    },
+    {
+      "slug": "auto-shows",
+      "name": "车展",
+      "group": "field",
+      "tags": [
+        "车展"
+      ],
+      "definition": "北京、上海、广州、成都等车展及海外车展上的发布与看点。"
     },
     {
       "slug": "safety",
-      "name": "安全对齐",
+      "name": "安全与事故",
       "group": "field",
       "tags": [
-        "安全/对齐"
+        "安全/事故"
       ],
-      "definition": "让 AI 可控、可信、不被滥用：越狱与防御、模型行为研究、安全评测与治理框架。"
+      "definition": "碰撞测试、起火、辅助驾驶事故与安全标准。"
     },
     {
-      "slug": "mcp",
-      "name": "MCP 与工具调用",
-      "group": "field",
-      "tags": [
-        "MCP/工具调用"
-      ],
-      "definition": "让 AI 连上外部软件和数据：MCP 协议、function calling 工具调用与各类工具集成。"
-    },
-    {
-      "slug": "model-releases",
-      "name": "模型发布",
+      "slug": "launches",
+      "name": "新车上市",
       "group": "genre",
       "tags": [
-        "模型发布"
+        "新车上市"
       ],
-      "definition": "各家新模型的发布、开源与迭代：旗舰更新、开源权重放出、能力与价格变化。"
+      "definition": "正式上市并公布售价的新车与改款换代车型。"
     },
     {
-      "slug": "product-updates",
-      "name": "产品更新",
+      "slug": "previews",
+      "name": "新车预告",
       "group": "genre",
       "tags": [
-        "产品更新"
+        "新车预告"
       ],
-      "definition": "AI 产品与应用的功能上新、改版与商业化——谁家的产品变强了、变贵了、能用了。"
+      "definition": "亮相、申报、预售与谍照：还没上市的新车信息。"
     },
     {
-      "slug": "papers",
-      "name": "论文研究",
+      "slug": "tech-releases",
+      "name": "技术发布",
       "group": "genre",
       "tags": [
-        "论文/研究"
+        "技术发布"
       ],
-      "definition": "值得读的 AI 论文与研究成果：架构创新、训练方法、能力测量与理论进展。"
-    },
-    {
-      "slug": "benchmarks",
-      "name": "评测基准",
-      "group": "genre",
-      "tags": [
-        "评测/基准"
-      ],
-      "definition": "模型到底谁更强：Benchmark 评测成绩、评测方法的争议与排行榜变化。"
-    },
-    {
-      "slug": "tutorials",
-      "name": "教程实践",
-      "group": "genre",
-      "tags": [
-        "教程/实践"
-      ],
-      "definition": "拿来就能用的实操内容：提示词技巧、工作流搭建、工具用法与踩坑经验。"
-    },
-    {
-      "slug": "opinions",
-      "name": "大佬观点",
-      "group": "genre",
-      "tags": [
-        "大佬观点"
-      ],
-      "definition": "行业关键人物在想什么：创始人访谈、研究者论战与投资人判断。"
-    },
-    {
-      "slug": "trends",
-      "name": "现象与趋势",
-      "group": "genre",
-      "tags": [
-        "现象/趋势"
-      ],
-      "definition": "AI 正在改变什么：大家怎么用 AI、新能力的出现、对社会与市场格局的影响。"
-    },
-    {
-      "slug": "industry",
-      "name": "行业动态",
-      "group": "genre",
-      "tags": [
-        "行业动态"
-      ],
-      "definition": "AI 圈的商业大事：融资并购、人事变动、合作与竞争、政策与市场变化。"
+      "definition": "技术发布会、量产搭载、OTA 升级与测试认证结果。"
     },
     {
       "slug": "policy",
-      "name": "政策监管",
+      "name": "政策法规",
       "group": "genre",
       "tags": [
-        "政策/监管"
+        "政策/法规"
       ],
-      "definition": "AI 相关的政策法规与政府监管：立法进展、出口管制与全球治理。"
+      "definition": "国家与地方的汽车政策、法规、标准和监管动作。"
+    },
+    {
+      "slug": "sales",
+      "name": "销量交付",
+      "group": "genre",
+      "tags": [
+        "销量/交付"
+      ],
+      "definition": "周度、月度销量与交付数据，各类榜单与市场份额。"
+    },
+    {
+      "slug": "pricing",
+      "name": "价格权益",
+      "group": "genre",
+      "tags": [
+        "价格/权益"
+      ],
+      "definition": "官方调价、限时权益与金融政策的变化。"
+    },
+    {
+      "slug": "marketing",
+      "name": "营销传播",
+      "group": "genre",
+      "tags": [
+        "营销/传播"
+      ],
+      "definition": "发布会、广告、代言、跨界与出圈的传播事件。"
+    },
+    {
+      "slug": "controversy",
+      "name": "舆情争议",
+      "group": "genre",
+      "tags": [
+        "舆情/争议"
+      ],
+      "definition": "热搜、车主维权、高管互怼与企业回应。"
+    },
+    {
+      "slug": "people",
+      "name": "人事变动",
+      "group": "genre",
+      "tags": [
+        "人事变动"
+      ],
+      "definition": "车企与供应链公司的高管任免、离职与组织调整。"
+    },
+    {
+      "slug": "earnings",
+      "name": "财报业绩",
+      "group": "genre",
+      "tags": [
+        "财报/业绩"
+      ],
+      "definition": "季度与年度财报、盈利预告与经营指标。"
+    },
+    {
+      "slug": "deals",
+      "name": "投融资并购",
+      "group": "genre",
+      "tags": [
+        "投融资/并购"
+      ],
+      "definition": "融资、上市、收购、重组与破产。"
+    },
+    {
+      "slug": "partnerships",
+      "name": "合作供应",
+      "group": "genre",
+      "tags": [
+        "合作/供应"
+      ],
+      "definition": "战略合作、合资、供应商定点与供应关系变化。"
+    },
+    {
+      "slug": "recalls",
+      "name": "召回质量",
+      "group": "genre",
+      "tags": [
+        "召回/质量"
+      ],
+      "definition": "召回公告、质量事故、缺陷调查与处理结果。"
+    },
+    {
+      "slug": "overseas",
+      "name": "出海海外",
+      "group": "genre",
+      "tags": [
+        "出海/海外"
+      ],
+      "definition": "中国品牌出海与海外市场：出口、建厂、海外销量与当地政策。"
+    },
+    {
+      "slug": "dealers",
+      "name": "渠道经销商",
+      "group": "genre",
+      "tags": [
+        "渠道/经销商"
+      ],
+      "definition": "经销商集团、门店网络、直营与代理模式的变化。"
+    },
+    {
+      "slug": "opinions",
+      "name": "观点访谈",
+      "group": "genre",
+      "tags": [
+        "观点/访谈"
+      ],
+      "definition": "行业关键人物的访谈、演讲与判断。"
+    },
+    {
+      "slug": "reviews",
+      "name": "评测体验",
+      "group": "genre",
+      "tags": [
+        "评测/体验"
+      ],
+      "definition": "有数据的评测、对比和长期使用报告。"
     }
   ]
 }
