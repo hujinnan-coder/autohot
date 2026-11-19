@@ -26,6 +26,8 @@ export const PRESETS: Record<string, ModelPreset> = {
   },
   "deepseek-flash-think": {
     service: "deepseek", model: "deepseek-flash", baseUrlEnv: "DEEPSEEK_BASE_URL", apiKeyEnv: "DEEPSEEK_API_KEY", reasoningTokens: 4000, jsonMode: true,
+    // 评分要带思考，默认 120 秒超时不够用，给到 240 秒。
+    scoreCall: { temperature: 0.2, maxTokens: 1024, timeoutMs: 240_000 },
   },
   // DeepSeek V4 Pro 用 .env 里默认的那把 DeepSeek 密钥（LLM_API_KEY）。它默认先思考再回答：
   // 结构化的短任务关掉思考；评分保留思考，并给思考留出输出额度。
