@@ -130,6 +130,16 @@ autohot 基于 [AIHOT 开源引擎](https://github.com/KKKKhazix/AIHOT)，是面
 7. 销量排行。
 8. 上服务器。
 
+### 进度
+
+- 第 1、2 步完成（2026-11-17）：临时信源已跑出第一批内容。临时信源都是 T2 媒体，门槛 76，而多数真实新闻在 55–72 分，所以精选很少；门槛要等第 3 步用标注样本校准，不凭感觉改。
+- 第 3 步进行中（2026-11-19）：后台标注页 `/admin/labeling`（模块 `modules/labeling`）已上线。站长在页面上逐条标“该选 / 不该选 / 两可”，可选“决策价值 / 话题价值”。标满后导出金标集并跑评测：
+  ```bash
+  node --env-file=.env modules/labeling/scripts/export-gold.ts      # 写 .data/gold.jsonl，五分之一进留出集
+  node --env-file=.env scripts/eval-selection.ts --split development
+  ```
+  还等站长提供正式信源名单。
+
 ## 14. 待验证的风险
 
 - **预算与信源规模**：公众号和微博采集按量付费，每月 1000 元未必撑得住“四类都做扎实”。拿到服务商报价后先算账再定规模和频率。

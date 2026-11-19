@@ -1,0 +1,16 @@
+{
+  "name": "@aihot/labeling",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./module": "./module.ts",
+    "./server": "./server.ts"
+  },
+  "dependencies": {
+    "@aihot/api": "*",
+    "@aihot/backend": "*",
+    "@aihot/contracts": "*",
+    "@aihot/industry": "*",
+    "zod": "4.6.6"
+  }
+}
