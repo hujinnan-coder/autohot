@@ -220,6 +220,39 @@
       ],
       "site_fulltext": false,
       "syndicate_fulltext": false
+    },
+    {
+      "id": "web-autohome-original",
+      "name": "汽车之家·之家原创车闻",
+      "kind": "web_list",
+      "config": {
+        "url": "https://www.autohome.com.cn/ExpertBlog/editor_8326.html",
+        "parseMode": "html",
+        "itemSelector": "li.eblog-zixun__item",
+        "linkSelector": "a.item-wrapper",
+        "titleSelector": ".item-title",
+        "allowUrlPrefixes": [
+          "https://www.autohome.com.cn/news/"
+        ],
+        "detail": {
+          "maxFetches": 20,
+          "publishedAtRegex": "\"publishDate\":\"(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2})\"",
+          "publishedAtAuthoritative": true
+        },
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "媒体",
+        "中国车市",
+        "原创"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
     }
   ]
 }
