@@ -139,6 +139,7 @@ autohot 基于 [AIHOT 开源引擎](https://github.com/KKKKhazix/AIHOT)，是面
   node --env-file=.env scripts/eval-selection.ts --split development
   ```
   还等站长提供正式信源名单。
+- 页面与归组（2026-11-19）：桌面和手机各 41 个页面、420 个站内链接全部能打开，无报错。门槛保持 76（站长决定），所以首页、品牌页、日报暂时偏空。归组、阅读增量和结构化主体的提示词已换成汽车行业的例子。从真实报道挑了 32 对标注好的关系样本放在 `.data/relation-gold.jsonl`，跑 `scripts/eval-relations.ts` 可对比提示词前后（会产生少量模型费用）。11 月 17 日 15:00 那批约 50 篇是在向量服务就绪前归组的，有几处跨语言漏合（如奔驰 2027 美国脱手驾驶的中英文报道），重新归组会产生少量模型费用，待站长决定。
 
 ## 14. 待验证的风险
 
