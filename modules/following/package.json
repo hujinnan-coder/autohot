@@ -1,0 +1,12 @@
+{
+  "name": "@aihot/following",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./module": "./module.ts",
+    "./web": "./web.tsx"
+  },
+  "dependencies": {
+    "@aihot/contracts": "*"
+  }
+}
