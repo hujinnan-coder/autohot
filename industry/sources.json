@@ -2193,39 +2193,6 @@
       "syndicate_fulltext": false
     },
     {
-      "id": "web-sohu-auto",
-      "name": "搜狐汽车",
-      "kind": "web_list",
-      "config": {
-        "url": "https://auto.sohu.com/",
-        "parseMode": "html",
-        "itemSelector": "ul.list li",
-        "linkSelector": "a",
-        "titleSelector": "a",
-        "allowUrlPrefixes": [
-          "https://www.sohu.com/a/"
-        ],
-        "detail": {
-          "maxFetches": 10,
-          "summarySelector": "meta[name=\"description\"]",
-          "publishedAtRegex": "itemprop=\"datePublished\" content=\"(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2})\"",
-          "publishedAtAuthoritative": true
-        },
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "媒体",
-        "中国车市"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
       "id": "web-mot-news",
       "name": "交通运输部·交通要闻",
       "kind": "web_list",
@@ -6346,6 +6313,626 @@
       "tags": [
         "公众号",
         "自媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-yiche-yuanshu-1347843",
+      "name": "易车号·苑叔聊车",
+      "kind": "web_list",
+      "config": {
+        "url": "https://i.yiche.com/u1347843/!article/",
+        "parseMode": "html",
+        "itemSelector": ".article-item",
+        "linkSelector": "h2.title a",
+        "titleSelector": "h2.title a",
+        "listSummarySelector": "a.desc",
+        "listSummaryDropSelector": ".queryMore",
+        "publishedAtSelector": ".bottom-right span",
+        "allowUrlPrefixes": [
+          "https://news.yiche.com/",
+          "https://hao.yiche.com/wenzhang/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "易车号",
+        "创作者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-yiche-yancheshe-2983127",
+      "name": "易车号·言车社",
+      "kind": "web_list",
+      "config": {
+        "url": "https://i.yiche.com/u2983127/!article/",
+        "parseMode": "html",
+        "itemSelector": ".article-item",
+        "linkSelector": "h2.title a",
+        "titleSelector": "h2.title a",
+        "listSummarySelector": "a.desc",
+        "listSummaryDropSelector": ".queryMore",
+        "publishedAtSelector": ".bottom-right span",
+        "allowUrlPrefixes": [
+          "https://news.yiche.com/",
+          "https://hao.yiche.com/wenzhang/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "易车号",
+        "创作者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-yiche-shijieguan-9964884",
+      "name": "易车号·汽车视界观",
+      "kind": "web_list",
+      "config": {
+        "url": "https://i.yiche.com/u9964884/!article/",
+        "parseMode": "html",
+        "itemSelector": ".article-item",
+        "linkSelector": "h2.title a",
+        "titleSelector": "h2.title a",
+        "listSummarySelector": "a.desc",
+        "listSummaryDropSelector": ".queryMore",
+        "publishedAtSelector": ".bottom-right span",
+        "allowUrlPrefixes": [
+          "https://news.yiche.com/",
+          "https://hao.yiche.com/wenzhang/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "易车号",
+        "创作者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-yiche-tianya-13404851",
+      "name": "易车号·汽车天涯",
+      "kind": "web_list",
+      "config": {
+        "url": "https://i.yiche.com/u13404851/!article/",
+        "parseMode": "html",
+        "itemSelector": ".article-item",
+        "linkSelector": "h2.title a",
+        "titleSelector": "h2.title a",
+        "listSummarySelector": "a.desc",
+        "listSummaryDropSelector": ".queryMore",
+        "publishedAtSelector": ".bottom-right span",
+        "allowUrlPrefixes": [
+          "https://news.yiche.com/",
+          "https://hao.yiche.com/wenzhang/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "易车号",
+        "创作者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-yiche-xincheping-13416648",
+      "name": "易车号·新车评",
+      "kind": "web_list",
+      "config": {
+        "url": "https://i.yiche.com/u13416648/!article/",
+        "parseMode": "html",
+        "itemSelector": ".article-item",
+        "linkSelector": "h2.title a",
+        "titleSelector": "h2.title a",
+        "listSummarySelector": "a.desc",
+        "listSummaryDropSelector": ".queryMore",
+        "publishedAtSelector": ".bottom-right span",
+        "allowUrlPrefixes": [
+          "https://news.yiche.com/",
+          "https://hao.yiche.com/wenzhang/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "易车号",
+        "创作者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-yiche-chegulu-14838927",
+      "name": "易车号·车轱辘",
+      "kind": "web_list",
+      "config": {
+        "url": "https://i.yiche.com/u14838927/!article/",
+        "parseMode": "html",
+        "itemSelector": ".article-item",
+        "linkSelector": "h2.title a",
+        "titleSelector": "h2.title a",
+        "listSummarySelector": "a.desc",
+        "listSummaryDropSelector": ".queryMore",
+        "publishedAtSelector": ".bottom-right span",
+        "allowUrlPrefixes": [
+          "https://news.yiche.com/",
+          "https://hao.yiche.com/wenzhang/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "易车号",
+        "创作者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-yiche-wanchejiaoshou-14956882",
+      "name": "易车号·玩车教授",
+      "kind": "web_list",
+      "config": {
+        "url": "https://i.yiche.com/u14956882/!article/",
+        "parseMode": "html",
+        "itemSelector": ".article-item",
+        "linkSelector": "h2.title a",
+        "titleSelector": "h2.title a",
+        "listSummarySelector": "a.desc",
+        "listSummaryDropSelector": ".queryMore",
+        "publishedAtSelector": ".bottom-right span",
+        "allowUrlPrefixes": [
+          "https://news.yiche.com/",
+          "https://hao.yiche.com/wenzhang/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "易车号",
+        "创作者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-yiche-aichebingtuan-15349471",
+      "name": "易车号·爱车兵团",
+      "kind": "web_list",
+      "config": {
+        "url": "https://i.yiche.com/u15349471/!article/",
+        "parseMode": "html",
+        "itemSelector": ".article-item",
+        "linkSelector": "h2.title a",
+        "titleSelector": "h2.title a",
+        "listSummarySelector": "a.desc",
+        "listSummaryDropSelector": ".queryMore",
+        "publishedAtSelector": ".bottom-right span",
+        "allowUrlPrefixes": [
+          "https://news.yiche.com/",
+          "https://hao.yiche.com/wenzhang/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "易车号",
+        "创作者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-yiche-goche-17455257",
+      "name": "易车号·GO车情报员",
+      "kind": "web_list",
+      "config": {
+        "url": "https://i.yiche.com/u17455257/!article/",
+        "parseMode": "html",
+        "itemSelector": ".article-item",
+        "linkSelector": "h2.title a",
+        "titleSelector": "h2.title a",
+        "listSummarySelector": "a.desc",
+        "listSummaryDropSelector": ".queryMore",
+        "publishedAtSelector": ".bottom-right span",
+        "allowUrlPrefixes": [
+          "https://news.yiche.com/",
+          "https://hao.yiche.com/wenzhang/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "易车号",
+        "创作者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-yiche-wufeiyang-18382956",
+      "name": "易车号·车舞飞扬TV",
+      "kind": "web_list",
+      "config": {
+        "url": "https://i.yiche.com/u18382956/!article/",
+        "parseMode": "html",
+        "itemSelector": ".article-item",
+        "linkSelector": "h2.title a",
+        "titleSelector": "h2.title a",
+        "listSummarySelector": "a.desc",
+        "listSummaryDropSelector": ".queryMore",
+        "publishedAtSelector": ".bottom-right span",
+        "allowUrlPrefixes": [
+          "https://news.yiche.com/",
+          "https://hao.yiche.com/wenzhang/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "易车号",
+        "创作者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-yiche-woweichekuang-18475398",
+      "name": "易车号·我为车狂",
+      "kind": "web_list",
+      "config": {
+        "url": "https://i.yiche.com/u18475398/!article/",
+        "parseMode": "html",
+        "itemSelector": ".article-item",
+        "linkSelector": "h2.title a",
+        "titleSelector": "h2.title a",
+        "listSummarySelector": "a.desc",
+        "listSummaryDropSelector": ".queryMore",
+        "publishedAtSelector": ".bottom-right span",
+        "allowUrlPrefixes": [
+          "https://news.yiche.com/",
+          "https://hao.yiche.com/wenzhang/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "易车号",
+        "创作者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-yiche-chezhishi-20724739",
+      "name": "易车号·车知事",
+      "kind": "web_list",
+      "config": {
+        "url": "https://i.yiche.com/u20724739/!article/",
+        "parseMode": "html",
+        "itemSelector": ".article-item",
+        "linkSelector": "h2.title a",
+        "titleSelector": "h2.title a",
+        "listSummarySelector": "a.desc",
+        "listSummaryDropSelector": ".queryMore",
+        "publishedAtSelector": ".bottom-right span",
+        "allowUrlPrefixes": [
+          "https://news.yiche.com/",
+          "https://hao.yiche.com/wenzhang/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "易车号",
+        "创作者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-yiche-malache-21297664",
+      "name": "易车号·麻辣车评君",
+      "kind": "web_list",
+      "config": {
+        "url": "https://i.yiche.com/u21297664/!article/",
+        "parseMode": "html",
+        "itemSelector": ".article-item",
+        "linkSelector": "h2.title a",
+        "titleSelector": "h2.title a",
+        "listSummarySelector": "a.desc",
+        "listSummaryDropSelector": ".queryMore",
+        "publishedAtSelector": ".bottom-right span",
+        "allowUrlPrefixes": [
+          "https://news.yiche.com/",
+          "https://hao.yiche.com/wenzhang/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "易车号",
+        "创作者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-yiche-youshi-22415783",
+      "name": "易车号·优视汽车",
+      "kind": "web_list",
+      "config": {
+        "url": "https://i.yiche.com/u22415783/!article/",
+        "parseMode": "html",
+        "itemSelector": ".article-item",
+        "linkSelector": "h2.title a",
+        "titleSelector": "h2.title a",
+        "listSummarySelector": "a.desc",
+        "listSummaryDropSelector": ".queryMore",
+        "publishedAtSelector": ".bottom-right span",
+        "allowUrlPrefixes": [
+          "https://news.yiche.com/",
+          "https://hao.yiche.com/wenzhang/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "易车号",
+        "创作者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-yiche-woniu-24109259",
+      "name": "易车号·蜗牛车志",
+      "kind": "web_list",
+      "config": {
+        "url": "https://i.yiche.com/u24109259/!article/",
+        "parseMode": "html",
+        "itemSelector": ".article-item",
+        "linkSelector": "h2.title a",
+        "titleSelector": "h2.title a",
+        "listSummarySelector": "a.desc",
+        "listSummaryDropSelector": ".queryMore",
+        "publishedAtSelector": ".bottom-right span",
+        "allowUrlPrefixes": [
+          "https://news.yiche.com/",
+          "https://hao.yiche.com/wenzhang/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "易车号",
+        "创作者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-yiche-tiantian-25959781",
+      "name": "易车号·天天汽车V",
+      "kind": "web_list",
+      "config": {
+        "url": "https://i.yiche.com/u25959781/!article/",
+        "parseMode": "html",
+        "itemSelector": ".article-item",
+        "linkSelector": "h2.title a",
+        "titleSelector": "h2.title a",
+        "listSummarySelector": "a.desc",
+        "listSummaryDropSelector": ".queryMore",
+        "publishedAtSelector": ".bottom-right span",
+        "allowUrlPrefixes": [
+          "https://news.yiche.com/",
+          "https://hao.yiche.com/wenzhang/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "易车号",
+        "创作者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-yiche-fengxing-31597693",
+      "name": "易车号·枫行视界",
+      "kind": "web_list",
+      "config": {
+        "url": "https://i.yiche.com/u31597693/!article/",
+        "parseMode": "html",
+        "itemSelector": ".article-item",
+        "linkSelector": "h2.title a",
+        "titleSelector": "h2.title a",
+        "listSummarySelector": "a.desc",
+        "listSummaryDropSelector": ".queryMore",
+        "publishedAtSelector": ".bottom-right span",
+        "allowUrlPrefixes": [
+          "https://news.yiche.com/",
+          "https://hao.yiche.com/wenzhang/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "易车号",
+        "创作者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-yiche-qipai-44278304",
+      "name": "易车号·汽湃",
+      "kind": "web_list",
+      "config": {
+        "url": "https://i.yiche.com/u44278304/!article/",
+        "parseMode": "html",
+        "itemSelector": ".article-item",
+        "linkSelector": "h2.title a",
+        "titleSelector": "h2.title a",
+        "listSummarySelector": "a.desc",
+        "listSummaryDropSelector": ".queryMore",
+        "publishedAtSelector": ".bottom-right span",
+        "allowUrlPrefixes": [
+          "https://news.yiche.com/",
+          "https://hao.yiche.com/wenzhang/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "易车号",
+        "创作者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-yiche-cjiache-49092279",
+      "name": "易车号·C家车探",
+      "kind": "web_list",
+      "config": {
+        "url": "https://i.yiche.com/u49092279/!article/",
+        "parseMode": "html",
+        "itemSelector": ".article-item",
+        "linkSelector": "h2.title a",
+        "titleSelector": "h2.title a",
+        "listSummarySelector": "a.desc",
+        "listSummaryDropSelector": ".queryMore",
+        "publishedAtSelector": ".bottom-right span",
+        "allowUrlPrefixes": [
+          "https://news.yiche.com/",
+          "https://hao.yiche.com/wenzhang/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "易车号",
+        "创作者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-yiche-jiaxiang-216970071",
+      "name": "易车号·驾享生活V",
+      "kind": "web_list",
+      "config": {
+        "url": "https://i.yiche.com/u216970071/!article/",
+        "parseMode": "html",
+        "itemSelector": ".article-item",
+        "linkSelector": "h2.title a",
+        "titleSelector": "h2.title a",
+        "listSummarySelector": "a.desc",
+        "listSummaryDropSelector": ".queryMore",
+        "publishedAtSelector": ".bottom-right span",
+        "allowUrlPrefixes": [
+          "https://news.yiche.com/",
+          "https://hao.yiche.com/wenzhang/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "易车号",
+        "创作者"
       ],
       "site_fulltext": false,
       "syndicate_fulltext": false
