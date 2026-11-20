@@ -473,6 +473,76 @@
       ],
       "site_fulltext": false,
       "syndicate_fulltext": false
+    },
+    {
+      "id": "web-pcauto-nation",
+      "name": "太平洋汽车·国内",
+      "kind": "web_list",
+      "config": {
+        "url": "https://www.pcauto.com.cn/nation/",
+        "parseMode": "html",
+        "itemSelector": "div.pic-txt",
+        "linkSelector": "dt a",
+        "titleSelector": "dt a",
+        "listSummarySelector": "dd",
+        "listSummaryDropSelector": "a",
+        "allowUrlPrefixes": [
+          "https://www.pcauto.com.cn/news/",
+          "https://www.pcauto.com.cn/nation/"
+        ],
+        "detail": {
+          "maxFetches": 10,
+          "publishedAtRegex": "\"pubDate\": \"(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2})\"",
+          "publishedAtAuthoritative": true
+        },
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "媒体",
+        "中国车市"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-pcauto-news",
+      "name": "太平洋汽车·新闻",
+      "kind": "web_list",
+      "config": {
+        "url": "https://www.pcauto.com.cn/news/",
+        "parseMode": "html",
+        "itemSelector": "div.pic-txt",
+        "linkSelector": "dt a",
+        "titleSelector": "dt a",
+        "listSummarySelector": "dd",
+        "listSummaryDropSelector": "a",
+        "allowUrlPrefixes": [
+          "https://www.pcauto.com.cn/news/",
+          "https://www.pcauto.com.cn/nation/"
+        ],
+        "detail": {
+          "maxFetches": 10,
+          "publishedAtRegex": "\"pubDate\": \"(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2})\"",
+          "publishedAtAuthoritative": true
+        },
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "媒体",
+        "中国车市"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
     }
   ]
 }
