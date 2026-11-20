@@ -149,6 +149,13 @@ autohot 基于 [AIHOT 开源引擎](https://github.com/KKKKhazix/AIHOT)，是面
 - **信源**（10 家）：机构媒体 TechCrunch：AI、The Verge：AI、The Decoder、404 Media、IT之家（沿用现有源，IT之家没有 AI 频道订阅）；研究机构 Microsoft Research、Google Research、Ai2、Google DeepMind、Stanford HAI。MIT News 按站长偏好不收。研究机构按媒体门槛（T2）从严，不因官方来源加分。
 - **未验证**：提示词已改，效果要等标注样本和回归评测后定。标注样本由站长在标注页里标，AI 条目按门槛距离排在待标队列里。
 
+### 海外媒体信源扩充（2026-11-20）
+
+按 IT之家汽车频道全量 46,480 篇的引用统计（原始数据 `/tmp/ith/`，CSV `top50k.csv`），站长要求全部加入监控。
+已加 7 家：Autocar、Auto Express、Carscoops、Motor1、Teslarati、BMW Blog、Not a Tesla App（均 T2 每小时）。
+**无法接入**（无公开汽车主题 RSS，不做绕过）：路透社、彭博社、华尔街日报、日经新闻、共同社、韩联社、CNBC、
+Automotive News（403）、BYDOTA（超时）。要收这些只能走付费 API 或人工推送。
+
 ### 不改 AIHOT 原样的约定（2026-11-20 站长确认）
 
 - 精选、时间线按**发布时间**分天，不按入选时间；旧文（首次发现时已超过 48 小时）按原文时间归档，不进“今天”。站长确认保持这一规则，不改排序和分天。
