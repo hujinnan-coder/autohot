@@ -2152,6 +2152,185 @@
       ],
       "site_fulltext": false,
       "syndicate_fulltext": false
+    },
+    {
+      "id": "web-sina-auto-news",
+      "name": "新浪汽车·新闻",
+      "kind": "web_list",
+      "config": {
+        "url": "https://auto.sina.com.cn/news/",
+        "parseMode": "html",
+        "itemSelector": "div.single",
+        "linkSelector": "h3 a",
+        "titleSelector": "h3 a",
+        "listSummarySelector": "p.intro",
+        "listSummaryDropSelector": "a",
+        "publishedAtSelector": ".info .time",
+        "allowUrlPrefixes": [
+          "https://auto.sina.com.cn/news/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "媒体",
+        "中国车市"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-163-auto-news",
+      "name": "网易汽车·新闻",
+      "kind": "web_list",
+      "config": {
+        "url": "https://auto.163.com/news/",
+        "parseMode": "html",
+        "itemSelector": ".sec-list-item",
+        "linkSelector": "h3 a",
+        "titleSelector": "h3 a",
+        "listSummarySelector": ".item-cont > p",
+        "listSummaryDropSelector": "a",
+        "publishedAtSelector": ".item-time",
+        "allowUrlPrefixes": [
+          "https://www.163.com/auto/article/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "媒体",
+        "中国车市"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-sohu-auto",
+      "name": "搜狐汽车",
+      "kind": "web_list",
+      "config": {
+        "url": "https://auto.sohu.com/",
+        "parseMode": "html",
+        "itemSelector": "ul.list li",
+        "linkSelector": "a",
+        "titleSelector": "a",
+        "allowUrlPrefixes": [
+          "https://www.sohu.com/a/"
+        ],
+        "detail": {
+          "maxFetches": 10,
+          "summarySelector": "meta[name=\"description\"]",
+          "publishedAtRegex": "itemprop=\"datePublished\" content=\"(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2})\"",
+          "publishedAtAuthoritative": true
+        },
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "媒体",
+        "中国车市"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-mot-news",
+      "name": "交通运输部·交通要闻",
+      "kind": "web_list",
+      "config": {
+        "url": "https://www.mot.gov.cn/xinwen/jiaotongyaowen/",
+        "parseMode": "html",
+        "itemSelector": "li.news-item",
+        "linkSelector": "a.news-link",
+        "titleSelector": ".news-title",
+        "publishedAtSelector": ".news-date",
+        "allowUrlPrefixes": [
+          "https://www.mot.gov.cn/xinwen/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T1",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "官方",
+        "交通"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-miit-vehicle-announcements",
+      "name": "工信部·装备工业一司文件发布",
+      "kind": "web_list",
+      "config": {
+        "url": "https://www.miit.gov.cn/api-gateway/jpaas-publish-server/front/page/build/unit?parseType=buildstatic&webId=8d828e408d90447786ddbe128d495e9e&tplSetId=209741b2109044b5b7695700b2bec37e&pageType=column&tagId=%E5%BD%93%E5%89%8D%E6%A0%8F%E7%9B%AE_list&editType=null&pageId=28ac65269a12494f81b5a832bce5f51c",
+        "parseMode": "html",
+        "htmlPath": "data.html",
+        "itemSelector": "li.cf",
+        "linkSelector": "a.fl",
+        "titleSelector": "a.fl",
+        "publishedAtSelector": "span.fr",
+        "allowUrlPrefixes": [
+          "https://www.miit.gov.cn/jgsj/zbys/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T1",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "官方",
+        "车辆公告"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-samr-recalls",
+      "name": "市场监管总局·召回公告",
+      "kind": "web_list",
+      "config": {
+        "url": "https://www.samr.gov.cn/api-gateway/jpaas-publish-server/front/page/build/unit?parseType=bulidstatic&webId=29e9522dc89d4e088a953d8cede72f4c&tplSetId=5c30fb89ae5e48b9aefe3cdf49853830&pageType=column&tagId=%E5%86%85%E5%AE%B9%E5%8C%BA%E5%9F%9F&editType=null&pageId=bf39604e7599427c92ec64e90577f57a",
+        "parseMode": "html",
+        "htmlPath": "data.html",
+        "itemSelector": ".Three_zhnlist_02 > ul",
+        "linkSelector": "li.nav04Left02_content a",
+        "titleSelector": "li.nav04Left02_content a",
+        "publishedAtSelector": "li.nav04Left02_contenttime",
+        "allowUrlPrefixes": [
+          "https://www.samr.gov.cn/zw/zh/art/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T1",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "官方",
+        "召回"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
     }
   ]
 }
