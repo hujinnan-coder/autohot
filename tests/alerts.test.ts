@@ -201,6 +201,36 @@ test("refusal and spent-budget alerts name the steps currently routed to the pro
   }
 });
 
+test("Jina costs above the Beijing month's threshold are announced to the owner", async () => {
+  const env = process.env.ALERT_JINA_COST_CNY;
+  const now = Date.parse("2027-01-01T00:30:00+08:00");
+  const prefix = `jina-month-${T}-`;
+  const monthly = async () => (await collectFindings(now)).find(f => f.key === "budget.month.jina");
+  delete process.env.ALERT_JINA_COST_CNY;
+  try {
+    assert.equal(await monthly(), undefined, "no Jina receipts");
+    await sql`INSERT INTO receipts (logical_key, service, purpose, status, cost, created_at) VALUES
+      (${prefix + "previous"}, 'jina', 'jina_read', 'completed', 20, '2026-12-31T23:59:59+08:00'),
+      (${prefix + "other"}, 'deepseek', 'score_article', 'completed', 20, '2027-01-01T00:00:00+08:00'),
+      (${prefix + "free"}, 'jina', 'jina_read', 'completed', NULL, '2027-01-01T00:00:00+08:00'),
+      (${prefix + "first"}, 'jina', 'jina_read', 'completed', 7.50, '2027-01-01T00:00:00+08:00')`;
+    assert.equal(await monthly(), undefined, "only 7.50 yuan counts toward January");
+    await sql`INSERT INTO receipts (logical_key, service, purpose, status, cost, created_at)
+      VALUES (${prefix + "second"}, 'jina', 'jina_read', 'completed', 0.50, '2027-01-01T00:15:00+08:00')`;
+    assert.equal(await monthly(), undefined, "exactly at the threshold");
+    await sql`UPDATE receipts SET cost = 0.75 WHERE logical_key = ${prefix + "second"}`;
+    const finding = await monthly();
+    assert.equal(finding?.level, "today");
+    assert.equal(finding.owner, "only");
+    assert.match(finding.impact!, /8\.25 元.*8 元/);
+    process.env.ALERT_JINA_COST_CNY = "9";
+    assert.equal(await monthly(), undefined, "the override takes precedence over the default");
+  } finally {
+    if (env === undefined) delete process.env.ALERT_JINA_COST_CNY; else process.env.ALERT_JINA_COST_CNY = env;
+    await sql`DELETE FROM receipts WHERE logical_key LIKE ${prefix + "%"}`;
+  }
+});
+
 // Backup failures may overwrite the latest-attempt summary. Alert age must use the last successful
 // run; repeated failures must not reset it. With no success ever, age starts at the first attempt.
 test("backup failures still escalate after fifty hours without a success", async () => {

@@ -14,7 +14,7 @@
 // The shared hub owns serial execution and retry; accepted events are never dispatched again here.
 // Delivery goes through sendAlert (alert webhook or ops chat, internal-chat fallback; off unless FEISHU_INTERNAL_ENABLED).
 import { randomUUID } from "node:crypto";
-import { addDays, beijingAt, beijingDate, beijingDay, beijingStamp, isValidDate } from "@aihot/contracts/time";
+import { addDays, beijingAt, beijingDate, beijingDay, beijingMidnight, beijingStamp, isValidDate } from "@aihot/contracts/time";
 import { ALERTS, EDITION_TIMES } from "@aihot/site";
 import { audit } from "../audit.ts";
 import { sql } from "../db.ts";
@@ -62,6 +62,7 @@ const CHECKS: Check[] = [
   dailyReportFindings,
   // Money, and things only the owner can do
   providerFindings,
+  jinaMonthlyCost,
   refusedDeliveries,
   backupAge,
   upstreamFindings,
@@ -407,6 +408,27 @@ async function providerFindings(now: number, open: AlertState): Promise<Finding[
     });
   }
   return out;
+}
+
+/** Jina charges recorded since the start of the Beijing calendar month. */
+async function jinaMonthlyCost(now: number): Promise<Finding[]> {
+  const start = beijingMidnight(`${beijingDate(now).slice(0, 7)}-01`);
+  const [{ cost }] = await sql<[{ cost: number }]>`
+    SELECT coalesce(sum(cost), 0) AS cost FROM receipts
+    WHERE service = 'jina' AND created_at >= ${start} AND created_at <= ${new Date(now)}`;
+  const threshold = Number(process.env.ALERT_JINA_COST_CNY || 8);
+  if (cost > threshold) {
+    return [{
+      key: "budget.month.jina",
+      level: "today",
+      owner: "only",
+      title: "Jina 本月费用超过提醒门槛",
+      impact: `读者照常使用网站。Jina 本月累计 ${cost} 元，提醒门槛为 ${threshold} 元`,
+      heals: "下月会重新累计，本月已花的费用不会减少",
+      action: "决定是否提高 Jina 预算，或减少使用 Jina 的信源",
+    }];
+  }
+  return [];
 }
 
 type PrivateNotice = ReturnType<typeof formatAlert> & { id: string; recovery: boolean };

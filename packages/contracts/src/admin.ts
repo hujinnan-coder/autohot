@@ -408,6 +408,22 @@ export interface AdminModels {
   benches: Array<{ id: string; label: string; sample_size: number; prompt_version: string | null; models: string[]; created_at: Timestamp }>;
 }
 
+export interface AdminCosts {
+  days: number;
+  rows: Array<{
+    service: string;
+    model: string | null;
+    purpose: string;
+    calls: number;
+    tokensIn: number;
+    tokensOut: number;
+    actualCost: number | null;
+    recordedCost: number | null;
+    currency: string | null;
+    estimate: { amount: number; currency: string } | null;
+  }>;
+}
+
 export interface AdminSelectBenchRun {
   id: string;
   label: string;
