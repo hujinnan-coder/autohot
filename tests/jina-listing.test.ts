@@ -22,7 +22,9 @@ const SOURCE = `test-jina-listing-${T}`;
 // was billed is unknown.
 let mode: "drop" | "page" = "drop";
 let hits = 0;
+const authorizations: (string | undefined)[] = [];
 const jina = http.createServer((req, res) => {
+  authorizations.push(req.headers.authorization);
   if (req.url?.endsWith("/nul-response")) {
     hits += 1;
     res.writeHead(200, { "content-type": "text/plain", "x-request-id": "nul-fixture", "x-usage-tokens": "100" });
@@ -182,5 +184,17 @@ test("a received Jina page with NUL persists its receipt and reuses it without a
   assert.equal(receipt!.usage.tokens, 100);
   const attempts = await sql`SELECT status FROM receipt_attempts WHERE receipt_id = ${first.receiptId}`;
   assert.deepEqual(attempts.map(row => row.status), ["received"]);
+});
+
+test("Jina sends authorization only when an API key is configured", async () => {
+  mode = "page";
+  const before = authorizations.length;
+  const read = () => jinaRead("https://example.org/news/", { purpose: "source_listing", subject: `source:${SOURCE}-auth`, perRead: true });
+  delete process.env.JINA_API_KEY;
+  const anonymous = await read().finally(() => { process.env.JINA_API_KEY = "test-key"; });
+  await read();
+  assert.deepEqual(authorizations.slice(before), [undefined, "Bearer test-key"]);
+  const [receipt] = await sql`SELECT status, cost, cost_basis FROM receipts WHERE id = ${anonymous.receiptId}`;
+  assert.deepEqual(receipt, { status: "received", cost: null, cost_basis: null });
 });
 

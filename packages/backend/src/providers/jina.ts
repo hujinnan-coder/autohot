@@ -1,5 +1,5 @@
-// Jina Reader (r.jina.ai): browser-rendered page text. Paid per request, reached through the egress
-// proxy, always behind receipts and the per-minute/hour/day budget (any zero stops it).
+// Jina Reader (r.jina.ai): browser-rendered page text. Both the free and paid tiers use the egress
+// proxy, receipts, and the per-minute/hour/day budget (any zero stops it).
 import { randomUUID } from "node:crypto";
 import { credential } from "../config.ts";
 import { guardedFetch } from "../lib/http-fetch.ts";
@@ -25,7 +25,6 @@ export async function jinaRead(
   opts: { purpose: string; subject: string; format?: "markdown" | "html"; cacheToleranceSeconds?: number; perRead?: boolean; round?: string; removeSelector?: string },
 ): Promise<{ markdown: string; raw: string; receiptId: number }> {
   const key = credential("collectors", "JINA_API_KEY");
-  if (!key) throw new Error("JINA_API_KEY is not configured");
   const base = (credential("collectors", "JINA_BASE_URL") ?? "https://r.jina.ai").replace(/\/$/, "");
   // A listing whose freshness matters (xAI news) caps how old Jina's cached rendering may be.
   const tolerance: Record<string, string> = Number.isInteger(opts.cacheToleranceSeconds) && opts.cacheToleranceSeconds! >= 0 ? { "x-cache-tolerance": String(opts.cacheToleranceSeconds) } : {};
@@ -37,7 +36,7 @@ export async function jinaRead(
     { service: "jina", model: null, purpose: opts.purpose, subject: opts.subject, identity: { url: targetUrl, day, format: opts.format ?? "markdown", ...read, ...remove }, requestSummary: { url: targetUrl } },
     async () => {
       const res = await guardedFetch(`${base}/${targetUrl}`, {
-        headers: { authorization: `Bearer ${key}`, "x-return-format": opts.format ?? "markdown", accept: "text/plain", ...tolerance, ...remove },
+        headers: { ...(key ? { authorization: `Bearer ${key}` } : {}), "x-return-format": opts.format ?? "markdown", accept: "text/plain", ...tolerance, ...remove },
         timeoutMs: 60_000,
         maxBytes: 6 * 1024 * 1024,
       });
@@ -52,7 +51,7 @@ export async function jinaRead(
   const raw = String((receipt.response as { text?: string })?.text ?? "");
   const at = raw.indexOf(CONTENT);
   const markdown = (at < 0 ? raw : raw.slice(at + CONTENT.length)).trim();
-  // The renderer has been paid even when the target failed. Validate after saving its receipt,
+  // The renderer can bill the read even when the target failed. Validate after saving its receipt,
   // and only read protocol warnings before Markdown Content (an article may quote the same words).
   if (opts.format === "html") contentDocument(raw);
   else {
