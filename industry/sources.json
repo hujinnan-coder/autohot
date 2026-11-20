@@ -6266,7 +6266,7 @@
       "name": "汽车公社",
       "kind": "mp_account",
       "config": {
-        "ghid": "iautodaily",
+        "ghid": "汽车公社",
         "nickname": "汽车公社"
       },
       "tier": "T2",
@@ -6304,7 +6304,7 @@
       "name": "智驭车联",
       "kind": "mp_account",
       "config": {
-        "ghid": "zhiyuchelian",
+        "ghid": "智驭车联",
         "nickname": "智驭车联"
       },
       "tier": "T2",
@@ -7147,7 +7147,7 @@
       "name": "新车行",
       "kind": "mp_account",
       "config": {
-        "ghid": "xinchexing",
+        "ghid": "新车行",
         "nickname": "新车行"
       },
       "tier": "T2",
@@ -7164,7 +7164,7 @@
       "name": "大家车言论",
       "kind": "mp_account",
       "config": {
-        "ghid": "dajiachelun",
+        "ghid": "大家车言论",
         "nickname": "大家车言论"
       },
       "tier": "T2",
@@ -7182,7 +7182,7 @@
       "name": "有车以后",
       "kind": "mp_account",
       "config": {
-        "ghid": "youchezhihou",
+        "ghid": "有车以后",
         "nickname": "有车以后"
       },
       "tier": "T2",
