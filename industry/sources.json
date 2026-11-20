@@ -7075,7 +7075,8 @@
         "创作者"
       ],
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false
     },
     {
       "id": "web-chedongxi",
@@ -7107,7 +7108,8 @@
         "智能汽车"
       ],
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false
     },
     {
       "id": "web-djcy",
@@ -7135,7 +7137,8 @@
         "车家号"
       ],
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false
     },
     {
       "id": "mp-xinchexing",
@@ -7150,6 +7153,60 @@
       "interval_minutes": 240,
       "tags": [
         "公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-djcy",
+      "name": "大家车言论",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "dajiachelun",
+        "nickname": "大家车言论"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "公众号",
+        "自媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-youchezhihou",
+      "name": "有车以后",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "youchezhihou",
+        "nickname": "有车以后"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "公众号",
+        "自媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-chedongxi",
+      "name": "车东西",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "chedongxi",
+        "nickname": "车东西"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "公众号",
+        "智能汽车"
       ],
       "site_fulltext": false,
       "syndicate_fulltext": false
