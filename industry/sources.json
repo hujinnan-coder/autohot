@@ -7004,7 +7004,9 @@
         "杂志"
       ],
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "disabled_reason": "官网 m-new.inabr.com 可抓（Jina 渲染），公众号版本停用备用"
     },
     {
       "id": "web-latepost",
@@ -7207,6 +7209,36 @@
       "tags": [
         "公众号",
         "智能汽车"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-autoreview",
+      "name": "汽车商业评论",
+      "kind": "web_list",
+      "config": {
+        "url": "https://r.jina.ai/https://m-new.inabr.com/",
+        "baseUrl": "https://m-new.inabr.com/",
+        "parseMode": "html",
+        "itemSelector": "li.articleItem",
+        "linkSelector": "a[href*='/news/']",
+        "titleSelector": "h5",
+        "listSummarySelector": ".articleItem_con p",
+        "publishedAtSelector": ".articleItem_cur p:last-child",
+        "allowUrlPrefixes": [
+          "https://m-new.inabr.com/news/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "杂志",
+        "深度报道"
       ],
       "site_fulltext": false,
       "syndicate_fulltext": false
