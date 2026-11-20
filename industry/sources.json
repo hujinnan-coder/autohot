@@ -7005,6 +7005,46 @@
       ],
       "site_fulltext": false,
       "syndicate_fulltext": false
+    },
+    {
+      "id": "web-latepost",
+      "name": "晚点LatePost",
+      "kind": "json_list",
+      "config": {
+        "url": "https://www.latepost.com/site/index",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "bodyJson": {
+          "page": 1,
+          "limit": 20
+        },
+        "itemsPath": "data",
+        "titlePaths": [
+          "title"
+        ],
+        "summaryPaths": [
+          "abstract"
+        ],
+        "publishedAtPath": "release_time",
+        "urlTemplate": "https://www.latepost.com/news/dj_detail?id={raw:id}",
+        "allowUrlPrefixes": [
+          "https://www.latepost.com/news/dj_detail"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "深度报道"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
     }
   ]
 }
