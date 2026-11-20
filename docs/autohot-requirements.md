@@ -134,6 +134,7 @@ autohot 基于 [AIHOT 开源引擎](https://github.com/KKKKhazix/AIHOT)，是面
 
 - 成本后台（2026-11-20）：管理员后台新增「成本」页 `/admin/costs`（导航在「模型与评测」旁），统一看各模型与付费服务的花费：`GET /api/admin/costs` 按 服务×模型×用途 汇总 `receipt_attempts` 的 live 调用（含 Jina、SocialData 这类无模型服务），展示调用数、token 用量、实际费用（服务商账单）、调用方记录的估算费用（`cost_basis='estimated'`）和按 `service_prices` 单价的推算，时间窗 24 小时/7/30/90 天。单价估算逻辑从「模型与评测」抽成共享的 `admin/pricing.ts`，两页同一份。后端派 Codex 实现、我验收：typecheck、全量测试 1180/1180、web 测试 67/67、smoke 全过；真实库 7 天窗口 31 行聚合正确（Jina ¥0.09、SocialData $0.08 的已记录估算费用不再漏掉）。单价表 `service_prices` 目前是空的，页面全部显示"未定价"——要出估算金额，需把各服务商单价录入该表（使用者决定录哪些）。
 - 平台侧余额对账（2026-11-20，站长提出调平台数据统计成本）：实测各平台官方余额接口——DeepSeek `GET /user/balance` 与小米 MiMo `GET /v1/platform/balance` 可用（都是免费 GET；.env 里 DEEPSEEK_API_KEY 与 LLM_* 是同一把密钥，两个账户行显示同一余额），Jina 和 SocialData 没有公开余额接口（官方 API 列表/文档确认），成本以回执记录的逐次估算为准。新增 `provider_balances` 快照表（迁移 0170，线上库已执行）+ worker 每小时第 8 分钟拉取（`ops.balances`，`PROVIDER_BALANCE_ENABLED` 门，.env 已开 true）+ `platformBalances(days)` 用相邻快照的余额差推算窗口消耗（充值/赠金增量剔除，窗口内快照不足两个时不推算）。成本页新增「平台侧余额（官方接口）」卡片，与回执估算并排对账。首轮真实拉取：DeepSeek ¥12.11（半小时前探测时 ¥12.23，真实消耗可见）、MiMo ¥48.58。注意：余额差推算受采样频率限制，是对账参考不是账单。
+- 成本页改造成决策页（2026-11-21，站长要求"真正有指导价值"）：单价已录入 `service_prices`（DeepSeek flash ¥2/0.04/8、v4-pro ¥9/0.30/27、MiMo pro ¥3/0.025/6，高峰价口径，空闲半价已在页面注明；官方价格页抄录）。`costsOverview` 扩展四组数据（派 Codex）：① 每日消耗 `daily`（北京日分天、币种合并）；② 余额跑道 `runway`（解析值相同的密钥合并成一行——线上 DEEPSEEK/LLM_API_KEY 同钥，日均消耗=回执口径的活动日均值，daysLeft=余额÷日均；Jina/SocialData 无接口不参与）；③ 重试数 `rows[].retried`（attempt≥2）；④ 日配额用量 `budgets`（滚动 24h/日配额）。前端重构为三个决策问题：钱还够用多久（跑道卡，≤3 天红/≤7 天黄）、每天烧多快（CSS 柱状图，按当日 CNY 归一）、花在哪一步（按模型/用途的次均成本与重试率列）。验收时抓到 Codex 的一个 bug：`dailyAttemptCosts` 外层 SELECT 漏了三个 uncosted token 列，估算全按 0 算（跑道因此漏算大头），已修复，7/7 测试过。**真实结论（截至 11-21 08:50）**：DeepSeek 余额 ¥11.77、日均 ≈¥22 → **约 0 天，今天就会烧完，需要充值**；MiMo ¥48.58 可用 539 天；7 天总消耗 ≈¥88.89+$0.085，大头是 v4-pro 的评分与理解（¥52.92，次均 ¥0.031 是 flash 的 10 倍——v4-pro 已只在必要时用）；11-19/11-20 两天烧了 ¥78（批量标注+夜间批处理），quiet 日几乎不花钱。对账方式：余额差（官方）与回执估算（自算）并排，23:53→00:08 的 15 分钟余额掉了 ¥0.34，与夜间批量时段吻合。
 - 第 1、2 步完成（2026-11-17）：临时信源已跑出第一批内容。临时信源都是 T2 媒体，门槛 76，而多数真实新闻在 55–72 分，所以精选很少；门槛要等第 3 步用标注样本校准，不凭感觉改。
 - 第 3 步进行中（2026-11-19）：后台标注页 `/admin/labeling`（模块 `modules/labeling`）已上线。站长在页面上逐条标“该选 / 不该选 / 两可”，可选“决策价值 / 话题价值”。标满后导出金标集并跑评测：
   ```bash
@@ -150,6 +151,14 @@ autohot 基于 [AIHOT 开源引擎](https://github.com/KKKKhazix/AIHOT)，是面
 - **范围**：AI 行业的爆炸级热点和汽车内容混排进精选（头部模型发布、头部公司上市、CEO 去职、具身智能、芯片），标准是别人聊到这些事时，读者不会一脸懵、插不上话；宁缺毋滥，不是 AI 新闻都收。论文、基准、开发者工具小更新、普通功能发布、小额融资不收。
 - **信源**（10 家）：机构媒体 TechCrunch：AI、The Verge：AI、The Decoder、404 Media、IT之家（沿用现有源，IT之家没有 AI 频道订阅）；研究机构 Microsoft Research、Google Research、Ai2、Google DeepMind、Stanford HAI。MIT News 按站长偏好不收。研究机构按媒体门槛（T2）从严，不因官方来源加分。
 - **未验证**：提示词已改，效果要等标注样本和回归评测后定。标注样本由站长在标注页里标，AI 条目按门槛距离排在待标队列里。
+
+### 四家新监控（2026-11-21）：晚点Auto、36氪Auto、汽车商业评论、第一电动
+
+- **已接入**：晚点LatePost（json_list POST /site/index + 无年份中文日期解析，晚点Auto 的报道混在独家/长报道
+  里由预筛挑出，首抓 2 篇入选）；第一电动·快讯（web_list + 文章页取日期，T2 每 2 小时，首抓 4 篇入选）。
+- **已建源待激活**：36氪Auto、汽车商业评论（官网 SPA/WAF，连 Jina 都 422）→ 公众号路线，卡 DAJIALA_KEY，
+  ghid 别名未验证，key 配置后逐个核对。
+- 附带：日期解析新增无年份“M月D日”支持（Codex 实现）；另一会话漏提交的 providers/pricing.ts 已随分支入库（HEAD 修复）。
 
 ### 创作者榜与公众号监控（2026-11-21）
 
