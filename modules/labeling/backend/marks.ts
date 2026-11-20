@@ -68,16 +68,22 @@ function item(r: Row): LabelingItem {
   };
 }
 
-export async function labelingPage(query: { view?: string; band?: string; page?: string }, csrf: string): Promise<LabelingPage> {
+export async function labelingPage(query: { view?: string; band?: string; source?: string; page?: string }, csrf: string): Promise<LabelingPage> {
   const view = query.view === "done" ? "done" : "todo";
   const band = query.band && Object.hasOwn(BANDS, query.band) ? (query.band as Band) : null;
-  const page = Math.max(1, Number(query.page) || 1);
+  const requestedPage = Math.max(1, Number(query.page) || 1);
   const rows = await scored();
   const todo = rows.filter((r) => r.decision === null);
   const done = rows.filter((r) => r.decision !== null);
   const bands = { high: 0, mid: 0, low: 0 };
-  for (const r of view === "todo" ? todo : done) bands[bandOf(Number(r.score))]++;
-  const list = (view === "todo" ? todo : done).filter((r) => !band || bandOf(Number(r.score)) === band);
+  const queue = view === "todo" ? todo : done;
+  const sourceCounts = Object.create(null) as Record<string, number>;
+  for (const r of queue) {
+    bands[bandOf(Number(r.score))]++;
+    sourceCounts[r.source_name] = (sourceCounts[r.source_name] ?? 0) + 1;
+  }
+  const sources = Object.keys(sourceCounts).sort((a, b) => sourceCounts[b] - sourceCounts[a] || a.localeCompare(b));
+  const list = queue.filter((r) => (!band || bandOf(Number(r.score)) === band) && (!query.source || r.source_name === query.source));
   if (view === "todo") list.sort((a, b) => distance(a) - distance(b) || a.article_id.localeCompare(b.article_id));
   else list.sort((a, b) => b.labeled_at!.getTime() - a.labeled_at!.getTime());
   const counts = {
@@ -88,8 +94,9 @@ export async function labelingPage(query: { view?: string; band?: string; page?:
     either: done.filter((r) => r.decision === "either").length,
     bands,
   };
+  const page = query.source ? Math.min(requestedPage, Math.max(1, Math.ceil(list.length / PAGE))) : requestedPage;
   const slice = list.slice((page - 1) * PAGE, page * PAGE);
-  return { csrf, view, band, counts, items: slice.map(item), page, hasMore: list.length > page * PAGE };
+  return { csrf, view, band, counts, sources, sourceCounts, items: slice.map(item), page, hasMore: list.length > page * PAGE };
 }
 
 /** Distance of the score from its source's threshold at the time; sources without one go last. */

@@ -103,7 +103,7 @@ function LabelCard({ item, csrf }: { item: LabelingItem; csrf: string }) {
 }
 
 export default function Labeling({ loaderData }: { loaderData: LabelingPage }) {
-  const { counts, items, csrf, view } = loaderData;
+  const { counts, items, csrf, view, sources, sourceCounts } = loaderData;
   const [sp] = useSearchParams();
   return (
     <AdminPage
@@ -123,9 +123,17 @@ export default function Labeling({ loaderData }: { loaderData: LabelingPage }) {
           { value: "mid", label: "中间（50–69）", count: counts.bands.mid },
           { value: "low", label: "低分（50 以下）", count: counts.bands.low },
         ]} />
+        <FilterChips param="source" resets={[]} options={[
+          { value: "", label: "全部信源", count: counts[view] },
+          ...sources.map((name) => ({
+            value: name,
+            label: <span className="min-w-0 max-w-[12rem] truncate" title={name}>{name}</span>,
+            count: sourceCounts[name],
+          })),
+        ]} />
       </div>
       {items.length === 0 ? (
-        <Empty>{view === "todo" ? (sp.get("band") ? "这一档没有待标的了" : "没有待标的资料，等新资料评完分再来") : "还没有标注"}</Empty>
+        <Empty>{sp.get("source") ? "当前筛选下没有资料" : view === "todo" ? (sp.get("band") ? "这一档没有待标的了" : "没有待标的资料，等新资料评完分再来") : "还没有标注"}</Empty>
       ) : (
         <div className="grid gap-3">
           {items.map((item) => <LabelCard key={`${item.articleId}:${item.mark?.labeledAt ?? ""}`} item={item} csrf={csrf} />)}

@@ -28,6 +28,8 @@ export interface LabelingPage {
   view: "todo" | "done";
   band: Band | null;
   counts: { todo: number; done: number; select: number; reject: number; either: number; bands: Record<Band, number> };
+  sources: string[];
+  sourceCounts: Record<string, number>;
   items: LabelingItem[];
   page: number;
   hasMore: boolean;

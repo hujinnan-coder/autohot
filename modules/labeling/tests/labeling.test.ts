@@ -16,8 +16,8 @@ installModules([labeling]);
 const app = await buildApp();
 after(async () => { await app.close(); await closeDb(); });
 
-async function scored(title: string, score: number | null, relevance = "pass") {
-  const { articleId } = await upsertMaterial({ sourceId, url: `https://example.com/${tag()}`, title, bodyText: `${title}的正文`, bodyStatus: "ok", via: "fetch", publishedAt: new Date() });
+async function scored(title: string, score: number | null, relevance = "pass", fromSource = sourceId) {
+  const { articleId } = await upsertMaterial({ sourceId: fromSource, url: `https://example.com/${tag()}`, title, bodyText: `${title}的正文`, bodyStatus: "ok", via: "fetch", publishedAt: new Date() });
   await sql`INSERT INTO analyses (article_id, input_revision, origin, relevance, category, title_zh, summary_zh, score, selected, output)
             VALUES (${articleId}, 1, 'rule', ${relevance}, 'market', ${title}, ${`${title}的摘要`}, ${score}, false, ${sql.json({ threshold: 76 })})`;
   return articleId;
@@ -38,6 +38,28 @@ test("the queue puts the cases nearest the threshold first, without the model's 
   assert.deepEqual(ids(mid, [far, near, high]), []);
   const highBand = await labelingPage({ band: "high" }, "csrf");
   assert.deepEqual(ids(highBand, [far, near, high]), [near, high]);
+
+  const aiSourceId = `${T}-ai`;
+  const aiSourceName = "TechCrunch：AI";
+  await sql`INSERT INTO sources (id, name, kind, tier) VALUES (${aiSourceId}, ${aiSourceName}, 'rss', 'T2')`;
+  const ai = await scored("新模型发布", 65, "pass", aiSourceId);
+  const all = await labelingPage({}, "csrf");
+  const filtered = await labelingPage({ source: aiSourceName, page: "2" }, "csrf");
+  assert.deepEqual(filtered.items.map((i) => i.articleId), [ai]);
+  assert.equal(filtered.page, 1);
+  assert.equal(filtered.hasMore, false);
+  assert.deepEqual(filtered.counts, all.counts);
+  assert.deepEqual(filtered.sources, all.sources);
+  assert.deepEqual(filtered.sources.filter((name) => name === "汽车媒体" || name === aiSourceName), ["汽车媒体", aiSourceName]);
+  assert.equal(filtered.sourceCounts["汽车媒体"], 3);
+  assert.equal(filtered.sourceCounts[aiSourceName], 1);
+  assert.deepEqual((await labelingPage({ source: aiSourceName, band: "high" }, "csrf")).items, []);
+  assert.ok(!(await labelingPage({ view: "done" }, "csrf")).sources.includes(aiSourceName));
+
+  const unknown = await labelingPage({ source: "TechCrunch" }, "csrf");
+  assert.deepEqual(unknown.items, []);
+  assert.deepEqual(unknown.counts, all.counts);
+  assert.deepEqual(unknown.sources, all.sources);
 });
 
 test("a label keeps the material as judged, shows the model's score after, and exports as a gold case", async () => {
