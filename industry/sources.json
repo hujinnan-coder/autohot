@@ -2312,37 +2312,6 @@
       "syndicate_fulltext": false
     },
     {
-      "id": "web-ifeng-auto",
-      "name": "凤凰汽车",
-      "kind": "web_list",
-      "config": {
-        "url": "https://iauto.ifeng.com/",
-        "parseMode": "html",
-        "itemSelector": "a[href*=\"auto.ifeng.com/c/\"]",
-        "allowUrlPrefixes": [
-          "https://auto.ifeng.com/c/"
-        ],
-        "detail": {
-          "maxFetches": 10,
-          "summarySelector": "meta[name=\"description\"]",
-          "publishedAtRegex": "property=\"article:published_time\" content=\"(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\+08:00)\"",
-          "publishedAtAuthoritative": true
-        },
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "媒体",
-        "中国车市"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
       "id": "web-cpca-news",
       "name": "乘联会·行业新闻",
       "kind": "web_list",
@@ -2377,6 +2346,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "1749127163"
@@ -2445,6 +2418,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "1882934071"
@@ -2485,6 +2462,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "2245894771"
@@ -2525,6 +2506,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "7883130603"
@@ -2565,6 +2550,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "1804134502"
@@ -2605,6 +2594,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "7909008288"
@@ -2645,6 +2638,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "7841262120"
@@ -2685,6 +2682,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "2047735024"
@@ -2725,6 +2726,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "7902080403"
@@ -2765,6 +2770,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "7796842527"
@@ -2805,6 +2814,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "1915347140"
@@ -2845,6 +2858,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "7961361901"
@@ -2885,6 +2902,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "1085536624"
@@ -2925,6 +2946,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "7915954986"
@@ -2965,6 +2990,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "7902110866"
@@ -3005,6 +3034,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "1679013335"
@@ -3045,6 +3078,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "1971874241"
@@ -3085,6 +3122,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "7990049885"
@@ -3125,6 +3166,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "5629836576"
@@ -3165,6 +3210,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "1774963862"
@@ -3205,6 +3254,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "7748789887"
@@ -3245,6 +3298,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "6934904193"
@@ -3285,6 +3342,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "4086652259"
@@ -3325,6 +3386,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "2551989497"
@@ -3365,6 +3430,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "7921069583"
@@ -3405,6 +3474,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "6366801446"
@@ -3445,6 +3518,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "1705212365"
@@ -3485,6 +3562,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "7968396264"
@@ -3525,6 +3606,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "7968023662"
@@ -3565,6 +3650,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "7992085799"
@@ -3605,6 +3694,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "1915631251"
@@ -3645,6 +3738,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "7740678459"
@@ -3685,6 +3782,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "7881826489"
@@ -3725,6 +3826,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "1087385463"
@@ -3765,6 +3870,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "2106315923"
@@ -3805,6 +3914,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "2455476364"
@@ -3845,6 +3958,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "2070182667"
@@ -3885,6 +4002,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "7861540767"
@@ -3925,6 +4046,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "1261412894"
@@ -3965,6 +4090,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "2631528431"
@@ -4005,6 +4134,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "7870009678"
@@ -4045,6 +4178,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "8374450716"
@@ -4085,6 +4222,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "1653368082"
@@ -4125,6 +4266,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "3158576864"
@@ -4165,6 +4310,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "1904328862"
@@ -4205,6 +4354,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "1130738561"
@@ -4245,6 +4398,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "4084920448"
@@ -4285,6 +4442,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "2151574834"
@@ -4325,6 +4486,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "5777800092"
@@ -4365,6 +4530,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "6995454758"
@@ -4405,6 +4574,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "7878584808"
@@ -4445,6 +4618,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "7929218006"
@@ -4485,6 +4662,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "1661028834"
@@ -4525,6 +4706,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "1040331325"
@@ -4565,6 +4750,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "6405869568"
@@ -4605,6 +4794,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "7704198387"
@@ -4645,6 +4838,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "1928374301"
@@ -4685,6 +4882,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "7863687999"
@@ -4725,6 +4926,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "9123861444"
@@ -4765,6 +4970,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "2105511073"
@@ -4805,6 +5014,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "7848714574"
@@ -4845,6 +5058,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "9087591604"
@@ -4885,6 +5102,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "7899305885"
@@ -4925,6 +5146,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "1892653244"
@@ -4965,6 +5190,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "1100856704"
@@ -5005,6 +5234,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "7935653316"
@@ -5045,6 +5278,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "1434624975"
@@ -5085,6 +5322,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "7992484609"
@@ -5125,6 +5366,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "7929588012"
@@ -5165,6 +5410,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "7926427432"
@@ -5205,6 +5454,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "1092220835"
@@ -5245,6 +5498,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "7994285559"
@@ -5285,6 +5542,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "7497343997"
@@ -5325,6 +5586,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "1401579593"
@@ -5365,6 +5630,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "7834442951"
@@ -5405,6 +5674,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "7682675972"
@@ -5445,6 +5718,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "3243882235"
@@ -5485,6 +5762,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "1862459915"
@@ -5525,6 +5806,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "2181179477"
@@ -5565,6 +5850,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "7802450527"
@@ -5605,6 +5894,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "7907175097"
@@ -5645,6 +5938,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "6277775185"
@@ -5685,6 +5982,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "2986959960"
@@ -5725,6 +6026,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "1871299764"
@@ -5765,6 +6070,10 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "2001356571"
@@ -5891,15 +6200,25 @@
       "config": {
         "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
         "itemsPath": "data",
+        "itemUrlPrefixRewrite": {
+          "from": "https://m.weibo.cn/detail/",
+          "to": "https://m.weibo.cn/status/"
+        },
         "requireBoolean": {
           "path": "uid",
           "equals": "1243861097"
         },
         "urlTemplate": "{raw:wapURL}",
-        "titlePaths": ["summary"],
-        "summaryPaths": ["summary"],
+        "titlePaths": [
+          "summary"
+        ],
+        "summaryPaths": [
+          "summary"
+        ],
         "summaryIsBody": true,
-        "authorPaths": ["userinfo.screen_name"],
+        "authorPaths": [
+          "userinfo.screen_name"
+        ],
         "publishedAtPath": "cTime",
         "allowUrlPrefixes": [
           "https://m.weibo.cn/detail/"
@@ -5911,7 +6230,67 @@
       "tier": "T2",
       "participation_mode": "editorial",
       "interval_minutes": 60,
-      "tags": ["高管", "微博"],
+      "tags": [
+        "高管",
+        "微博"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-cnipa-news",
+      "name": "国家知识产权局·最新发布",
+      "kind": "web_list",
+      "config": {
+        "url": "https://www.cnipa.gov.cn/module/web/jpage/dataproxy.jsp?page=1&webid=1&path=https%3A%2F%2Fwww.cnipa.gov.cn%2F&columnid=2073&unitid=669&webname=%E5%9B%BD%E5%AE%B6%E7%9F%A5%E8%AF%86%E4%BA%A7%E6%9D%83%E5%B1%80&permissiontype=0&startrecord=1&endrecord=30&perpage=20",
+        "parseMode": "html",
+        "unwrapCdata": true,
+        "itemSelector": "li",
+        "linkSelector": "a",
+        "titleSelector": "a",
+        "publishedAtSelector": "span",
+        "allowUrlPrefixes": [
+          "https://www.cnipa.gov.cn/art/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T1",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "官方",
+        "知识产权"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-nfra-news",
+      "name": "国家金融监督管理总局·要闻",
+      "kind": "web_list",
+      "config": {
+        "url": "https://r.jina.ai/https://www.nfra.gov.cn/",
+        "allowUrlPrefixes": [
+          "https://www.nfra.gov.cn/cn/view/pages/ItemDetail.html"
+        ],
+        "detail": {
+          "maxFetches": 10,
+          "publishedAtRegex": "发布时间[：:]\\s*(\\d{4}-\\d\\d-\\d\\d)",
+          "publishedAtAuthoritative": true
+        },
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T1",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "官方",
+        "金融监管"
+      ],
       "site_fulltext": false,
       "syndicate_fulltext": false
     }
