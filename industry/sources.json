@@ -6936,6 +6936,75 @@
       ],
       "site_fulltext": false,
       "syndicate_fulltext": false
+    },
+    {
+      "id": "web-d1ev-newsflash",
+      "name": "第一电动·快讯",
+      "kind": "web_list",
+      "config": {
+        "url": "https://www.d1ev.com/newsflash",
+        "parseMode": "html",
+        "itemSelector": ".list-desc",
+        "linkSelector": "a",
+        "titleSelector": ".desc-title",
+        "listSummarySelector": "a",
+        "allowUrlPrefixes": [
+          "https://www.d1ev.com/newsflash/"
+        ],
+        "detail": {
+          "maxFetches": 10,
+          "publishedAtRegex": "(20\\d\\d-\\d\\d-\\d\\d)",
+          "publishedAtAuthoritative": true
+        },
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "媒体",
+        "新能源"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-36kr-auto",
+      "name": "36氪Auto",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "36氪Auto",
+        "nickname": "36氪Auto"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "公众号",
+        "媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-autoreview",
+      "name": "汽车商业评论",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "autoreview",
+        "nickname": "汽车商业评论"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "公众号",
+        "杂志"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
     }
   ]
 }
