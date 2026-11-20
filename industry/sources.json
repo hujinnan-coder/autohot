@@ -442,6 +442,37 @@
       ],
       "site_fulltext": false,
       "syndicate_fulltext": false
+    },
+    {
+      "id": "web-yiche-original",
+      "name": "易车·原创报道",
+      "kind": "web_list",
+      "config": {
+        "url": "https://i.yiche.com/u61014816/!article/",
+        "parseMode": "html",
+        "itemSelector": ".article-item",
+        "linkSelector": "h2.title a",
+        "titleSelector": "h2.title a",
+        "listSummarySelector": "a.desc",
+        "listSummaryDropSelector": ".queryMore",
+        "publishedAtSelector": ".bottom-right span",
+        "allowUrlPrefixes": [
+          "https://news.yiche.com/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "媒体",
+        "中国车市",
+        "原创"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
     }
   ]
 }
