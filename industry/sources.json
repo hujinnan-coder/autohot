@@ -6331,6 +6331,24 @@
       ],
       "site_fulltext": false,
       "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-zhiyuchelian",
+      "name": "智驭车联",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "zhiyuchelian",
+        "nickname": "智驭车联"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "公众号",
+        "自媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
     }
   ]
 }
