@@ -6975,7 +6975,7 @@
       "name": "36氪Auto",
       "kind": "mp_account",
       "config": {
-        "ghid": "36氪Auto",
+        "ghid": "auto-time",
         "nickname": "36氪Auto"
       },
       "tier": "T2",
@@ -7042,6 +7042,114 @@
       "tags": [
         "媒体",
         "深度报道"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-yiche-youchezhihou-13713973",
+      "name": "易车号·有车以后",
+      "kind": "web_list",
+      "config": {
+        "url": "https://i.yiche.com/u13713973/!article/",
+        "parseMode": "html",
+        "itemSelector": ".article-item",
+        "linkSelector": "h2.title a",
+        "titleSelector": "h2.title a",
+        "listSummarySelector": "a.desc",
+        "listSummaryDropSelector": ".queryMore",
+        "publishedAtSelector": ".bottom-right span",
+        "allowUrlPrefixes": [
+          "https://news.yiche.com/",
+          "https://hao.yiche.com/wenzhang/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "易车号",
+        "创作者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-chedongxi",
+      "name": "车东西",
+      "kind": "web_list",
+      "config": {
+        "url": "https://chedongxi.com/",
+        "parseMode": "html",
+        "itemSelector": "a[href*='/p/']",
+        "linkSelector": "a[href*='/p/']",
+        "titleSelector": ".top-img-min-title div",
+        "allowUrlPrefixes": [
+          "https://chedongxi.com/p/"
+        ],
+        "detail": {
+          "maxFetches": 10,
+          "publishedAtSelector": "span.time",
+          "publishedAtAuthoritative": true
+        },
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "媒体",
+        "智能汽车"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-djcy",
+      "name": "大家车言论",
+      "kind": "web_list",
+      "config": {
+        "url": "https://chejiahao.autohome.com.cn/Authors/10298382",
+        "parseMode": "html",
+        "itemSelector": "div.author-vr",
+        "linkSelector": "a[href*='/info/']",
+        "titleSelector": ".title",
+        "publishedAtSelector": ".info span",
+        "allowUrlPrefixes": [
+          "https://chejiahao.autohome.com.cn/info/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "自媒体",
+        "车家号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-xinchexing",
+      "name": "新车行",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "xinchexing",
+        "nickname": "新车行"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "公众号"
       ],
       "site_fulltext": false,
       "syndicate_fulltext": false
