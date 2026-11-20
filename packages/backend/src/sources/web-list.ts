@@ -378,7 +378,8 @@ export async function fetchWebList(source: SourceRow): Promise<Candidate[]> {
   const { text: raw, viaJina, base } = await fetchListingText(source);
   const mode = source.config.adapter === "mimo_home" ? "mimo_home" : source.config.parseMode ?? (viaJina ? "markdown" : "html");
   const htmlPath = source.config.htmlPath;
-  const text = mode === "html" && typeof htmlPath === "string" ? htmlAtPath(raw, htmlPath) : raw;
+  let text = mode === "html" && typeof htmlPath === "string" ? htmlAtPath(raw, htmlPath) : raw;
+  if (mode === "html" && source.config.unwrapCdata === true) text = text.replaceAll("<![CDATA[", "").replaceAll("]]>", "");
   if (!viaJina) contentDocument(text);
   let out: Candidate[];
   if (mode === "mimo_home") out = await fromMimoHome(text, base, source);

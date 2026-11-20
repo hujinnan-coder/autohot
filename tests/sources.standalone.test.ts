@@ -29,6 +29,8 @@ const newsList = `<ul class="news">
 const pages: Record<string, () => string> = {
   "/api/news.html": () => newsList,
   "/api/news.json": () => JSON.stringify({ data: { html: newsList } }),
+  "/cdata-list": () => `<record><![CDATA[<li><a href="/posts/first">第一条公告</a><span>2026-11-17</span></li>]]></record>
+    <record><![CDATA[<li><a href="/posts/second">第二条公告</a><span>2026-11-16</span></li>]]></record>`,
   "/summary-list": () => `<main>
     <article><a href="/posts/first">First post</a><p class="summary">A   card summary. <span class="more">查看更多&gt;</span></p></article>
     <article><a href="/posts/second">Second post</a><p class="summary" content="An attribute summary.">Visible text</p></article>
@@ -123,6 +125,18 @@ test("web lists report the HTML path when the response cannot supply its string"
   }
   await assert.rejects(fetchWebList(source({ url: `${site}/api/news.html`, htmlPath: "data.html" })),
     (error) => error instanceof FetchError && /data\.html.*response is not JSON/.test(error.message));
+});
+
+test("HTML web lists unwrap CDATA only when enabled", async () => {
+  const listing = { url: `${site}/cdata-list`, itemSelector: "li", publishedAtSelector: "span" };
+  const enabled = { ...listing, unwrapCdata: true };
+  assert.deepEqual(unsupportedConfig("web_list", enabled), []);
+  assert.deepEqual(unsupportedConfig("web_list", { ...listing, unwrapCdata: "true" }), ["unwrapCdata"]);
+  assert.deepEqual(await fetchWebList(source(enabled)), [
+    { url: `${site}/posts/first`, title: "第一条公告", publishedAt: new Date("2026-11-17T00:00:00+08:00"), publicationTime: "2026-11-17" },
+    { url: `${site}/posts/second`, title: "第二条公告", publishedAt: new Date("2026-11-16T00:00:00+08:00"), publicationTime: "2026-11-16" },
+  ]);
+  await assert.rejects(fetchWebList(source(listing)), { message: "no items matched (html)" });
 });
 
 test("HTML list cards supply excerpts without requesting detail pages", async () => {
