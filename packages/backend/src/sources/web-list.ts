@@ -175,8 +175,16 @@ export function fromHtml(html: string, base: string, source: SourceRow): Candida
       const m = new RegExp(c.publishedAtRegex).exec($.html(el));
       date = readPublicationDate(m?.[1], c.publishedAtUtcOffset);
     }
+    const candidate: Candidate = { url, title, ...date };
+    if (c.listSummarySelector) {
+      const card = c.listSummaryDropSelector ? el.clone() : el;
+      if (c.listSummaryDropSelector) card.find(c.listSummaryDropSelector).remove();
+      const summaryEl = card.is(c.listSummarySelector) ? card : card.find(c.listSummarySelector).first();
+      const summary = collapseWhitespace(summaryEl.attr("content") ?? summaryEl.text());
+      if (summary && summary !== title) candidate.excerpt = summary;
+    }
     seen.add(url);
-    out.push({ url, title, ...date });
+    out.push(candidate);
   }
   return out;
 }

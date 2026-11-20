@@ -21,6 +21,12 @@ import { noiseFiltered } from "@aihot/backend/sources/filters";
 const source = (config: Record<string, unknown>) => ({ id: "test-list", config }) as never;
 
 const pages: Record<string, () => string> = {
+  "/summary-list": () => `<main>
+    <article><a href="/posts/first">First post</a><p class="summary">A   card summary. <span class="more">查看更多&gt;</span></p></article>
+    <article><a href="/posts/second">Second post</a><p class="summary" content="An attribute summary.">Visible text</p></article>
+    <article><a href="/posts/third">Third post</a><p class="summary">Third   post</p></article>
+    <article><a href="/posts/fourth">Fourth post</a><p class="summary"> <span class="more">查看更多&gt;</span></p></article>
+  </main>`,
   // A news site's feed: a teaser that ends in "Read the full story", next to a post whose feed carries it whole.
   "/teaser.xml": () =>
     `<?xml version="1.0"?><feed xmlns="http://www.w3.org/2005/Atom">` +
@@ -82,6 +88,20 @@ await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", () => resolve
 const site = `http://127.0.0.1:${(server.address() as { port: number }).port}`;
 config.allowPrivateNetworkFetch = true;
 after(() => new Promise<void>((resolve) => server.close(() => resolve())));
+
+test("HTML list cards supply excerpts without requesting detail pages", async () => {
+  const listing = { url: `${site}/summary-list`, itemSelector: "article" };
+  const summary = { listSummarySelector: ".summary" };
+  const drop = { listSummaryDropSelector: ".more" };
+  assert.deepEqual(unsupportedConfig("web_list", { ...listing, ...summary, ...drop }), []);
+
+  const start = languages.length;
+  const excerpts = async (extra: Record<string, unknown>) => (await fetchWebList(source({ ...listing, ...extra }))).map((item) => item.excerpt);
+  assert.deepEqual(await excerpts({}), [undefined, undefined, undefined, undefined]);
+  assert.deepEqual(await excerpts(summary), ["A card summary. 查看更多>", "An attribute summary.", undefined, "查看更多>"]);
+  assert.deepEqual(await excerpts({ ...summary, ...drop }), ["A card summary.", "An attribute summary.", undefined, undefined]);
+  assert.deepEqual(languages.slice(start).map((hit) => hit.path), ["/summary-list", "/summary-list", "/summary-list"]);
+});
 
 test("Jina card links become posts with their own titles", () => {
   const md = [
