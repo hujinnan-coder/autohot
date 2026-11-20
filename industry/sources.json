@@ -1916,6 +1916,242 @@
       ],
       "site_fulltext": false,
       "syndicate_fulltext": false
+    },
+    {
+      "id": "web-xcar-industry",
+      "name": "爱卡汽车·行业资讯",
+      "kind": "web_list",
+      "config": {
+        "url": "https://info.xcar.com.cn/list/214/",
+        "parseMode": "html",
+        "itemSelector": "dl.listCon",
+        "linkSelector": "a.ConTit",
+        "titleSelector": "a.ConTit",
+        "listSummarySelector": "dd.listTxt",
+        "listSummaryDropSelector": "a",
+        "publishedAtSelector": ".listIcon",
+        "allowUrlPrefixes": [
+          "https://info.xcar.com.cn/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "媒体",
+        "中国车市",
+        "原创"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-xcar-newcar",
+      "name": "爱卡汽车·国内新车",
+      "kind": "web_list",
+      "config": {
+        "url": "https://info.xcar.com.cn/list/164/",
+        "parseMode": "html",
+        "itemSelector": "dl.listCon",
+        "linkSelector": "a.ConTit",
+        "titleSelector": "a.ConTit",
+        "listSummarySelector": "dd.listTxt",
+        "listSummaryDropSelector": "a",
+        "publishedAtSelector": ".listIcon",
+        "allowUrlPrefixes": [
+          "https://info.xcar.com.cn/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "媒体",
+        "中国车市",
+        "原创"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-news18a-dujia",
+      "name": "网通社·独家",
+      "kind": "web_list",
+      "config": {
+        "url": "https://auto.news18a.com/news/dujia/",
+        "parseMode": "html",
+        "itemSelector": "div.block.group",
+        "linkSelector": "a[href*=\"storys_\"]",
+        "titleSelector": "p.line-clamp-2",
+        "allowUrlPrefixes": [
+          "https://auto.news18a.com/news/storys_"
+        ],
+        "detail": {
+          "maxFetches": 10,
+          "publishedAtRegex": "\"datePublished\":\"(\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\+08:00)\"",
+          "publishedAtAuthoritative": true,
+          "summarySelector": "meta[name=\"description\"]"
+        },
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "媒体",
+        "中国车市",
+        "原创"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-gov-cn-policy",
+      "name": "中国政府网·最新政策",
+      "kind": "web_list",
+      "config": {
+        "url": "https://www.gov.cn/pushinfo/v150203/index.htm",
+        "parseMode": "html",
+        "itemSelector": "li",
+        "linkSelector": "h4 a",
+        "titleSelector": "h4 a",
+        "publishedAtSelector": ".date",
+        "allowUrlPrefixes": [
+          "https://www.gov.cn/zhengce/content/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T1",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "官方",
+        "政策"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-ndrc-news",
+      "name": "国家发展改革委·新闻发布",
+      "kind": "web_list",
+      "config": {
+        "url": "https://www.ndrc.gov.cn/xwdt/xwfb/",
+        "parseMode": "html",
+        "itemSelector": ".u-list li",
+        "linkSelector": "a",
+        "titleSelector": "a",
+        "publishedAtSelector": "span",
+        "allowUrlPrefixes": [
+          "https://www.ndrc.gov.cn/xwdt/xwfb/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T1",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "官方",
+        "政策"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-mof-news",
+      "name": "财政部·财政新闻",
+      "kind": "web_list",
+      "config": {
+        "url": "https://www.mof.gov.cn/zhengwuxinxi/caizhengxinwen/",
+        "parseMode": "html",
+        "itemSelector": ".xwfb_listbox li",
+        "linkSelector": "a",
+        "titleSelector": "a",
+        "publishedAtSelector": "span",
+        "allowUrlPrefixes": [
+          "https://"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T1",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "官方",
+        "财政"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-stats-releases",
+      "name": "国家统计局·最新发布",
+      "kind": "web_list",
+      "config": {
+        "url": "https://www.stats.gov.cn/sj/zxfb/",
+        "parseMode": "html",
+        "itemSelector": "li",
+        "linkSelector": "a",
+        "titleSelector": "a",
+        "publishedAtSelector": "span",
+        "allowUrlPrefixes": [
+          "https://www.stats.gov.cn/sj/zxfb/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T1",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "官方",
+        "数据"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-ev100",
+      "name": "中国电动汽车百人会",
+      "kind": "web_list",
+      "config": {
+        "url": "https://www.chinaev100.com/",
+        "parseMode": "html",
+        "itemSelector": ".tit",
+        "linkSelector": "a",
+        "titleSelector": "a",
+        "publishedAtSelector": "span",
+        "allowUrlPrefixes": [
+          "https://www.chinaev100.com/news/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T1",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "行业组织",
+        "新能源"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
     }
   ]
 }
