@@ -11,6 +11,7 @@ import { sanitizeBody } from "../content/sanitize.ts";
 import { articleCover } from "../content/cover.ts";
 import { JINA_PREFIX, jinaRead } from "../providers/jina.ts";
 import { articleUtcOffset, readPublicationDate, readRelativeDate, type PublicationDate } from "./dates.ts";
+import { getPath } from "./json-list.ts";
 import { FetchError, type Candidate, type SourceRow } from "./types.ts";
 
 
@@ -84,9 +85,19 @@ async function fetchListingText(source: SourceRow): Promise<{ text: string; viaJ
     return { text: page.markdown, viaJina: true, base: source.config.baseUrl ?? target };
   }
   const res = requireOk(await fetchListing(url, { headers: { accept: "text/html,application/xhtml+xml,application/json;q=0.9,*/*;q=0.8", ...languageHeaders(source.config.acceptLanguage) }, timeoutMs: 25_000 }));
-  const text = res.text();
-  contentDocument(text);
-  return { text, viaJina: false, base: source.config.baseUrl ?? res.url };
+  return { text: res.text(), viaJina: false, base: source.config.baseUrl ?? res.url };
+}
+
+function htmlAtPath(text: string, path: string): string {
+  let data: unknown;
+  try {
+    data = JSON.parse(text);
+  } catch {
+    throw new FetchError(`htmlPath "${path}": response is not JSON`);
+  }
+  const html = getPath(data, path);
+  if (typeof html !== "string") throw new FetchError(`htmlPath "${path}" did not resolve to a string`);
+  return html;
 }
 
 /** A listing title that is no headline: a label that swallowed its summary, or a call to action. */
@@ -364,8 +375,11 @@ async function fromMimoHome(html: string, base: string, source: SourceRow): Prom
 }
 
 export async function fetchWebList(source: SourceRow): Promise<Candidate[]> {
-  const { text, viaJina, base } = await fetchListingText(source);
+  const { text: raw, viaJina, base } = await fetchListingText(source);
   const mode = source.config.adapter === "mimo_home" ? "mimo_home" : source.config.parseMode ?? (viaJina ? "markdown" : "html");
+  const htmlPath = source.config.htmlPath;
+  const text = mode === "html" && typeof htmlPath === "string" ? htmlAtPath(raw, htmlPath) : raw;
+  if (!viaJina) contentDocument(text);
   let out: Candidate[];
   if (mode === "mimo_home") out = await fromMimoHome(text, base, source);
   else if (mode === "markdown") out = fromMarkdown(text, base, source);

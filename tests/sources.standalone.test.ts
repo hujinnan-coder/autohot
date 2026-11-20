@@ -17,10 +17,18 @@ import { fetchDetail, fetchWebList, fromHtml, fromMarkdown } from "@aihot/backen
 import { fetchRss } from "@aihot/backend/sources/rss";
 import { fetchJsonList } from "@aihot/backend/sources/json-list";
 import { noiseFiltered } from "@aihot/backend/sources/filters";
+import { FetchError } from "@aihot/backend/sources/types";
 
 const source = (config: Record<string, unknown>) => ({ id: "test-list", config }) as never;
 
+const newsList = `<ul class="news">
+  <li><a class="more" href="/index.html">更多</a><a class="post" href="/jgsj/zbys/wjfb/art/notice.html"><strong>第一条公告</strong></a><span class="fr">2026-11-16</span><p class="summary">第一条摘要</p></li>
+  <li><a class="post" href="updates/second.html"><strong>第二条公告</strong></a><span class="fr">2026-11-15</span></li>
+</ul>`;
+
 const pages: Record<string, () => string> = {
+  "/api/news.html": () => newsList,
+  "/api/news.json": () => JSON.stringify({ data: { html: newsList } }),
   "/summary-list": () => `<main>
     <article><a href="/posts/first">First post</a><p class="summary">A   card summary. <span class="more">查看更多&gt;</span></p></article>
     <article><a href="/posts/second">Second post</a><p class="summary" content="An attribute summary.">Visible text</p></article>
@@ -76,18 +84,46 @@ const languages: Array<{ path: string; language: string | undefined }> = [];
 const server = http.createServer((req, res) => {
   const path = req.url ?? "";
   languages.push({ path, language: req.headers["accept-language"] });
+  if (path === "/news") {
+    res.writeHead(302, { location: "/api/news.json" });
+    return res.end();
+  }
   if (path === "/en/post" && /^zh/.test(req.headers["accept-language"] ?? "")) {
     res.writeHead(307, { location: "/zh/post" });
     return res.end();
   }
   const found = Object.hasOwn(pages, path);
-  res.writeHead(found ? 200 : 404, { "content-type": "text/html; charset=utf-8" });
+  res.writeHead(found ? 200 : 404, { "content-type": path.endsWith(".json") ? "application/json" : "text/html; charset=utf-8" });
   res.end(found ? pages[path]!() : "");
 });
 await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", () => resolve()));
 const site = `http://127.0.0.1:${(server.address() as { port: number }).port}`;
 config.allowPrivateNetworkFetch = true;
 after(() => new Promise<void>((resolve) => server.close(() => resolve())));
+
+test("web lists extract HTML from a JSON field and resolve links against the final listing URL", async () => {
+  const selectors = {
+    itemSelector: ".news > li", linkSelector: "a.post", titleSelector: "strong",
+    publishedAtSelector: ".fr", listSummarySelector: ".summary",
+  };
+  const wrapped = { ...selectors, url: `${site}/news`, htmlPath: "data.html" };
+  assert.deepEqual(unsupportedConfig("web_list", wrapped), []);
+  const expected = [
+    { url: `${site}/jgsj/zbys/wjfb/art/notice.html`, title: "第一条公告", publishedAt: new Date("2026-11-16T00:00:00+08:00"), publicationTime: "2026-11-16", excerpt: "第一条摘要" },
+    { url: `${site}/api/updates/second.html`, title: "第二条公告", publishedAt: new Date("2026-11-15T00:00:00+08:00"), publicationTime: "2026-11-15" },
+  ];
+  assert.deepEqual(await fetchWebList(source(wrapped)), expected);
+  assert.deepEqual(await fetchWebList(source({ ...selectors, url: `${site}/api/news.html` })), expected);
+});
+
+test("web lists report the HTML path when the response cannot supply its string", async () => {
+  for (const htmlPath of ["data.missing", "data"]) {
+    await assert.rejects(fetchWebList(source({ url: `${site}/api/news.json`, htmlPath })),
+      (error) => error instanceof FetchError && error.message.includes(`"${htmlPath}"`) && /string/.test(error.message));
+  }
+  await assert.rejects(fetchWebList(source({ url: `${site}/api/news.html`, htmlPath: "data.html" })),
+    (error) => error instanceof FetchError && /data\.html.*response is not JSON/.test(error.message));
+});
 
 test("HTML list cards supply excerpts without requesting detail pages", async () => {
   const listing = { url: `${site}/summary-list`, itemSelector: "article" };
