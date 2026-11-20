@@ -154,7 +154,7 @@ autohot 基于 [AIHOT 开源引擎](https://github.com/KKKKhazix/AIHOT)，是面
 按 IT之家汽车频道全量 46,480 篇的引用统计（原始数据 `/tmp/ith/`，CSV `top50k.csv`），站长要求全部加入监控。
 已加 7 家：Autocar、Auto Express、Carscoops、Motor1、Teslarati、BMW Blog、Not a Tesla App（均 T2 每小时）。
 **无法接入**（无公开汽车主题 RSS，不做绕过）：路透社、彭博社、华尔街日报、日经新闻、共同社、韩联社、CNBC、
-Automotive News（403）、BYDOTA（超时）。要收这些只能走付费 API 或人工推送。
+Automotive News（403）、BYDOTA（超时）。站长 2026-11-20 确认：连不上就不连，不强求，不再追付费方案。
 
 ### 不改 AIHOT 原样的约定（2026-11-20 站长确认）
 
