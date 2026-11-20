@@ -71,10 +71,10 @@ export function sidebar(): Array<{ title: string; items: NavItem[] }> {
   for (const m of webModules()) {
     if (!m.sidebar) continue;
     const section = sections.find((s) => s.title === m.sidebar!.section);
-    if (section) section.items.push(...m.sidebar.items);
-    else sections.push({ title: m.sidebar.section, items: [...m.sidebar.items] });
+    if (section) section.items.push(...m.sidebar!.items);
+    else sections.push({ title: m.sidebar!.section, items: [...m.sidebar!.items] });
   }
-  return [...sections, more];
+  return [...sections, { ...more, items: more.items.filter((i) => inNav(i.to)) }];
 }
 
 /** A sidebar entry is lit on its pages and the ones it covers (日报 also covers weekly and monthly reports). */
