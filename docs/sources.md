@@ -82,6 +82,7 @@
 - 链接取自 `href`；`/posts/first` 等相对链接按列表重定向后的最终地址解析，也可用 `baseUrl` 指定基准地址。标题取节点文字。重复链接会合并；Markdown 列表先出现“Read more”等按钮、后出现真实标题时，使用真实标题。指向列表自身的链接通常会跳过。
 - `listSummarySelector` 在 HTML 列表的每个条目内取摘要，优先读 `content` 属性，否则读节点文字，空白或与标题相同的摘要忽略。可选的 `listSummaryDropSelector` 在取摘要前从条目副本里去掉匹配的子节点，如“查看更多”提示。
 - 日期在条目内查找 `publishedAtSelector`，依次尝试 `datetime`、`content`、`title` 属性和文字，无法解析的提示文字不会遮住同一节点的有效日期。没有时区的日期时间可用 `publishedAtUtcOffset`（默认 `+08:00`）；自带时区的时间保留原时区语义，纯 `YYYY-MM-DD` 按 UTC 零点读。不完整的月份、产品版本号和不存在的日历日期不作为发布日期。
+  `11月11日` 或 `11月11日 16:12` 这类中文日期按信源时区推断为当年，超过当前时刻 24 小时则用上一年，仅有月日时保留日历日精度。
 - `parseMode`：普通网页默认 `html`；`markdown` 按 Markdown 链接读；`docusaurus_changelog` 读更新日志标题；`intercom_changelog` 按 Intercom 帮助中心的日期章节读取标题和正文，每节保留自己的网址锚点，默认按 UTC 日历日读取，也可指定 `publishedAtUtcOffset`。列表需要 Jina 时，将 `url` 写成 `https://r.jina.ai/https://目标站/路径`。`JINA_API_KEY` 选填，留空走限速的免费档。Jina 默认返回 Markdown；要继续使用 CSS 选择器，显式设 `parseMode: "html"`。
 - 接口在 JSON 里返回 HTML 字符串时，用 `htmlPath` 指定点分隔的字段路径，例如 `data.html`，取出的 HTML 仍按原有选择器读取。这个字段只在 `html` 模式下生效，响应不是 JSON、路径不存在或字段不是字符串都会报错。
 - 列表 HTML 包在 CDATA 中时，设 `unwrapCdata: true`，仅在 `html` 模式下去掉所有 `<![CDATA[` 和 `]]>` 标记，再用选择器读取条目。

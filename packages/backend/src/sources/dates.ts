@@ -12,6 +12,7 @@ export function articleUtcOffset(config: SourceRow["config"]): string | undefine
  * CST is no zone here: Date.parse reads US Central, Chinese pages mean China, so it is read in the source's offset.
  */
 const EXPLICIT_ZONE = /\d{1,2}:\d{2}(?::\d{2}(?:\.\d+)?)?\s*(?:[AP]M\s*)?(?:Z|[+-]\d{2}:?\d{2}|GMT|UTC?|[EMP][SD]T|CDT)\b/i;
+const CHINESE_MONTH_DAY = /^(?:(?:发布于|发布时间)\s*[:：]?\s*)?(\d{1,2})月(\d{1,2})日(?:\s*(\d{1,2}):(\d{2})(?::(\d{2}))?)?/;
 
 function calendarDay(y: string | number, mo: string | number, d: string | number): boolean {
   const date = new Date(Date.UTC(Number(y), Number(mo) - 1, Number(d)));
@@ -37,6 +38,15 @@ export function parseLooseDate(value: string | null | undefined, utcOffset = "+0
   if (!v) return null;
   const compact = /^(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})$/.exec(v);
   if (compact) return atOffset(compact[1]!, compact[2]!, compact[3]!, compact[4]!, compact[5]!, compact[6]!, utcOffset);
+  const monthDay = CHINESE_MONTH_DAY.exec(v);
+  if (monthDay) {
+    const [, mo, d, h = "00", mi = "00", s = "00"] = monthDay;
+    const now = new Date();
+    const year = wallTimeAt(now, utcOffset).getUTCFullYear();
+    const at = atOffset(year, mo!, d!, h, mi, s, utcOffset);
+    if (at && at.getTime() - now.getTime() > 86400e3) return atOffset(year - 1, mo!, d!, h, mi, s, utcOffset);
+    return at;
+  }
   const yearFirst = /(\d{4})[-/.年](\d{1,2})[-/.月](\d{1,2})日?(?:(?:T|\s*)(\d{1,2}):(\d{2})(?::(\d{2}))?)?/.exec(v);
   const monthFirst = /\b(\d{1,2})\/(\d{1,2})\/(\d{4})(?:(?:T|\s+)(\d{1,2}):(\d{2})(?::(\d{2}))?)?/.exec(v);
   const numeric = yearFirst ?? monthFirst?.map((part, i, match) => i === 1 ? match[3]! : i === 2 ? match[1]! : i === 3 ? match[2]! : part);
@@ -82,7 +92,9 @@ export interface PublicationDate {
 export function readPublicationDate(value: string | null | undefined, utcOffset = "+08:00"): PublicationDate {
   const publishedAt = parseLooseDate(value, utcOffset);
   if (!publishedAt) return { publishedAt: null, publicationTime: null };
-  const timed = /\d{1,2}:\d{2}/.test(value!) || /^\d{14}$/.test(value!.trim());
+  const text = value!.trim();
+  const monthDay = CHINESE_MONTH_DAY.exec(text);
+  const timed = monthDay ? monthDay[3] !== undefined : /\d{1,2}:\d{2}/.test(text) || /^\d{14}$/.test(text);
   if (timed) return { publishedAt, publicationTime: publishedAt.toISOString() };
   return { publishedAt, publicationTime: dayAt(publishedAt, utcOffset) };
 }
@@ -98,10 +110,15 @@ export function describePublicationTime(at: Date | null, source: string | null |
 const RELATIVE_UNITS: Record<string, number> = { 秒: 1e3, 分钟: 60e3, 分: 60e3, 小时: 3600e3, 天: 86400e3, second: 1e3, minute: 60e3, min: 60e3, m: 60e3, hour: 3600e3, hr: 3600e3, h: 3600e3, day: 86400e3, d: 86400e3 };
 const DAYS_BACK: Record<string, number> = { 今天: 0, 昨天: 1, 前天: 2, yesterday: 1 };
 
+/** The source's wall-clock fields, readable through the UTC getters. */
+function wallTimeAt(at: Date, utcOffset: string): Date {
+  const offsetMs = Date.UTC(2000, 0, 1) - Date.parse(`2000-01-01T00:00:00${utcOffset}`);
+  return new Date(at.getTime() + offsetMs);
+}
+
 /** The calendar day `at` falls on in the given offset, as YYYY-MM-DD. */
 function dayAt(at: Date, utcOffset: string): string {
-  const offsetMs = Date.UTC(2000, 0, 1) - atOffset(2000, 1, 1, 0, 0, 0, utcOffset)!.getTime();
-  return new Date(at.getTime() + offsetMs).toISOString().slice(0, 10);
+  return wallTimeAt(at, utcOffset).toISOString().slice(0, 10);
 }
 
 /**

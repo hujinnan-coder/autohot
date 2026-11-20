@@ -25,6 +25,25 @@ test("a bare date is midnight in the source's offset, including ISO date-only te
   assert.equal(iso("September 26th, 2026", "+00:00"), "2026-09-26T00:00:00.000Z");
 });
 
+test("Chinese month and day use the source's current year and retain their precision", (t) => {
+  t.mock.timers.enable({ apis: ["Date"], now: new Date("2026-11-20T00:00:00Z") });
+  assert.deepEqual(readPublicationDate("11月11日"), { publishedAt: new Date("2026-11-10T16:00:00Z"), publicationTime: "2026-11-11" });
+  assert.deepEqual(readPublicationDate("11月11日 16:12"), { publishedAt: new Date("2026-11-11T08:12:00Z"), publicationTime: "2026-11-11T08:12:00.000Z" });
+  assert.equal(iso("发布于 11月11日 6:12:34"), "2026-11-10T22:12:34.000Z");
+  assert.equal(iso("发布时间：11月11日"), "2026-11-10T16:00:00.000Z");
+  // A date may lead the value, but a date mentioned later in prose is ignored.
+  assert.equal(readPublicationDate("3月5日发布了将于 16:12 举行会议的通知").publicationTime, "2026-03-05");
+  assert.equal(iso("通知提到将在11月11日开会"), null);
+  assert.equal(iso("13月11日"), null);
+});
+
+test("a yearless date more than a day ahead rolls back a year in the source's offset", (t) => {
+  t.mock.timers.enable({ apis: ["Date"], now: new Date("2026-12-31T16:00:00Z") }); // January 1 at midnight in +08:00.
+  assert.equal(iso("1月2日"), "2027-01-01T16:00:00.000Z");
+  assert.equal(iso("1月2日 00:01"), "2026-01-01T16:01:00.000Z");
+  assert.equal(iso("12月30日"), "2026-12-29T16:00:00.000Z");
+});
+
 test("a date that carries its zone keeps it", () => {
   assert.equal(iso("2026-09-26T10:00:00Z"), "2026-09-26T10:00:00.000Z");
   assert.equal(iso("2026-09-26T10:00:00.000+09:00"), "2026-09-26T01:00:00.000Z");
