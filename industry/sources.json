@@ -6293,6 +6293,44 @@
       ],
       "site_fulltext": false,
       "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-autocomm",
+      "name": "汽车公社",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "iautodaily",
+        "nickname": "汽车公社"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "公众号",
+        "自媒体",
+        "中国车市"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-autolab",
+      "name": "AutoLab",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "autolab",
+        "nickname": "AutoLab"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "公众号",
+        "自媒体",
+        "测评"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
     }
   ]
 }
