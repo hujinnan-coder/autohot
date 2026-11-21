@@ -1,6 +1,7 @@
-// Ordinary reports share the fact's representative in v1, RSS and the sync ledger. Social posts share
-// a seat by account and publication time. A broken snapshot page asks for a new snapshot, and a
-// database outage during sync is a retryable answer, never a reason to discard the client's snapshot.
+// Machines receive one selected seat per fact: several selected reports of one fact give v1, RSS and the
+// sync ledger only the representative, a better report taking over removes the old one; a broken
+// snapshot page asks for a new snapshot, and a database outage during sync is a retryable answer, never
+// a reason to discard the client's snapshot.
 import { tag } from "./setup.ts";
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
@@ -39,13 +40,13 @@ after(async () => {
 
 // Reports arrive a second apart, the first a minute ago: their order and the windows that end at the reader's
 // clock hold even when the VM's clock steps back (on the CI VMs by as much as 0.4 s).
-const start = Math.floor(Date.now() / 1000) * 1000 - 60_000;
+const start = Date.now() - 60_000;
 let n = 0;
-async function report(source: string, fact: number, options: { at?: Date; discoveredAt?: Date; score?: number; selected?: boolean } = {}) {
+async function report(source: string, fact: number, options: { at?: Date; score?: number; selected?: boolean } = {}) {
   n += 1;
   const at = options.at ?? new Date(start + n * 1000);
   const { articleId } = await upsertMaterial({
-    sourceId: source, url: `https://example.com/seats-${T}-${n}`, title: `Seat ${n} ${T}`, bodyText: "body", bodyHtml: "<p>body</p>", bodyStatus: "ok", via: "fetch", publishedAt: at, discoveredAt: options.discoveredAt ?? at,
+    sourceId: source, url: `https://example.com/seats-${T}-${n}`, title: `Seat ${n} ${T}`, bodyText: "body", bodyHtml: "<p>body</p>", bodyStatus: "ok", via: "fetch", publishedAt: at, discoveredAt: at,
   });
   await sql`INSERT INTO analyses (article_id, input_revision, origin, relevance, category, title_zh, summary_zh, reason_zh, score, selected, tags)
             VALUES (${articleId}, 1, 'rule', 'pass', 'industry', ${`标题${n}-${T}`}, ${`摘要${n}-${T}`}, ${`理由${n}`}, ${options.score ?? 80}, ${options.selected ?? true}, ${[`t-${T}`]})`;
@@ -137,59 +138,41 @@ test("Weibo source IDs take precedence over X data in the publication channel", 
   assert.equal(channelOf(MEDIA, "rss", false), "news");
 });
 
-test("selected Weibo and X posts share a seat only at the same publication time for an account", async () => {
-  const [story] = await sql<{ id: number }[]>`INSERT INTO stories (public_id, title) VALUES (${randomUUID()}, ${`Social-${T}`}) RETURNING id`;
-  const [fact] = await sql<{ id: number }[]>`INSERT INTO facts (public_id, story_id, title) VALUES (${`social-seat-${T}`}, ${story!.id}, 'Launch') RETURNING id`;
+test("selected Weibo posts yield to the latest post from the same source on the same fact", async () => {
+  const [story] = await sql<{ id: number }[]>`INSERT INTO stories (public_id, title) VALUES (${randomUUID()}, ${`Weibo-${T}`}) RETURNING id`;
+  const [fact] = await sql<{ id: number }[]>`INSERT INTO facts (public_id, story_id, title) VALUES (${`weibo-seat-${T}`}, ${story!.id}, 'Launch') RETURNING id`;
   const official = await report(OFFICIAL, fact!.id);
+  const old = await report(WEIBO, fact!.id, { score: 98 });
+  const otherAccount = await report(WEIBO_PAGE, fact!.id);
   const news = await report(MEDIA, fact!.id);
-  const earlierAt = new Date(start + (n + 1) * 1000);
-  const sameAt = new Date(+earlierAt + 1000);
-  const discoveredLater = new Date(+sameAt + 1000);
-  const social = [];
-  for (const [source, channel] of [[WEIBO, "weibo"], [X, "x"]] as const) {
-    const earlier = await report(source, fact!.id, { at: earlierAt, score: 98 });
-    const duplicate = await report(source, fact!.id, { at: sameAt, discoveredAt: discoveredLater, score: 80 });
-    const winner = await report(source, fact!.id, { at: sameAt, score: 90 });
-    social.push({ channel, earlier, winner, duplicate });
-  }
-  const otherAccount = await report(WEIBO_PAGE, fact!.id, { at: sameAt });
-  const unselected = await report(WEIBO, fact!.id, { at: sameAt, score: 99, selected: false });
+  const x = await report(X, fact!.id);
+  const latestAt = new Date(start + (n + 1) * 1000);
+  const latest = await report(WEIBO, fact!.id, { at: latestAt, score: 90 });
+  const lowerScore = await report(WEIBO, fact!.id, { at: latestAt, score: 80 });
+  const unselected = await report(WEIBO, fact!.id, { score: 99, selected: false });
 
   const seats = await sql<{ article_id: string; channel: string; selected: boolean; seat: boolean }[]>`
     SELECT article_id, channel, selected, seat FROM publications WHERE fact_id = ${fact!.id}`;
-  assert.deepEqual(new Set(seats.filter((r) => r.seat).map((r) => r.article_id)),
-    new Set([official, otherAccount, unselected, ...social.flatMap(({ earlier, winner }) => [earlier, winner])]));
-  for (const { channel, duplicate } of social) {
-    assert.deepEqual(seats.find((r) => r.article_id === duplicate), { article_id: duplicate, channel, selected: true, seat: false });
-  }
+  assert.deepEqual(new Set(seats.filter((r) => r.seat).map((r) => r.article_id)), new Set([official, latest, otherAccount, unselected]));
+  assert.deepEqual(seats.find((r) => r.article_id === old), { article_id: old, channel: "weibo", selected: true, seat: false });
   assert.deepEqual(seats.find((r) => r.article_id === unselected), { article_id: unselected, channel: "weibo", selected: false, seat: true });
 
   const pool = (await get(`/api/site/pool?q=${T}`)).json.items as Array<{ id: string; channel: string; x: unknown; sameEvent?: { id: string } | null }>;
   const cards = new Map(pool.map((item) => [item.id, item]));
-  assert.equal(cards.get(news)?.sameEvent?.id, official);
-  for (const { channel, earlier, winner, duplicate } of social) {
-    for (const id of [earlier, winner]) {
-      assert.equal(cards.get(id)?.channel, channel);
-      assert.equal(cards.get(id)?.sameEvent ?? null, null);
-      if (channel === "weibo") assert.equal(cards.get(id)?.x, null);
-    }
-    if (channel === "weibo") {
-      assert.equal(cards.get(duplicate)?.sameEvent?.id, winner);
-      assert.equal((await get(`/api/site/items/${duplicate}`)).json.sameEvent?.id, winner);
-    }
-  }
-  for (const id of [otherAccount, unselected]) {
+  for (const id of [old, lowerScore]) assert.equal(cards.get(id)?.sameEvent?.id, latest);
+  for (const id of [news, x]) assert.equal(cards.get(id)?.sameEvent?.id, official);
+  for (const id of [latest, otherAccount, unselected]) {
     assert.equal(cards.get(id)?.channel, "weibo");
     assert.equal(cards.get(id)?.x, null);
     assert.equal(cards.get(id)?.sameEvent ?? null, null);
   }
+  assert.equal((await get(`/api/site/items/${old}`)).json.sameEvent?.id, latest);
+
   const [followUp] = await sql<{ id: number }[]>`INSERT INTO facts (public_id, story_id, title) VALUES (${`weibo-follow-up-${T}`}, ${story!.id}, 'Follow-up') RETURNING id`;
-  const at = new Date(start + (n + 1) * 1000);
-  const representative = await report(WEIBO, followUp!.id, { at, score: 95 });
-  const later = { at, discoveredAt: new Date(+at + 1000), score: 95 };
-  const tied = [await report(WEIBO, followUp!.id, later), await report(WEIBO, followUp!.id, later)].sort();
+  const representative = await report(WEIBO, followUp!.id, { score: 95 });
+  const update = await report(WEIBO, followUp!.id, { score: 85 });
   const followUpSeats = await sql<{ article_id: string }[]>`SELECT article_id FROM publications WHERE fact_id = ${followUp!.id} AND seat`;
-  assert.deepEqual(new Set(followUpSeats.map((r) => r.article_id)), new Set([representative, tied[0]]));
+  assert.deepEqual(new Set(followUpSeats.map((r) => r.article_id)), new Set([representative, update]));
 });
 
 test("a broken or empty snapshot page asks for a new snapshot", async () => {

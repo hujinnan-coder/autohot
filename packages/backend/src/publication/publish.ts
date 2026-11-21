@@ -13,7 +13,7 @@ import { pickRepresentative, REPRESENTATIVE_COLUMNS, type RepresentativeIdentity
 import { enqueue, QUEUES, shutdownSignal } from "../jobs/queue.ts";
 import { editorialPolicy, emit } from "../modules.ts";
 import {
-  bodyModeOf, channelOf, displayTags, isIndexable, isPoolEligible, isSelectable, isIndependentSelectedSource, isSocialChannel, mayRedistribute, publicSourceName, sameTimeSocialKey, sameTimeSocialSeats, type SourceFacts,
+  bodyModeOf, channelOf, displayTags, isIndexable, isPoolEligible, isSelectable, isIndependentSelectedSource, latestWeiboBySource, mayRedistribute, publicSourceName, type SourceFacts,
 } from "./rules.ts";
 import { foldableSelectionCondition, latestCompositeCondition, ownFactEvidenceCondition } from "./scope.ts";
 
@@ -172,8 +172,8 @@ async function appendLedger(tx: Tx, articleId: string, op: "upsert" | "remove", 
  * the representative (first-party, full text, higher score, earliest) takes it, and a
  * change of representative removes the old one and adds the new one.
  * The website folds the same reports into reading groups instead. An article outside any fact keeps
- * its own seat, as does each selected news article from an independent source. Weibo and X posts
- * keep a seat for each publication time, folding only posts from the same account's burst.
+ * its own seat, as does each selected article from an independent source. On Weibo, only the latest
+ * selected report per account also keeps its seat, so launch-day updates from the same account can fold.
  * Returns the ledger change of `self` when this settling made one. Fact membership is unaffected.
  */
 async function settleSeats(tx: Tx, factId: number | null, self: string | null, now: Date): Promise<"upsert" | "remove" | null> {
@@ -181,19 +181,17 @@ async function settleSeats(tx: Tx, factId: number | null, self: string | null, n
     if (self) await tx`UPDATE publications SET seat = true WHERE article_id = ${self} AND NOT seat`;
     return null;
   }
-  const members = await tx<Array<Pick<PublicationRow, "article_id" | "score" | "source_id" | "channel" | "published_at" | "timeline_at"> & RepresentativeIdentity & { body_mode: "full" | "summary"; seat: boolean; holds: boolean }>>`
-    SELECT p.article_id, p.source_id, p.channel, p.body_mode, p.score, p.published_at, p.timeline_at, p.seat, ${REPRESENTATIVE_COLUMNS},
+  const members = await tx<Array<Pick<PublicationRow, "article_id" | "score" | "source_id" | "channel"> & RepresentativeIdentity & { body_mode: "full" | "summary"; timeline_at: Date; seat: boolean; holds: boolean }>>`
+    SELECT p.article_id, p.source_id, p.channel, p.body_mode, p.score, p.timeline_at, p.seat, ${REPRESENTATIVE_COLUMNS},
       (p.selected AND p.visibility = 'public' AND ${ownFactEvidenceCondition()}) AS holds
     FROM publications p JOIN sources s ON s.id = p.source_id JOIN facts f ON f.id = p.fact_id WHERE p.fact_id = ${factId}`;
   const candidates = members.filter((m) => m.holds && !isIndependentSelectedSource(m.source_id)).map((m) => ({ ...m, score: m.score === null ? null : Number(m.score) }));
   const rep = candidates.length ? pickRepresentative(candidates) : null;
-  const socialSeats = sameTimeSocialSeats(members.filter((m) => m.holds && isSocialChannel(m.channel)));
+  const weibo = latestWeiboBySource(members.filter((m) => m.holds && m.channel === "weibo"));
   let own: "upsert" | "remove" | null = null;
   for (const m of members) {
     const seat = !m.holds || m.article_id === rep?.article_id
-      || (isSocialChannel(m.channel)
-        ? m.published_at === null || socialSeats.get(sameTimeSocialKey(m.source_id, m.published_at)) === m
-        : isIndependentSelectedSource(m.source_id));
+      || (m.channel === "weibo" ? weibo.get(m.source_id) === m : isIndependentSelectedSource(m.source_id));
     if (seat === m.seat) continue;
     await tx`UPDATE publications SET seat = ${seat} WHERE article_id = ${m.article_id}`;
     const change = await syncLedger(tx, m.article_id, now);

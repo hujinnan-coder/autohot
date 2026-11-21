@@ -1,9 +1,8 @@
 // Failure cases: an independent source loses its card to an official report; its early arrival moves
 // the ordinary reading group; enabling the policy rejudges history or changes event membership;
-// a social post of the same news loses its own seat (an account keeps one seat per publication time);
-// an unselected/pending/low-value item bypasses admission; ordinary duplicates point to the
-// independent item instead of their representative; outlets or cursors lose one of the cards;
-// withdrawal leaves a stale selected/sync entry.
+// another channel/name match inherits it; an unselected/pending/low-value item bypasses admission;
+// ordinary duplicates point to the independent item instead of their representative; outlets or
+// cursors lose one of the cards; withdrawal leaves a stale selected/sync entry.
 import { tag } from './setup.ts';
 import assert from 'node:assert/strict';
 import { randomUUID } from 'node:crypto';
@@ -59,7 +58,7 @@ test('independent selected sources retain identity and their own cards across pu
   await publishArticle(official,{now});
   await publishArticle(other,{now});
   const selected = (await get(`/api/v1/items?mode=selected&window=24h&q=${T}&limit=100`)).json().items;
-  assert.deepEqual(new Set(selected.map((x: {id:string})=>x.id)),new Set([firstOwn,laterOwn,official,other]));
+  assert.deepEqual(new Set(selected.map((x: {id:string})=>x.id)),new Set([firstOwn,laterOwn,official]));
   assert.equal((await sql`SELECT count(*) AS n FROM analyses`)[0]!.n,analysisCount,'republication reuses the judgement');
   assert.deepEqual(await sql`SELECT article_id,fact_id,role,manual FROM fact_articles WHERE fact_id=${fact!.id} ORDER BY article_id`,before);
   const filters = {channel:'all' as const,category:null,tag:T,now:new Date()};
@@ -71,13 +70,12 @@ test('independent selected sources retain identity and their own cards across pu
   do { const page = await loadTimeline({...filters,limit:1,cursor}); paged.push(...page.cards.map(c=>c.item.id)); cursor=page.nextCursor; } while(cursor);
   assert.deepEqual(paged,timeline.cards.map(c=>c.item.id));
   const channel = await loadTimeline({...filters,channel:'x'});
-  assert.deepEqual(channel.cards.map(c=>c.item.id),[other],'the social post keeps its own card on its channel');
+  assert.deepEqual(channel.cards.map(c=>c.item.id),[other],'other channel follows ordinary grouping');
   for (const id of [firstOwn,laterOwn]) {
     const detail = (await get(`/api/site/items/${id}`)).json();
     assert.equal(detail.sameEvent ?? null,null); assert.equal(detail.selected,true); assert.ok(detail.reason);
   }
-  // A social post keeps its own seat for its account and time; it no longer yields to the representative.
-  assert.equal((await get(`/api/site/items/${other}`)).json().sameEvent ?? null,null);
+  assert.equal((await get(`/api/site/items/${other}`)).json().sameEvent.id,official);
   for (const id of [rejected,pending,lowValue]) assert.equal((await get(`/api/site/items/${id}`)).json().selected,false);
   for (const url of ['/feed.xml','/api/v1/agent/latest?limit=30','/api/v1/selected/snapshot?limit=1000','/api/site/topics/tesla']) {
     const body=(await get(url)).body;
@@ -87,6 +85,6 @@ test('independent selected sources retain identity and their own cards across pu
   for (const id of [firstOwn,laterOwn]) assert.ok(changes.some((c: {op:string;item?:{id:string}})=>c.op==='upsert'&&c.item?.id===id));
   await setVisibility(laterOwn,{visibility:'withdrawn',reason:'test withdrawal',version:0},'test');
   const remaining=(await get(`/api/v1/items?mode=selected&q=${T}&limit=100`)).json().items;
-  assert.deepEqual(new Set(remaining.map((x:{id:string})=>x.id)),new Set([firstOwn,official,other]));
-  assert.equal((await get(`/api/site/items/${other}`)).json().sameEvent ?? null,null);
+  assert.deepEqual(new Set(remaining.map((x:{id:string})=>x.id)),new Set([firstOwn,official]));
+  assert.equal((await get(`/api/site/items/${other}`)).json().sameEvent.id,official);
 });
