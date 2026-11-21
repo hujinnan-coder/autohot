@@ -2527,7 +2527,7 @@
       },
       "tier": "T2",
       "participation_mode": "editorial",
-      "interval_minutes": 240,
+      "interval_minutes": 1440,
       "tags": [
         "公众号",
         "自媒体"
@@ -3402,25 +3402,6 @@
       "enabled": false
     },
     {
-      "id": "mp-xinchexing",
-      "name": "新车行",
-      "kind": "mp_account",
-      "config": {
-        "ghid": "新车行",
-        "nickname": "新车行"
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 240,
-      "tags": [
-        "公众号"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false,
-      "enabled": false,
-      "disabled_reason": "应为“新出行”的笔误；新出行已按正确微信号建档，此占位停用"
-    },
-    {
       "id": "mp-djcy",
       "name": "大家车言论",
       "kind": "mp_account",
@@ -3837,24 +3818,6 @@
       "syndicate_fulltext": false
     },
     {
-      "id": "mp-pengpainews",
-      "name": "澎湃新闻",
-      "kind": "mp_account",
-      "config": {
-        "ghid": "pengpaixinwen",
-        "nickname": "澎湃新闻"
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 240,
-      "tags": [
-        "媒体",
-        "微信公众号"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
       "id": "mp-eeo",
       "name": "经济观察报",
       "kind": "mp_account",
@@ -3909,24 +3872,6 @@
       "syndicate_fulltext": false
     },
     {
-      "id": "mp-rm-auto",
-      "name": "人民汽车",
-      "kind": "mp_account",
-      "config": {
-        "ghid": "rm-rbqiche",
-        "nickname": "人民汽车"
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 240,
-      "tags": [
-        "媒体",
-        "微信公众号"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
       "id": "mp-xinhua-auto",
       "name": "新华网汽车",
       "kind": "mp_account",
@@ -3936,7 +3881,7 @@
       },
       "tier": "T2",
       "participation_mode": "editorial",
-      "interval_minutes": 240,
+      "interval_minutes": 1440,
       "tags": [
         "媒体",
         "微信公众号"
@@ -4152,7 +4097,7 @@
       },
       "tier": "T2",
       "participation_mode": "editorial",
-      "interval_minutes": 240,
+      "interval_minutes": 1440,
       "tags": [
         "媒体",
         "微信公众号"
@@ -4167,24 +4112,6 @@
       "config": {
         "ghid": "gh_0268cf97d33f",
         "nickname": "太平洋汽车"
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 240,
-      "tags": [
-        "媒体",
-        "微信公众号"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "mp-7d2d539a37af",
-      "name": "网上车市",
-      "kind": "mp_account",
-      "config": {
-        "ghid": "gh_7d2d539a37af",
-        "nickname": "网上车市"
       },
       "tier": "T2",
       "participation_mode": "editorial",
@@ -4215,24 +4142,6 @@
       "syndicate_fulltext": false
     },
     {
-      "id": "mp-369e2b8d0ac6",
-      "name": "中华网汽车",
-      "kind": "mp_account",
-      "config": {
-        "ghid": "gh_369e2b8d0ac6",
-        "nickname": "中华网汽车"
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 240,
-      "tags": [
-        "媒体",
-        "微信公众号"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
       "id": "mp-08d482d19ab0",
       "name": "凤凰网汽车",
       "kind": "mp_account",
@@ -4242,7 +4151,7 @@
       },
       "tier": "T2",
       "participation_mode": "editorial",
-      "interval_minutes": 240,
+      "interval_minutes": 1440,
       "tags": [
         "媒体",
         "微信公众号"
@@ -4296,7 +4205,7 @@
       },
       "tier": "T2",
       "participation_mode": "editorial",
-      "interval_minutes": 240,
+      "interval_minutes": 1440,
       "tags": [
         "媒体",
         "微信公众号"
@@ -4359,24 +4268,6 @@
       "syndicate_fulltext": false
     },
     {
-      "id": "mp-eedbb20b1659",
-      "name": "汽车周刊",
-      "kind": "mp_account",
-      "config": {
-        "ghid": "gh_eedbb20b1659",
-        "nickname": "汽车周刊"
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 240,
-      "tags": [
-        "媒体",
-        "微信公众号"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
       "id": "mp-203adcbf2ab8",
       "name": "车早茶",
       "kind": "mp_account",
@@ -4386,7 +4277,7 @@
       },
       "tier": "T2",
       "participation_mode": "editorial",
-      "interval_minutes": 240,
+      "interval_minutes": 1440,
       "tags": [
         "媒体",
         "微信公众号"
@@ -4440,7 +4331,7 @@
       },
       "tier": "T2",
       "participation_mode": "editorial",
-      "interval_minutes": 240,
+      "interval_minutes": 1440,
       "tags": [
         "媒体",
         "微信公众号"
@@ -4539,78 +4430,6 @@
       "syndicate_fulltext": false
     },
     {
-      "id": "mp-1f42a2ae6675",
-      "name": "胖哥说车",
-      "kind": "mp_account",
-      "config": {
-        "ghid": "gh_1f42a2ae6675",
-        "nickname": "胖哥说车"
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 240,
-      "tags": [
-        "媒体",
-        "微信公众号"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "mp-448d31bd8ac7",
-      "name": "逗斗车",
-      "kind": "mp_account",
-      "config": {
-        "ghid": "gh_448d31bd8ac7",
-        "nickname": "逗斗车"
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 240,
-      "tags": [
-        "媒体",
-        "微信公众号"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "mp-4a50237168ce",
-      "name": "懂车老王",
-      "kind": "mp_account",
-      "config": {
-        "ghid": "gh_4a50237168ce",
-        "nickname": "懂车老王"
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 240,
-      "tags": [
-        "媒体",
-        "微信公众号"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "mp-3a4c59512699",
-      "name": "二师兄玩车",
-      "kind": "mp_account",
-      "config": {
-        "ghid": "gh_3a4c59512699",
-        "nickname": "二师兄玩车"
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 240,
-      "tags": [
-        "媒体",
-        "微信公众号"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
       "id": "mp-583b5137b78e",
       "name": "汽车志",
       "kind": "mp_account",
@@ -4647,48 +4466,12 @@
       "syndicate_fulltext": false
     },
     {
-      "id": "mp-48bdaf836ebe",
-      "name": "NE时代",
-      "kind": "mp_account",
-      "config": {
-        "ghid": "gh_48bdaf836ebe",
-        "nickname": "NE时代"
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 240,
-      "tags": [
-        "媒体",
-        "微信公众号"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
       "id": "mp-6c8e0174cb0d",
       "name": "电车汇",
       "kind": "mp_account",
       "config": {
         "ghid": "gh_6c8e0174cb0d",
         "nickname": "电车汇"
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 240,
-      "tags": [
-        "媒体",
-        "微信公众号"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "mp-e4e7c712fb5f",
-      "name": "第一电动网",
-      "kind": "mp_account",
-      "config": {
-        "ghid": "gh_e4e7c712fb5f",
-        "nickname": "第一电动网"
       },
       "tier": "T2",
       "participation_mode": "editorial",
@@ -4725,24 +4508,6 @@
       "config": {
         "ghid": "gh_1255c350a395",
         "nickname": "亿欧汽车"
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 240,
-      "tags": [
-        "媒体",
-        "微信公众号"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "mp-a38c213c3893",
-      "name": "车云网",
-      "kind": "mp_account",
-      "config": {
-        "ghid": "gh_a38c213c3893",
-        "nickname": "车云网"
       },
       "tier": "T2",
       "participation_mode": "editorial",
@@ -4863,12 +4628,12 @@
       "syndicate_fulltext": false
     },
     {
-      "id": "mp-2d40f2749e86",
-      "name": "商用车联盟",
+      "id": "mp-539bcf97e979",
+      "name": "轮胎世界网",
       "kind": "mp_account",
       "config": {
-        "ghid": "gh_2d40f2749e86",
-        "nickname": "商用车联盟"
+        "ghid": "gh_539bcf97e979",
+        "nickname": "轮胎世界网"
       },
       "tier": "T2",
       "participation_mode": "editorial",
@@ -4881,12 +4646,12 @@
       "syndicate_fulltext": false
     },
     {
-      "id": "mp-539bcf97e979",
-      "name": "轮胎世界网",
+      "id": "mp-pengpai",
+      "name": "澎湃新闻",
       "kind": "mp_account",
       "config": {
-        "ghid": "gh_539bcf97e979",
-        "nickname": "轮胎世界网"
+        "ghid": "thepapernews",
+        "nickname": "澎湃新闻"
       },
       "tier": "T2",
       "participation_mode": "editorial",
