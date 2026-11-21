@@ -10,6 +10,7 @@ import { closeDb, sql } from "@aihot/backend/db";
 import { upsertMaterial } from "@aihot/backend/content/materials";
 import { stopBoss } from "@aihot/backend/jobs/queue";
 import { publishArticle } from "@aihot/backend/publication/publish";
+import { channelOf } from "@aihot/backend/publication/rules";
 import { ITEM_COPY } from "@aihot/site";
 import { encodeCursor, decodeCursor, queryBinding } from "@aihot/backend/lib/cursor";
 import { loadTimeline } from "@aihot/backend/publication/timeline";
@@ -18,12 +19,18 @@ import { buildApp } from "../apps/api/src/app.ts";
 const T = tag();
 const MEDIA = `test-seats-media-${T}`;
 const OFFICIAL = `test-seats-official-${T}`;
+const WEIBO = `weibo-${T}`;
+const WEIBO_PAGE = `weibopage-other-${T}`;
+const X = `test-seats-x-${T}`;
 const app = await buildApp();
 
 before(async () => {
   await sql`INSERT INTO sources (id, name, kind, tier, participation_mode, next_fetch_at) VALUES
     (${MEDIA}, 'Media', 'rss', 'T2', 'editorial', '2100-01-01'),
-    (${OFFICIAL}, 'Official', 'rss', 'T1', 'editorial', '2100-01-01')`;
+    (${OFFICIAL}, 'Official', 'rss', 'T1', 'editorial', '2100-01-01'),
+    (${WEIBO}, 'Weibo account', 'json_list', 'T2', 'editorial', '2100-01-01'),
+    (${WEIBO_PAGE}, 'Other Weibo account', 'external', 'T2', 'editorial', '2100-01-01'),
+    (${X}, 'X account', 'x_search', 'T2', 'editorial', '2100-01-01')`;
 });
 after(async () => {
   await app.close();
@@ -35,14 +42,14 @@ after(async () => {
 // clock hold even when the VM's clock steps back (on the CI VMs by as much as 0.4 s).
 const start = Date.now() - 60_000;
 let n = 0;
-async function report(source: string, fact: number) {
+async function report(source: string, fact: number, options: { at?: Date; score?: number; selected?: boolean } = {}) {
   n += 1;
-  const at = new Date(start + n * 1000);
+  const at = options.at ?? new Date(start + n * 1000);
   const { articleId } = await upsertMaterial({
     sourceId: source, url: `https://example.com/seats-${T}-${n}`, title: `Seat ${n} ${T}`, bodyText: "body", bodyHtml: "<p>body</p>", bodyStatus: "ok", via: "fetch", publishedAt: at, discoveredAt: at,
   });
   await sql`INSERT INTO analyses (article_id, input_revision, origin, relevance, category, title_zh, summary_zh, reason_zh, score, selected, tags)
-            VALUES (${articleId}, 1, 'rule', 'pass', 'industry', ${`标题${n}-${T}`}, ${`摘要${n}-${T}`}, ${`理由${n}`}, 80, true, ${[`t-${T}`]})`;
+            VALUES (${articleId}, 1, 'rule', 'pass', 'industry', ${`标题${n}-${T}`}, ${`摘要${n}-${T}`}, ${`理由${n}`}, ${options.score ?? 80}, ${options.selected ?? true}, ${[`t-${T}`]})`;
   await sql`INSERT INTO fact_articles (fact_id, article_id, role) VALUES (${fact}, ${articleId}, 'report')`;
   await sql`UPDATE articles SET grouping_status = 'complete', grouped_at = now() WHERE id = ${articleId}`;
   await publishArticle(articleId, { releasedAt: at });
@@ -119,6 +126,53 @@ test("one fact holds one selected seat on v1, RSS and the sync ledger", async ()
   const agent = (await get('/api/v1/agent/latest?limit=30')).body;
   assert.ok(agent.includes(evaluated) && agent.includes(official) && !agent.includes(first));
 
+});
+
+test("Weibo source IDs take precedence over X data in the publication channel", () => {
+  assert.equal(channelOf("weibo-123", "json_list", false), "weibo");
+  assert.equal(channelOf("weibopage-456", "external", false), "weibo");
+  assert.equal(channelOf("weibo-123", "json_list", true), "weibo");
+  assert.equal(channelOf("weibopage-456", "x_search", true), "weibo");
+  assert.equal(channelOf(X, "x_search", false), "x");
+  assert.equal(channelOf(MEDIA, "rss", true), "x");
+  assert.equal(channelOf(MEDIA, "rss", false), "news");
+});
+
+test("selected Weibo posts yield to the latest post from the same source on the same fact", async () => {
+  const [story] = await sql<{ id: number }[]>`INSERT INTO stories (public_id, title) VALUES (${randomUUID()}, ${`Weibo-${T}`}) RETURNING id`;
+  const [fact] = await sql<{ id: number }[]>`INSERT INTO facts (public_id, story_id, title) VALUES (${`weibo-seat-${T}`}, ${story!.id}, 'Launch') RETURNING id`;
+  const official = await report(OFFICIAL, fact!.id);
+  const old = await report(WEIBO, fact!.id, { score: 98 });
+  const otherAccount = await report(WEIBO_PAGE, fact!.id);
+  const news = await report(MEDIA, fact!.id);
+  const x = await report(X, fact!.id);
+  const latestAt = new Date(start + (n + 1) * 1000);
+  const latest = await report(WEIBO, fact!.id, { at: latestAt, score: 90 });
+  const lowerScore = await report(WEIBO, fact!.id, { at: latestAt, score: 80 });
+  const unselected = await report(WEIBO, fact!.id, { score: 99, selected: false });
+
+  const seats = await sql<{ article_id: string; channel: string; selected: boolean; seat: boolean }[]>`
+    SELECT article_id, channel, selected, seat FROM publications WHERE fact_id = ${fact!.id}`;
+  assert.deepEqual(new Set(seats.filter((r) => r.seat).map((r) => r.article_id)), new Set([official, latest, otherAccount, unselected]));
+  assert.deepEqual(seats.find((r) => r.article_id === old), { article_id: old, channel: "weibo", selected: true, seat: false });
+  assert.deepEqual(seats.find((r) => r.article_id === unselected), { article_id: unselected, channel: "weibo", selected: false, seat: true });
+
+  const pool = (await get(`/api/site/pool?q=${T}`)).json.items as Array<{ id: string; channel: string; x: unknown; sameEvent?: { id: string } | null }>;
+  const cards = new Map(pool.map((item) => [item.id, item]));
+  for (const id of [old, lowerScore]) assert.equal(cards.get(id)?.sameEvent?.id, latest);
+  for (const id of [news, x]) assert.equal(cards.get(id)?.sameEvent?.id, official);
+  for (const id of [latest, otherAccount, unselected]) {
+    assert.equal(cards.get(id)?.channel, "weibo");
+    assert.equal(cards.get(id)?.x, null);
+    assert.equal(cards.get(id)?.sameEvent ?? null, null);
+  }
+  assert.equal((await get(`/api/site/items/${old}`)).json.sameEvent?.id, latest);
+
+  const [followUp] = await sql<{ id: number }[]>`INSERT INTO facts (public_id, story_id, title) VALUES (${`weibo-follow-up-${T}`}, ${story!.id}, 'Follow-up') RETURNING id`;
+  const representative = await report(WEIBO, followUp!.id, { score: 95 });
+  const update = await report(WEIBO, followUp!.id, { score: 85 });
+  const followUpSeats = await sql<{ article_id: string }[]>`SELECT article_id FROM publications WHERE fact_id = ${followUp!.id} AND seat`;
+  assert.deepEqual(new Set(followUpSeats.map((r) => r.article_id)), new Set([representative, update]));
 });
 
 test("a broken or empty snapshot page asks for a new snapshot", async () => {

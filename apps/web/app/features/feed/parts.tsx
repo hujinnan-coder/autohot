@@ -10,7 +10,7 @@ import { toggleStar, useIsStarred } from "../../lib/local-state";
 /** The text colour of a report: grey once this browser has opened it, so the unread ones stand out. */
 export const readTone = (read: boolean, unread: string) => (read ? "text-ink-4" : unread);
 
-type SourceLineItem = Pick<FeedItemSummary, "source" | "channel"> & {
+type SourceLineItem = Pick<FeedItemSummary, "source" | "channel" | "weibo"> & {
   x: Pick<XPostView, "authorName" | "handle" | "avatarUrl" | "avatarSrcSet"> | null;
 };
 
@@ -22,6 +22,16 @@ export function SourceLine({ item, className = "" }: { item: SourceLineItem; cla
         <SourceAvatar name={item.x.authorName} avatarUrl={item.x.avatarUrl} avatarSrcSet={item.x.avatarSrcSet} size={16} />
         <span className="truncate text-ink-3">{item.x.authorName}</span>
         <span className="hidden shrink-0 text-ink-4 min-[400px]:inline">@{item.x.handle}</span>
+      </span>
+    );
+  }
+  // A Weibo post is an account's own voice: the account avatar and name, not the feed's source label.
+  if (item.channel === "weibo" && item.weibo) {
+    return (
+      <span className={`flex min-w-0 items-center gap-1.5 ${className}`}>
+        {item.source.iconUrl && <SourceAvatar name={item.weibo.author} iconUrl={item.source.iconUrl} size={16} />}
+        <span className="truncate text-ink-3">{item.weibo.author}</span>
+        <span className="hidden shrink-0 text-ink-4 min-[400px]:inline">微博</span>
       </span>
     );
   }

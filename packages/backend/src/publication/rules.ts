@@ -30,8 +30,22 @@ export interface SourceFacts {
   syndicate_fulltext: boolean;
 }
 
-export function channelOf(sourceKind: string, hasXPost: boolean): "x" | "news" {
+export function channelOf(sourceId: string, sourceKind: string, hasXPost: boolean): "x" | "weibo" | "news" {
+  if (sourceId.startsWith("weibo-") || sourceId.startsWith("weibopage-")) return "weibo";
   return sourceKind === "x_search" || hasXPost ? "x" : "news";
+}
+
+/** A Weibo account can post several updates on one fact; its latest report gets the account's seat. */
+export function latestWeiboBySource<T extends { source_id: string; article_id: string; timeline_at: Date; score: number | null }>(reports: T[]): Map<string, T> {
+  const latest = new Map<string, T>();
+  for (const report of reports) {
+    const current = latest.get(report.source_id);
+    const priority = current && (report.timeline_at.getTime() - current.timeline_at.getTime()
+      || (report.score ?? -Infinity) - (current.score ?? -Infinity)
+      || current.article_id.localeCompare(report.article_id));
+    if (priority === undefined || priority > 0) latest.set(report.source_id, report);
+  }
+  return latest;
 }
 
 /** Public pool (/all): editorial sources, AI relevant, with usable copy or an original post. */

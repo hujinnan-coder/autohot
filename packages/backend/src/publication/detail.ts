@@ -102,6 +102,7 @@ export async function loadItemDetail(id: string, language: "zh" | "original" = "
       reason: null,
       tags: [],
       x: null,
+      weibo: row.channel === "weibo" ? { author: summary.source.name } : null,
       readingMode: "summary-only",
       author: null,
       body: null,
@@ -187,6 +188,7 @@ export async function loadItemDetail(id: string, language: "zh" | "original" = "
   const item: SiteItemDetail = {
     ...summary,
     x,
+    weibo: row.channel === "weibo" ? { author: row.author ?? summary.source.name } : null,
     ...(sameEvent ? { reason: null, sameEvent } : {}),
     readingMode: "full",
     author: row.author,

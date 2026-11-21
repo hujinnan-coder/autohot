@@ -78,7 +78,7 @@ export interface ItemSummary {
   tags: string[];
   score: number | null;
   selected: boolean;
-  channel: "news" | "x";
+  channel: "news" | "x" | "weibo";
   story: StoryRef | null;
 }
 
@@ -87,6 +87,8 @@ export interface FeedItemSummary extends Pick<ItemSummary, "id" | "title" | "sum
   x: (Pick<XPostView, "authorName" | "handle" | "avatarUrl" | "avatarSrcSet" | "media" | "article"> & {
     quoted: Omit<NonNullable<XPostView["quoted"]>, "url"> | null;
   }) | null;
+  /** A Weibo post renders as a social card: its author's name next to the source avatar (parts.tsx). */
+  weibo: { author: string } | null;
   /**
    * A selected report whose fact is represented by another report (全部动态 and search): that report,
    * so the card can say "同一件事，精选收录的是《…》" instead of claiming a seat of its own.
@@ -164,6 +166,8 @@ export interface SiteItemDetail extends ItemSummary {
   x: (Omit<XPostView, "text" | "translation" | "quoted"> & { quoted: QuotedPostView | null }) | null;
   /** Selected, but its fact's seat is held by this report: marked 同事件, without a reason of its own. */
   sameEvent?: { id: string; title: string } | null;
+  /** A Weibo post's account name for the social card's source line (parts.tsx); null for other channels. */
+  weibo: { author: string } | null;
   readingMode: "full" | "summary-only";
   author: string | null;
   /** Whitelisted HTML of the language shown; the other one is null. */
