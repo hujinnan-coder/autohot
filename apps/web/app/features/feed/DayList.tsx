@@ -20,11 +20,16 @@ export function DayList({ items, todayCount = null, headerAside }: { items: Feed
         <section key={day} aria-label={day}>
           <DayHeader day={day} today={today} count={day === today ? todayCount : null} aside={i === 0 ? headerAside : undefined} />
           <ol className="lg:pt-1">
-            {list.map((it) => (
-              <TimelineSlot key={it.id} at={it.timelineAt}>
-                <FeedItem item={it} read={readSet.has(it.id)} onOpen={markRead} showTags at={it.timelineAt} />
-              </TimelineSlot>
-            ))}
+            {list.map((it) => {
+              // The card shows when it was published, not when the site received it; a card whose
+              // publication predates its day carries its date (cardTimeLabel).
+              const shownAt = it.publishedAt ?? it.timelineAt;
+              return (
+                <TimelineSlot key={it.id} at={shownAt} day={day}>
+                  <FeedItem item={it} read={readSet.has(it.id)} onOpen={markRead} showTags at={shownAt} atDay={day} />
+                </TimelineSlot>
+              );
+            })}
           </ol>
         </section>
       ))}

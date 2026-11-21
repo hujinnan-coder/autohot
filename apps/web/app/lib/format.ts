@@ -25,6 +25,13 @@ export function weekdayShort(date: string): string {
   return beijingWeekday(date).replace("星期", "周");
 }
 
+/** The card time of an item: its original publication time, or the site's time for it. A time from
+ * another day than the list's day says its date too ("11-20 23:50"), so the label never reads as
+ * that day's time. */
+export function cardTimeLabel(at: string, day?: string): string {
+  return day && beijingDate(at) !== day ? `${beijingDate(at).slice(5)} ${beijingTime(at)}` : beijingTime(at);
+}
+
 export function relativeTime(iso: string, now = Date.now()): string {
   return timeAgo(iso, now) ?? beijingDate(iso);
 }
