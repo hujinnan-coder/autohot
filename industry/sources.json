@@ -5752,6 +5752,26 @@
       ],
       "site_fulltext": false,
       "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-audi-mediacenter",
+      "name": "奥迪 MediaCenter·全球新闻稿",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://www.audi-mediacenter.com/en/feeds/media-releases",
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "官方",
+        "海外"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
     }
   ]
 }
