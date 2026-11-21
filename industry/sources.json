@@ -163,7 +163,7 @@
     },
     {
       "id": "rss-cnbc-autos",
-      "name": "CNBC：Autos",
+      "name": "CNBC",
       "kind": "rss",
       "config": {
         "feedUrl": "https://www.cnbc.com/id/10000101/device/rss/rss.html",
@@ -183,7 +183,7 @@
     },
     {
       "id": "rss-verge-transportation",
-      "name": "The Verge：交通",
+      "name": "The Verge",
       "kind": "rss",
       "config": {
         "feedUrl": "https://www.theverge.com/rss/transportation/index.xml",
@@ -203,7 +203,7 @@
     },
     {
       "id": "rss-techcrunch-transportation",
-      "name": "TechCrunch：交通",
+      "name": "TechCrunch",
       "kind": "rss",
       "config": {
         "feedUrl": "https://techcrunch.com/category/transportation/feed/",
@@ -223,7 +223,7 @@
     },
     {
       "id": "web-autohome-original",
-      "name": "汽车之家·之家原创车闻",
+      "name": "汽车之家",
       "kind": "web_list",
       "config": {
         "url": "https://www.autohome.com.cn/ExpertBlog/editor_8326.html",
@@ -256,7 +256,7 @@
     },
     {
       "id": "rss-techcrunch-ai",
-      "name": "TechCrunch：AI",
+      "name": "TechCrunch",
       "kind": "rss",
       "config": {
         "feedUrl": "https://techcrunch.com/category/artificial-intelligence/feed/",
@@ -276,7 +276,7 @@
     },
     {
       "id": "rss-the-verge-ai",
-      "name": "The Verge：AI",
+      "name": "The Verge",
       "kind": "rss",
       "config": {
         "feedUrl": "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml",
@@ -296,7 +296,7 @@
     },
     {
       "id": "rss-the-decoder",
-      "name": "The Decoder：AI News",
+      "name": "The Decoder",
       "kind": "rss",
       "config": {
         "feedUrl": "https://the-decoder.com/feed/",
@@ -445,7 +445,7 @@
     },
     {
       "id": "web-yiche-original",
-      "name": "易车·原创报道",
+      "name": "易车",
       "kind": "web_list",
       "config": {
         "url": "https://i.yiche.com/u61014816/!article/",
@@ -478,7 +478,7 @@
     },
     {
       "id": "web-pcauto-nation",
-      "name": "太平洋汽车·国内",
+      "name": "太平洋汽车",
       "kind": "web_list",
       "config": {
         "url": "https://www.pcauto.com.cn/nation/",
@@ -513,7 +513,7 @@
     },
     {
       "id": "web-pcauto-news",
-      "name": "太平洋汽车·新闻",
+      "name": "太平洋汽车",
       "kind": "web_list",
       "config": {
         "url": "https://www.pcauto.com.cn/news/",
@@ -808,7 +808,7 @@
     },
     {
       "id": "json-cr-cars",
-      "name": "Consumer Reports：汽车",
+      "name": "Consumer Reports",
       "kind": "json_list",
       "config": {
         "url": "https://www.consumerreports.org/bin/feedinfo.tag=productsAndServices:taxonomy%7Ccars.json",
@@ -1449,7 +1449,7 @@
     },
     {
       "id": "rss-bloomberg-industries",
-      "name": "Bloomberg：工业",
+      "name": "Bloomberg",
       "kind": "rss",
       "config": {
         "feedUrl": "https://www.bloomberg.com/feeds/industries/news.rss",
@@ -1469,7 +1469,7 @@
     },
     {
       "id": "rss-ft-companies",
-      "name": "金融时报：公司",
+      "name": "金融时报",
       "kind": "rss",
       "config": {
         "feedUrl": "https://www.ft.com/companies?format=rss",
@@ -1489,7 +1489,7 @@
     },
     {
       "id": "rss-economist-business",
-      "name": "经济学人：商业",
+      "name": "经济学人",
       "kind": "rss",
       "config": {
         "feedUrl": "https://www.economist.com/business/rss.xml",
@@ -1509,7 +1509,7 @@
     },
     {
       "id": "rss-handelsblatt-auto",
-      "name": "德国商报：汽车",
+      "name": "德国商报",
       "kind": "rss",
       "config": {
         "feedUrl": "https://www.handelsblatt.com/contentexport/feed/auto",
@@ -1652,7 +1652,7 @@
     },
     {
       "id": "rss-autobild-news",
-      "name": "Auto Bild：新闻",
+      "name": "Auto Bild",
       "kind": "rss",
       "config": {
         "feedUrl": "https://www.autobild.de/rss/22590657.xml",
@@ -1714,7 +1714,7 @@
     },
     {
       "id": "rss-automobile-magazine",
-      "name": "L'Automobile Magazine：新闻",
+      "name": "L'Automobile Magazine",
       "kind": "rss",
       "config": {
         "feedUrl": "https://www.automobile-magazine.fr/services/rss/actualite.xml",
@@ -1735,7 +1735,7 @@
     },
     {
       "id": "web-automobil-produktion",
-      "name": "Automobil Produktion：新闻",
+      "name": "Automobil Produktion",
       "kind": "web_list",
       "config": {
         "url": "https://www.automobil-produktion.de/news",
@@ -1770,7 +1770,7 @@
     },
     {
       "id": "web-carmagazine-news",
-      "name": "CAR Magazine：新闻",
+      "name": "CAR Magazine",
       "kind": "web_list",
       "config": {
         "url": "https://www.carmagazine.co.uk/car-news/",
@@ -1803,7 +1803,7 @@
     },
     {
       "id": "web-autozeitung-news",
-      "name": "Auto Zeitung：新闻",
+      "name": "Auto Zeitung",
       "kind": "web_list",
       "config": {
         "url": "https://www.autozeitung.de/news",
@@ -1900,7 +1900,7 @@
     },
     {
       "id": "web-xcar-industry",
-      "name": "爱卡汽车·行业资讯",
+      "name": "爱卡汽车",
       "kind": "web_list",
       "config": {
         "url": "https://info.xcar.com.cn/list/214/",
@@ -1931,7 +1931,7 @@
     },
     {
       "id": "web-xcar-newcar",
-      "name": "爱卡汽车·国内新车",
+      "name": "爱卡汽车",
       "kind": "web_list",
       "config": {
         "url": "https://info.xcar.com.cn/list/164/",
@@ -1962,7 +1962,7 @@
     },
     {
       "id": "web-news18a-dujia",
-      "name": "网通社·独家",
+      "name": "网通社",
       "kind": "web_list",
       "config": {
         "url": "https://auto.news18a.com/news/dujia/",
@@ -1996,7 +1996,7 @@
     },
     {
       "id": "web-gov-cn-policy",
-      "name": "中国政府网·最新政策",
+      "name": "中国政府网",
       "kind": "web_list",
       "config": {
         "url": "https://www.gov.cn/pushinfo/v150203/index.htm",
@@ -2024,7 +2024,7 @@
     },
     {
       "id": "web-ndrc-news",
-      "name": "国家发展改革委·新闻发布",
+      "name": "国家发展改革委",
       "kind": "web_list",
       "config": {
         "url": "https://www.ndrc.gov.cn/xwdt/xwfb/",
@@ -2052,7 +2052,7 @@
     },
     {
       "id": "web-mof-news",
-      "name": "财政部·财政新闻",
+      "name": "财政部",
       "kind": "web_list",
       "config": {
         "url": "https://www.mof.gov.cn/zhengwuxinxi/caizhengxinwen/",
@@ -2080,7 +2080,7 @@
     },
     {
       "id": "web-stats-releases",
-      "name": "国家统计局·最新发布",
+      "name": "国家统计局",
       "kind": "web_list",
       "config": {
         "url": "https://www.stats.gov.cn/sj/zxfb/",
@@ -2136,7 +2136,7 @@
     },
     {
       "id": "web-sina-auto-news",
-      "name": "新浪汽车·新闻",
+      "name": "新浪汽车",
       "kind": "web_list",
       "config": {
         "url": "https://auto.sina.com.cn/news/",
@@ -2166,7 +2166,7 @@
     },
     {
       "id": "web-163-auto-news",
-      "name": "网易汽车·新闻",
+      "name": "网易汽车",
       "kind": "web_list",
       "config": {
         "url": "https://auto.163.com/news/",
@@ -2196,7 +2196,7 @@
     },
     {
       "id": "web-mot-news",
-      "name": "交通运输部·交通要闻",
+      "name": "交通运输部",
       "kind": "web_list",
       "config": {
         "url": "https://www.mot.gov.cn/xinwen/jiaotongyaowen/",
@@ -2224,7 +2224,7 @@
     },
     {
       "id": "web-miit-vehicle-announcements",
-      "name": "工信部·装备工业一司文件发布",
+      "name": "工信部",
       "kind": "web_list",
       "config": {
         "url": "https://www.miit.gov.cn/api-gateway/jpaas-publish-server/front/page/build/unit?parseType=buildstatic&webId=8d828e408d90447786ddbe128d495e9e&tplSetId=209741b2109044b5b7695700b2bec37e&pageType=column&tagId=%E5%BD%93%E5%89%8D%E6%A0%8F%E7%9B%AE_list&editType=null&pageId=28ac65269a12494f81b5a832bce5f51c",
@@ -2253,7 +2253,7 @@
     },
     {
       "id": "web-samr-recalls",
-      "name": "市场监管总局·召回公告",
+      "name": "市场监管总局",
       "kind": "web_list",
       "config": {
         "url": "https://www.samr.gov.cn/api-gateway/jpaas-publish-server/front/page/build/unit?parseType=bulidstatic&webId=29e9522dc89d4e088a953d8cede72f4c&tplSetId=5c30fb89ae5e48b9aefe3cdf49853830&pageType=column&tagId=%E5%86%85%E5%AE%B9%E5%8C%BA%E5%9F%9F&editType=null&pageId=bf39604e7599427c92ec64e90577f57a",
@@ -2282,7 +2282,7 @@
     },
     {
       "id": "web-cpca-news",
-      "name": "乘联会·行业新闻",
+      "name": "乘联会",
       "kind": "web_list",
       "config": {
         "url": "https://r.jina.ai/https://www.cpcaauto.com/news.php?types=news",
@@ -2310,7 +2310,7 @@
     },
     {
       "id": "web-caam-stats",
-      "name": "中汽协·产销简析",
+      "name": "中汽协",
       "kind": "web_list",
       "config": {
         "url": "http://www.caam.org.cn/chn/5/cate_31/list_1.html",
@@ -2338,7 +2338,7 @@
     },
     {
       "id": "web-nea-news",
-      "name": "国家能源局·要闻",
+      "name": "国家能源局",
       "kind": "web_list",
       "config": {
         "url": "https://www.nea.gov.cn/",
@@ -2366,7 +2366,7 @@
     },
     {
       "id": "web-catarc-news",
-      "name": "中汽中心·新闻",
+      "name": "中汽中心",
       "kind": "web_list",
       "config": {
         "url": "https://www.catarc.ac.cn/",
@@ -2394,7 +2394,7 @@
     },
     {
       "id": "web-mofcom-news",
-      "name": "商务部·新闻发布",
+      "name": "商务部",
       "kind": "web_list",
       "config": {
         "url": "http://www.mofcom.gov.cn/",
@@ -2424,7 +2424,7 @@
     },
     {
       "id": "web-cnipa-news",
-      "name": "国家知识产权局·最新发布",
+      "name": "国家知识产权局",
       "kind": "web_list",
       "config": {
         "url": "https://www.cnipa.gov.cn/module/web/jpage/dataproxy.jsp?page=1&webid=1&path=https%3A%2F%2Fwww.cnipa.gov.cn%2F&columnid=2073&unitid=669&webname=%E5%9B%BD%E5%AE%B6%E7%9F%A5%E8%AF%86%E4%BA%A7%E6%9D%83%E5%B1%80&permissiontype=0&startrecord=1&endrecord=30&perpage=20",
@@ -2453,7 +2453,7 @@
     },
     {
       "id": "web-nfra-news",
-      "name": "国家金融监督管理总局·要闻",
+      "name": "国家金融监督管理总局",
       "kind": "web_list",
       "config": {
         "url": "https://r.jina.ai/https://www.nfra.gov.cn/",
@@ -2537,7 +2537,7 @@
     },
     {
       "id": "web-yiche-yuanshu-1347843",
-      "name": "易车号·苑叔聊车",
+      "name": "苑叔聊车",
       "kind": "web_list",
       "config": {
         "url": "https://i.yiche.com/u1347843/!article/",
@@ -2570,7 +2570,7 @@
     },
     {
       "id": "web-yiche-yancheshe-2983127",
-      "name": "易车号·言车社",
+      "name": "言车社",
       "kind": "web_list",
       "config": {
         "url": "https://i.yiche.com/u2983127/!article/",
@@ -2603,7 +2603,7 @@
     },
     {
       "id": "web-yiche-shijieguan-9964884",
-      "name": "易车号·汽车视界观",
+      "name": "汽车视界观",
       "kind": "web_list",
       "config": {
         "url": "https://i.yiche.com/u9964884/!article/",
@@ -2636,7 +2636,7 @@
     },
     {
       "id": "web-yiche-tianya-13404851",
-      "name": "易车号·汽车天涯",
+      "name": "汽车天涯",
       "kind": "web_list",
       "config": {
         "url": "https://i.yiche.com/u13404851/!article/",
@@ -2669,7 +2669,7 @@
     },
     {
       "id": "web-yiche-xincheping-13416648",
-      "name": "易车号·新车评",
+      "name": "新车评",
       "kind": "web_list",
       "config": {
         "url": "https://i.yiche.com/u13416648/!article/",
@@ -2702,7 +2702,7 @@
     },
     {
       "id": "web-yiche-chegulu-14838927",
-      "name": "易车号·车轱辘",
+      "name": "车轱辘",
       "kind": "web_list",
       "config": {
         "url": "https://i.yiche.com/u14838927/!article/",
@@ -2735,7 +2735,7 @@
     },
     {
       "id": "web-yiche-wanchejiaoshou-14956882",
-      "name": "易车号·玩车教授",
+      "name": "玩车教授",
       "kind": "web_list",
       "config": {
         "url": "https://i.yiche.com/u14956882/!article/",
@@ -2768,7 +2768,7 @@
     },
     {
       "id": "web-yiche-aichebingtuan-15349471",
-      "name": "易车号·爱车兵团",
+      "name": "爱车兵团",
       "kind": "web_list",
       "config": {
         "url": "https://i.yiche.com/u15349471/!article/",
@@ -2801,7 +2801,7 @@
     },
     {
       "id": "web-yiche-goche-17455257",
-      "name": "易车号·GO车情报员",
+      "name": "GO车情报员",
       "kind": "web_list",
       "config": {
         "url": "https://i.yiche.com/u17455257/!article/",
@@ -2834,7 +2834,7 @@
     },
     {
       "id": "web-yiche-wufeiyang-18382956",
-      "name": "易车号·车舞飞扬TV",
+      "name": "车舞飞扬TV",
       "kind": "web_list",
       "config": {
         "url": "https://i.yiche.com/u18382956/!article/",
@@ -2867,7 +2867,7 @@
     },
     {
       "id": "web-yiche-woweichekuang-18475398",
-      "name": "易车号·我为车狂",
+      "name": "我为车狂",
       "kind": "web_list",
       "config": {
         "url": "https://i.yiche.com/u18475398/!article/",
@@ -2900,7 +2900,7 @@
     },
     {
       "id": "web-yiche-chezhishi-20724739",
-      "name": "易车号·车知事",
+      "name": "车知事",
       "kind": "web_list",
       "config": {
         "url": "https://i.yiche.com/u20724739/!article/",
@@ -2933,7 +2933,7 @@
     },
     {
       "id": "web-yiche-malache-21297664",
-      "name": "易车号·麻辣车评君",
+      "name": "麻辣车评君",
       "kind": "web_list",
       "config": {
         "url": "https://i.yiche.com/u21297664/!article/",
@@ -2966,7 +2966,7 @@
     },
     {
       "id": "web-yiche-youshi-22415783",
-      "name": "易车号·优视汽车",
+      "name": "优视汽车",
       "kind": "web_list",
       "config": {
         "url": "https://i.yiche.com/u22415783/!article/",
@@ -2999,7 +2999,7 @@
     },
     {
       "id": "web-yiche-woniu-24109259",
-      "name": "易车号·蜗牛车志",
+      "name": "蜗牛车志",
       "kind": "web_list",
       "config": {
         "url": "https://i.yiche.com/u24109259/!article/",
@@ -3032,7 +3032,7 @@
     },
     {
       "id": "web-yiche-tiantian-25959781",
-      "name": "易车号·天天汽车V",
+      "name": "天天汽车V",
       "kind": "web_list",
       "config": {
         "url": "https://i.yiche.com/u25959781/!article/",
@@ -3065,7 +3065,7 @@
     },
     {
       "id": "web-yiche-fengxing-31597693",
-      "name": "易车号·枫行视界",
+      "name": "枫行视界",
       "kind": "web_list",
       "config": {
         "url": "https://i.yiche.com/u31597693/!article/",
@@ -3098,7 +3098,7 @@
     },
     {
       "id": "web-yiche-qipai-44278304",
-      "name": "易车号·汽湃",
+      "name": "汽湃",
       "kind": "web_list",
       "config": {
         "url": "https://i.yiche.com/u44278304/!article/",
@@ -3131,7 +3131,7 @@
     },
     {
       "id": "web-yiche-cjiache-49092279",
-      "name": "易车号·C家车探",
+      "name": "C家车探",
       "kind": "web_list",
       "config": {
         "url": "https://i.yiche.com/u49092279/!article/",
@@ -3164,7 +3164,7 @@
     },
     {
       "id": "web-yiche-jiaxiang-216970071",
-      "name": "易车号·驾享生活V",
+      "name": "驾享生活V",
       "kind": "web_list",
       "config": {
         "url": "https://i.yiche.com/u216970071/!article/",
@@ -3197,7 +3197,7 @@
     },
     {
       "id": "web-d1ev-newsflash",
-      "name": "第一电动·快讯",
+      "name": "第一电动",
       "kind": "web_list",
       "config": {
         "url": "https://www.d1ev.com/newsflash",
@@ -3308,7 +3308,7 @@
     },
     {
       "id": "web-yiche-youchezhihou-13713973",
-      "name": "易车号·有车以后",
+      "name": "有车以后",
       "kind": "web_list",
       "config": {
         "url": "https://i.yiche.com/u13713973/!article/",
@@ -3533,7 +3533,7 @@
     },
     {
       "id": "web-yiche-autocarweekly-13805639",
-      "name": "易车号·autocarweekly",
+      "name": "autocarweekly",
       "kind": "web_list",
       "config": {
         "url": "https://i.yiche.com/u13805639/!article/",
@@ -4641,7 +4641,7 @@
     },
     {
       "id": "web-saic-official-news",
-      "name": "上汽集团·官方新闻",
+      "name": "上汽集团",
       "kind": "web_list",
       "config": {
         "url": "https://www.saicmotor.com/chinese/xwzx/xwk/index.shtml",
@@ -4673,7 +4673,7 @@
     },
     {
       "id": "web-jac-official-news",
-      "name": "江汽集团·官方新闻",
+      "name": "江汽集团",
       "kind": "web_list",
       "config": {
         "url": "https://www.jac.com.cn/news/",
@@ -4706,7 +4706,7 @@
     },
     {
       "id": "web-sinotruk-official-news",
-      "name": "中国重汽·官方新闻",
+      "name": "中国重汽",
       "kind": "web_list",
       "config": {
         "url": "https://www.sinotruk.com/sinotruk_xg/xwzx/jtxw/index.html",
@@ -4738,7 +4738,7 @@
     },
     {
       "id": "web-lexus-official-news",
-      "name": "雷克萨斯·官方新闻",
+      "name": "雷克萨斯",
       "kind": "web_list",
       "config": {
         "url": "https://www.lexus.com.cn/news",
@@ -4768,7 +4768,7 @@
     },
     {
       "id": "web-toyota-official-news",
-      "name": "丰田中国·媒体中心",
+      "name": "丰田中国",
       "kind": "web_list",
       "config": {
         "url": "https://www.toyota.com.cn/mediacenter/news/",
@@ -5767,7 +5767,7 @@
     },
     {
       "id": "rss-audi-mediacenter",
-      "name": "奥迪 MediaCenter·全球新闻稿",
+      "name": "奥迪 MediaCenter",
       "kind": "rss",
       "config": {
         "feedUrl": "https://www.audi-mediacenter.com/en/feeds/media-releases",
@@ -5787,7 +5787,7 @@
     },
     {
       "id": "web-21jingji-auto",
-      "name": "21世纪经济报道·汽车",
+      "name": "21世纪经济报道",
       "kind": "web_list",
       "config": {
         "url": "https://www.21jingji.com/channel/auto/",
@@ -5821,7 +5821,7 @@
     },
     {
       "id": "web-jiemian-auto",
-      "name": "界面新闻·汽车",
+      "name": "界面新闻",
       "kind": "web_list",
       "config": {
         "url": "https://www.jiemian.com/lists/51.html",
@@ -5849,7 +5849,7 @@
     },
     {
       "id": "web-jlr-official-news",
-      "name": "捷豹路虎·集团新闻室",
+      "name": "捷豹路虎",
       "kind": "web_list",
       "config": {
         "url": "https://media.jlr.com/corporate/en",
@@ -5881,7 +5881,7 @@
     },
     {
       "id": "web-gasgoo-news",
-      "name": "盖世汽车·资讯",
+      "name": "盖世汽车",
       "kind": "web_list",
       "config": {
         "url": "https://auto.gasgoo.com/auto-news/C-103-106-107-108-109-110-303-409-501-601",
