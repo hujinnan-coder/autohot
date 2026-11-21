@@ -4783,6 +4783,975 @@
       ],
       "site_fulltext": false,
       "syndicate_fulltext": false
+    },
+    {
+      "id": "x-tweetermeyer",
+      "name": "E.W. Niedermeyer（TheAutonocast）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:Tweetermeyer -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-davidshepardson",
+      "name": "David Shepardson（DetroitNews）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:davidshepardson -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-troyteslike",
+      "name": "Troy Teslike",
+      "kind": "x_search",
+      "config": {
+        "query": "from:TroyTeslike -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-shawnfainuaw",
+      "name": "Shawn Fain（UAW）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:ShawnFainUAW -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-craigdmauger",
+      "name": "Craig Mauger（detroitnews）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:CraigDMauger -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-guydealership",
+      "name": "Car Dealership Guy",
+      "kind": "x_search",
+      "config": {
+        "query": "from:GuyDealership -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-ebergg",
+      "name": "Emma Bergg",
+      "kind": "x_search",
+      "config": {
+        "query": "from:ebergg -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-mclainsean",
+      "name": "Sean McLain（WSJ）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:McLainSean -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-chadlivengood",
+      "name": "Chad Livengood（DetroitNews）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:ChadLivengood -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-mark-phelan",
+      "name": "Mark Phelan",
+      "kind": "x_search",
+      "config": {
+        "query": "from:mark_phelan -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-teslaownerssv",
+      "name": "Tesla Owners Silicon Valley",
+      "kind": "x_search",
+      "config": {
+        "query": "from:teslaownersSV -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-detroitnews",
+      "name": "The Detroit News",
+      "kind": "x_search",
+      "config": {
+        "query": "from:detroitnews -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-martinviecha",
+      "name": "Martin Viecha（PhysicalAIData）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:MartinViecha -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-jonahfurman",
+      "name": "Jonah Furman（UAW）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:JonahFurman -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-samueljrob",
+      "name": "Sam Robinson（icloud）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:samueljrob -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-dunne-insights",
+      "name": "Michael Dunne",
+      "kind": "x_search",
+      "config": {
+        "query": "from:dunne_insights -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-cpautoscribe",
+      "name": "Chris Paukert",
+      "kind": "x_search",
+      "config": {
+        "query": "from:CPAutoScribe -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-chactivist",
+      "name": "Chris Brooks（UAW）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:chactivist -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-tyson-jominy",
+      "name": "Tyson Jominy",
+      "kind": "x_search",
+      "config": {
+        "query": "from:tyson_jominy -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-kelleyroot",
+      "name": "Kelley Root（detroitnews）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:kelleyroot -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-graceihle",
+      "name": "Grace Kay（nytimes）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:graceihle -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-sawyermerritt",
+      "name": "Sawyer Merritt",
+      "kind": "x_search",
+      "config": {
+        "query": "from:SawyerMerritt -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-insideevs",
+      "name": "InsideEVs",
+      "kind": "x_search",
+      "config": {
+        "query": "from:InsideEVs -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-pduan",
+      "name": "Phil Duan（Tesla）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:pduan -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-johnvoelcker",
+      "name": "John 'legacy blue check' Voelcker",
+      "kind": "x_search",
+      "config": {
+        "query": "from:johnvoelcker -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-coreybcantor",
+      "name": "Corey Cantor🌙",
+      "kind": "x_search",
+      "config": {
+        "query": "from:CoreyBCantor -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-bozitatarevic",
+      "name": "Bozi Tatarevic",
+      "kind": "x_search",
+      "config": {
+        "query": "from:BoziTatarevic -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-jefferygilbert",
+      "name": "Jeff Gilbert",
+      "kind": "x_search",
+      "config": {
+        "query": "from:jefferygilbert -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-lramseth",
+      "name": "Luke Ramseth（detroitnews）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:lramseth -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-mikecolias",
+      "name": "Mike Colias（Reuters）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:MikeColias -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-aelluswamy",
+      "name": "Ashok Elluswamy（Tesla）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:aelluswamy -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-freep",
+      "name": "Detroit Free Press",
+      "kind": "x_search",
+      "config": {
+        "query": "from:freep -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-joesquawk",
+      "name": "Joe Kernen",
+      "kind": "x_search",
+      "config": {
+        "query": "from:JoeSquawk -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-woodhaus2",
+      "name": "Franz von Holzhausen（Tesla）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:woodhaus2 -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-teslaboomermama",
+      "name": "AleXandra Merz（TeslaBoomerPapa）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:TeslaBoomerMama -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-realdanodowd",
+      "name": "Dan O'Dowd",
+      "kind": "x_search",
+      "config": {
+        "query": "from:RealDanODowd -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-rohanspatel",
+      "name": "Rohan Patel（majoritydems）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:rohanspatel -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-bradmunchen",
+      "name": "Motorhead",
+      "kind": "x_search",
+      "config": {
+        "query": "from:BradMunchen -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-speedsportlife",
+      "name": "Zerin Dube",
+      "kind": "x_search",
+      "config": {
+        "query": "from:SpeedSportLife -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-leixing77",
+      "name": "Lei 𝕏ing邢磊",
+      "kind": "x_search",
+      "config": {
+        "query": "from:leixing77 -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-jonathansmucker",
+      "name": "Jonathan Smucker（popularcomms）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:jonathansmucker -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-rfelliott",
+      "name": "Rebecca Elliott（nytimes）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:rfelliott -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-hearstautos",
+      "name": "Hearst Autos 🚘",
+      "kind": "x_search",
+      "config": {
+        "query": "from:HearstAutos -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-chinadriven",
+      "name": "ChinaDriven",
+      "kind": "x_search",
+      "config": {
+        "query": "from:ChinaDriven -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-mramsey92",
+      "name": "Mike Ramsey",
+      "kind": "x_search",
+      "config": {
+        "query": "from:MRamsey92 -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-uaw-archivist",
+      "name": "UAW Archivist",
+      "kind": "x_search",
+      "config": {
+        "query": "from:UAW_Archivist -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-uawmembers",
+      "name": "UAW Members United",
+      "kind": "x_search",
+      "config": {
+        "query": "from:uawmembers -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-kjimroglou",
+      "name": "Krissi Jimroglou（UAW）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:kjimroglou -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-workeruaw",
+      "name": "Scott Houldieson Sr",
+      "kind": "x_search",
+      "config": {
+        "query": "from:workerUAW -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-elonmusk",
+      "name": "Elon Musk（特斯拉 CEO）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:elonmusk -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "高管"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-mtbarra",
+      "name": "Mary Barra（通用汽车 CEO）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:mtbarra -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "高管"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-williamlinio",
+      "name": "李斌（蔚来创始人）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:WilliamLiNIO -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "高管"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-leijun",
+      "name": "雷军（小米创始人）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:leijun -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "高管"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-rjscaringe",
+      "name": "RJ Scaringe（Rivian CEO）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:RJScaringe -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "高管"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-thomasingenlath",
+      "name": "Thomas Ingenlath（极星 CEO）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:ThomasIngenlath -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "高管"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-herbert-diess",
+      "name": "Herbert Diess（前大众集团 CEO）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:Herbert_Diess -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "高管"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-dkhos",
+      "name": "Dara Khosrowshahi（Uber CEO）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:dkhos -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "高管"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
     }
   ]
 }
