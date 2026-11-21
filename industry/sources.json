@@ -3743,7 +3743,9 @@
         "微信公众号"
       ],
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "disabled_reason": "官网资讯栏目更全（46/55 汽车占比 vs 公众号同量），免费"
     },
     {
       "id": "mp-my360che",
@@ -5841,6 +5843,66 @@
       "tags": [
         "媒体",
         "汽车原创"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-jlr-official-news",
+      "name": "捷豹路虎·集团新闻室",
+      "kind": "web_list",
+      "config": {
+        "url": "https://media.jlr.com/corporate/en",
+        "parseMode": "html",
+        "linkSelector": "a[href*='/corporate/news/']",
+        "allowUrlPrefixes": [
+          "https://media.jlr.com/corporate/news/"
+        ],
+        "detail": {
+          "maxFetches": 10,
+          "titleSelector": "title",
+          "titleAuthoritative": true,
+          "publishedAtRegex": "\"datePublished\"\\s*:\\s*\"([^\"]+)\"",
+          "publishedAtAuthoritative": true
+        },
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "官方",
+        "海外"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-gasgoo-news",
+      "name": "盖世汽车·资讯",
+      "kind": "web_list",
+      "config": {
+        "url": "https://auto.gasgoo.com/auto-news/C-103-106-107-108-109-110-303-409-501-601",
+        "parseMode": "html",
+        "itemSelector": ".contentList",
+        "linkSelector": "h2.bigtitle a",
+        "titleSelector": "h2.bigtitle a",
+        "publishedAtSelector": ".time",
+        "allowUrlPrefixes": [
+          "https://auto.gasgoo.com/news/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "供应链"
       ],
       "site_fulltext": false,
       "syndicate_fulltext": false
