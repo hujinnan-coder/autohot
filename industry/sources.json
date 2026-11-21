@@ -3851,7 +3851,9 @@
         "微信公众号"
       ],
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "disabled_reason": "官网汽车频道内容更全更纯且免费"
     },
     {
       "id": "mp-cnauto",
@@ -3905,7 +3907,9 @@
         "微信公众号"
       ],
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "disabled_reason": "近7天推送0条汽车内容，官网也无汽车频道，停用省费"
     },
     {
       "id": "mp-1bef1f435dab",
@@ -3941,7 +3945,9 @@
         "微信公众号"
       ],
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "disabled_reason": "官网汽车频道内容更全更纯且免费"
     },
     {
       "id": "mp-caixinwang",
@@ -3977,7 +3983,9 @@
         "微信公众号"
       ],
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "disabled_reason": "近7天推送0条汽车内容，官网也无汽车频道，停用省费"
     },
     {
       "id": "mp-8a28da92dd9d",
@@ -4049,7 +4057,9 @@
         "微信公众号"
       ],
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "disabled_reason": "近7天推送0条汽车内容，官网也无汽车频道，停用省费"
     },
     {
       "id": "mp-0e34ec8fea29",
@@ -5769,6 +5779,68 @@
       "tags": [
         "官方",
         "海外"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-21jingji-auto",
+      "name": "21世纪经济报道·汽车",
+      "kind": "web_list",
+      "config": {
+        "url": "https://www.21jingji.com/channel/auto/",
+        "parseMode": "html",
+        "itemSelector": ".news a[href*=21jingji.com/article]",
+        "linkSelector": "a",
+        "titleSelector": "a",
+        "allowUrlPrefixes": [
+          "https://www.21jingji.com/article/",
+          "https://m.21jingji.com/article/"
+        ],
+        "detail": {
+          "maxFetches": 8,
+          "publishedAtRegex": "(20\\d\\d-\\d\\d-\\d\\d \\d\\d:\\d\\d)",
+          "publishedAtAuthoritative": true
+        },
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "财经",
+        "汽车原创"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-jiemian-auto",
+      "name": "界面新闻·汽车",
+      "kind": "web_list",
+      "config": {
+        "url": "https://www.jiemian.com/lists/51.html",
+        "parseMode": "html",
+        "itemSelector": "li.card-list",
+        "linkSelector": "a[href*=article]",
+        "titleSelector": ".card-list__title",
+        "publishedAtSelector": ".news-footer__date",
+        "allowUrlPrefixes": [
+          "https://www.jiemian.com/article/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "汽车原创"
       ],
       "site_fulltext": false,
       "syndicate_fulltext": false
