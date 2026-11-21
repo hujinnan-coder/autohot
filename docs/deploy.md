@@ -101,7 +101,7 @@ docker compose run --rm setup && docker compose up -d
 
 #### 原文发布时间用于时间线（2026 年 11 月 21 日）
 
-升级后新条目按原文发布时间分天和排序。已有站点在完成迁移后、重启 API 和 worker 前运行一次 `node --env-file=.env scripts/rebuild-timeline.ts`。Docker 部署在同一阶段运行 `docker compose run --rm --no-deps setup node scripts/rebuild-timeline.ts`。脚本在同一事务中重算旧条目的时间线、阅读组落位和精选席位，沿用已保存的评分、回灌标记和公开时间。
+升级后新条目按原文发布时间分天和排序，阅读组按代表自己的原文时间落位。已有站点先停 API 和 worker，再运行一次 `node --env-file=.env scripts/rebuild-timeline.ts`；Docker 部署运行 `docker compose stop api worker` 后执行 `docker compose run --rm --no-deps setup node scripts/rebuild-timeline.ts`。脚本在同一事务中重算旧条目的时间线，并将每条精选的 `sort_at` 重置为自身 `timeline_at`，沿用已保存的评分、回灌标记和公开时间。脚本完成后再启动服务，并确保只运行一个 worker。
 
 #### 后台只用管理员密码登录（2026 年 11 月 15 日）
 

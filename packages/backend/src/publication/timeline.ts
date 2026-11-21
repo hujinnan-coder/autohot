@@ -1,5 +1,5 @@
 // Selected news timeline: ordinary reports fold by fact; standalone and independent-source articles
-// keep their own cards. Each ordinary fact is dated by its earliest report's timeline time.
+// keep their own cards. Each ordinary fact is dated by its representative's timeline time.
 import type { GroupInfo, TimelineCard, TimelineFilters, TimelineResponse } from "@aihot/contracts/site";
 import { beijingDate, beijingMidnight } from "@aihot/contracts/time";
 import { sql } from "../db.ts";
@@ -45,23 +45,27 @@ async function groupPool(q: TimelineQuery, now: Date, factIds: number[]) {
 }
 
 /**
- * The selected set grouped into cards (fact or standalone item) with their anchor times, newest
+ * The selected set grouped into cards (fact or standalone item) with their representative times, newest
  * first. Every timeline page and its day counts read this list; it is kept for five seconds per
  * filter scope (a newly selected report appears at most that much later).
  */
 const groupedAnchors = cachedByKey(binding, (q: TimelineQuery) => queryGroupedAnchors(q, new Date()), { freshMs: 5000, maxStaleMs: 5000, maxKeys: 50 });
 
 async function queryGroupedAnchors(q: TimelineQuery, now: Date) {
-  const rows = (
-    await sql<{ gk: string; anchor_at: Date }[]>`
-      WITH base AS MATERIALIZED (
-        SELECT p.sort_at, CASE WHEN p.fact_id IS NOT NULL AND ${ownFactEvidenceCondition()} AND ${foldableSelectionCondition()}
-          THEN 'f' || p.fact_id::text ELSE 'a' || p.article_id END AS gk
-        FROM publications p
-        WHERE ${selectedCondition(now)} ${filterSql(q)}
-      )
-      SELECT gk, min(sort_at) AS anchor_at FROM base GROUP BY gk ORDER BY anchor_at DESC, gk COLLATE "C" DESC`
-  ).map((r) => ({ gk: r.gk, anchor: r.anchor_at.getTime() }));
+  type GroupMember = RepresentativeRow & { gk: string; sort_at: Date };
+  const members = await sql<GroupMember[]>`
+    SELECT p.article_id AS id, p.sort_at, p.timeline_at, p.body_mode, p.score,
+      CASE WHEN p.fact_id IS NOT NULL AND ${ownFactEvidenceCondition()} AND ${foldableSelectionCondition()}
+        THEN 'f' || p.fact_id::text ELSE 'a' || p.article_id END AS gk,
+      ${REPRESENTATIVE_COLUMNS}
+    FROM publications p JOIN sources s ON s.id = p.source_id LEFT JOIN facts f ON f.id = p.fact_id
+    WHERE ${selectedCondition(now)} ${filterSql(q)}`;
+  const groups = new Map<string, GroupMember[]>();
+  for (const member of members) groups.set(member.gk, [...(groups.get(member.gk) ?? []), member]);
+  const rows = [...groups].map(([gk, rows]) => {
+    const position = gk.startsWith("f") ? pickRepresentative(rows).sort_at : rows[0]!.sort_at;
+    return { gk, anchor: position.getTime() };
+  }).sort((a, b) => b.anchor - a.anchor || (a.gk < b.gk ? 1 : a.gk > b.gk ? -1 : 0));
   return rows;
 }
 

@@ -128,7 +128,7 @@ test("one fact holds one selected seat on v1, RSS and the sync ledger", async ()
 
 });
 
-test("a report discovered after Beijing midnight anchors its fact on the original publication day", async () => {
+test("a report discovered after Beijing midnight keeps the selected representative's publication time", async () => {
   const [fact] = await sql<{ id: number }[]>`INSERT INTO facts (public_id, title)
     VALUES (${`cross-midnight-${T}`}, 'Launch') RETURNING id`;
   const officialAt = new Date("2026-01-01T16:05:00Z");
@@ -139,17 +139,33 @@ test("a report discovered after Beijing midnight anchors its fact on the origina
   const query = { channel: "all" as const, category: null, tag: `t-${T}`, now: new Date("2026-01-01T16:20:00Z") };
   const checkTimeline = async () => {
     const timeline = await loadTimeline(query);
-    assert.deepEqual(timeline.cards.map((card) => [card.item.id, card.anchorAt]), [[official, publicAt.toISOString()]]);
+    assert.deepEqual(timeline.cards.map((card) => [card.item.id, card.anchorAt]), [[official, officialAt.toISOString()]]);
     assert.deepEqual(timeline.dayCounts, { "2026-01-01": 1 });
   };
   await checkTimeline();
 
-  // Recreate the timestamps stored before the cutover, including the selected report's old anchor.
+  // Recreate the discovered-time timestamps stored before the previous cutover.
   await sql`UPDATE articles SET timeline_at = discovered_at WHERE id = ${earlier}`;
   await sql`UPDATE publications SET timeline_at = discovered_at, sort_at = discovered_at WHERE article_id IN (${official}, ${earlier})`;
   await rebuildPublicationTimeline();
   await checkTimeline();
   assert.deepEqual(await rebuildPublicationTimeline(), { articles: 0, publications: 0 });
+});
+
+test("a representative stays at its own time when an earlier foldable report belongs to its fact", async () => {
+  const [fact] = await sql<{ id: number }[]>`INSERT INTO facts (public_id, title)
+    VALUES (${`representative-time-${T}`}, 'Launch') RETURNING id`;
+  const now = new Date();
+  const early = await report(MEDIA, fact!.id, { at: new Date(+now - 3 * 60 * 60_000) });
+  const [otherFact] = await sql<{ id: number }[]>`INSERT INTO facts (public_id, title)
+    VALUES (${`middle-time-${T}`}, 'Other news') RETURNING id`;
+  const middle = await report(MEDIA, otherFact!.id, { at: new Date(+now - 60 * 60_000) });
+  const representative = await report(OFFICIAL, fact!.id, { at: new Date(+now - 30 * 60_000) });
+
+  const timeline = await loadTimeline({ channel: "all", category: null, tag: `t-${T}`, now: new Date() });
+  assert.deepEqual(timeline.cards.map((card) => card.item.id), [representative, middle]);
+  assert.equal(timeline.cards[0]!.anchorAt, new Date(+now - 30 * 60_000).toISOString());
+  assert.ok(!timeline.cards.some((card) => card.item.id === early));
 });
 
 test("Weibo source IDs take precedence over X data in the publication channel", () => {

@@ -1,5 +1,5 @@
 // Failure cases: a composite or mention folding into a fact; stale fact membership still folding;
-// a future/withdrawn/unselected report affecting the anchor; filters choosing an anchor outside their
+// a future/withdrawn/unselected report affecting the representative time; filters choosing a representative outside their
 // own set; a later report moving a fact; equal-time standalone cards changing cursor order.
 import { tag } from "./setup.ts";
 import assert from "node:assert/strict";

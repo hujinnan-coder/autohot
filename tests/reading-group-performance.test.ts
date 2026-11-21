@@ -35,10 +35,10 @@ after(closeDb);
 // Failure cases: an old launch lifted by a new evaluation; two news facts hidden in one story card;
 // late duplicate reports moving a fact; a representative leaking another fact's sources;
 // a withdrawn representative returned; pagination splitting a fact across pages.
-test('selected news keeps each fact at its first appearance under its representative',async()=>{
+test('selected news keeps each fact at its representative time',async()=>{
   const timeline = await loadTimeline({channel:'all',category:null,tag:key,now});
   assert.deepEqual(timeline.cards.map(c=>c.item.id),[`${key}-1-2`,`${key}-0-2`]);
-  assert.deepEqual(timeline.cards.map(c=>c.anchorAt),[new Date(+now-3600000).toISOString(),new Date(+now-10*86400000).toISOString()]);
+  assert.deepEqual(timeline.cards.map(c=>c.anchorAt),[new Date(+now-3600000+2000).toISOString(),new Date(+now-10*86400000+2000).toISOString()]);
   assert.deepEqual(timeline.cards.map(c=>c.group!.reportCount),[6,6]);
   assert.deepEqual(timeline.cards.map(c=>c.group!.additionalSourceCount),[1,1]);
   assert.ok(timeline.cards.every(c=>!('latestDevelopment' in c.group!)&&!('developmentCount' in c.group!)), 'news cards carry no event progress');

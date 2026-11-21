@@ -44,7 +44,7 @@ async function queryItems(query: V1ItemsQuery, now: Date): Promise<V1ItemsResult
   const windowMs = query.window === "24h" ? 86400000 : 7 * 86400000;
   const windowStart = new Date(now.getTime() - windowMs);
   const binding = queryBinding({ m: query.mode, w: query.window, b: query.by, c: query.category, q: query.q });
-  // by=timeline is the site's own order: a selected item at its reading-group anchor, anything else at its timeline time.
+  // by=timeline is the site's own order: every item uses its own timeline time.
   const sortCol = query.by === "published" ? sql`coalesce(p.published_at, p.discovered_at)` : query.mode === "selected" ? sql`p.sort_at` : sql`p.timeline_at`;
   let after: { a: number; i: string } | null = null;
   if (query.cursor) {

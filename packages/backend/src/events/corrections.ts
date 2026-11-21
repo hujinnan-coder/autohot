@@ -32,7 +32,7 @@ export async function detachFromFact(id: string, reason: string, actor: string) 
     return { facts: factIds, stories: storyIds };
   });
   await publishArticle(id);
-  // The fact's other reports may take a new reading-group anchor.
+  // The fact's remaining representative may change.
   if (facts.length) {
     const others = await sql<{ article_id: string }[]>`SELECT DISTINCT article_id FROM fact_articles WHERE fact_id = ANY(${facts})`;
     for (const o of others) await publishArticle(o.article_id);
@@ -73,7 +73,7 @@ export async function moveToFact(id: string, factPublicId: string, reason: strin
   });
   if (!moved) return null;
   await publishArticle(id);
-  // The old facts' other reports may take a new reading-group anchor.
+  // Representatives of the old facts may change.
   if (moved.facts.length) {
     const others = await sql<{ article_id: string }[]>`SELECT DISTINCT article_id FROM fact_articles WHERE fact_id = ANY(${moved.facts})`;
     for (const o of others) await publishArticle(o.article_id);

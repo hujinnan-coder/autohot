@@ -15,7 +15,7 @@ import { editorialPolicy, emit } from "../modules.ts";
 import {
   bodyModeOf, channelOf, displayTags, isIndexable, isPoolEligible, isSelectable, isIndependentSelectedSource, latestWeiboBySource, mayRedistribute, publicSourceName, type SourceFacts,
 } from "./rules.ts";
-import { foldableSelectionCondition, latestCompositeCondition, ownFactEvidenceCondition } from "./scope.ts";
+import { latestCompositeCondition, ownFactEvidenceCondition } from "./scope.ts";
 
 interface ArticleRow {
   id: string;
@@ -174,7 +174,7 @@ async function appendLedger(tx: Tx, articleId: string, op: "upsert" | "remove", 
  * The website folds the same reports into reading groups instead. An article outside any fact keeps
  * its own seat, as does each selected article from an independent source. On Weibo, only the latest
  * selected report per account also keeps its seat, so launch-day updates from the same account can fold.
- * Recompute the shared timeline anchor here because a late discovery or a date correction can move it.
+ * Keep each publication's selected position aligned with its own timeline time.
  * Returns the ledger change of `self` when this settling made one. Fact membership is unaffected.
  */
 async function settleSeats(tx: Tx, factId: number | null, self: string | null, now: Date): Promise<"upsert" | "remove" | null> {
@@ -183,18 +183,16 @@ async function settleSeats(tx: Tx, factId: number | null, self: string | null, n
     return null;
   }
   const members = await tx<Array<Pick<PublicationRow, "article_id" | "score" | "source_id" | "channel" | "timeline_at" | "sort_at" | "selected"> & RepresentativeIdentity
-    & { body_mode: "full" | "summary"; seat: boolean; holds: boolean; anchors: boolean }>>`
+    & { body_mode: "full" | "summary"; seat: boolean; holds: boolean }>>`
     SELECT p.article_id, p.source_id, p.channel, p.body_mode, p.score, p.timeline_at, p.sort_at, p.selected, p.seat, ${REPRESENTATIVE_COLUMNS},
-      (p.eligible AND p.visibility = 'public' AND ${foldableSelectionCondition()}) AS anchors,
       (p.selected AND p.visibility = 'public' AND ${ownFactEvidenceCondition()}) AS holds
     FROM publications p JOIN sources s ON s.id = p.source_id JOIN facts f ON f.id = p.fact_id WHERE p.fact_id = ${factId}`;
   const candidates = members.filter((m) => m.holds && !isIndependentSelectedSource(m.source_id)).map((m) => ({ ...m, score: m.score === null ? null : Number(m.score) }));
   const rep = candidates.length ? pickRepresentative(candidates) : null;
   const weibo = latestWeiboBySource(members.filter((m) => m.holds && m.channel === "weibo"));
-  const anchor = members.reduce<Date | null>((earliest, m) => m.anchors && (!earliest || m.timeline_at < earliest) ? m.timeline_at : earliest, null);
   let own: "upsert" | "remove" | null = null;
   for (const m of members) {
-    const sortAt = m.selected && !isIndependentSelectedSource(m.source_id) && anchor && anchor < m.timeline_at ? anchor : m.timeline_at;
+    const sortAt = m.timeline_at;
     if (sortAt.getTime() !== m.sort_at.getTime()) {
       await tx`UPDATE publications SET sort_at = ${sortAt}, revision = revision + 1, updated_at = now() WHERE article_id = ${m.article_id}`;
     }
@@ -344,16 +342,8 @@ export async function publishArticleTx(tx: Tx, articleId: string, options: Publi
     [title, originalTitle, summary, publicSourceName(source.name), ...displayTags(tags), ...(analysis?.subjects ?? [])].filter(Boolean).join(" "),
   ).toLowerCase();
 
-  // Ordinary selected reports share their reading group's earliest timeline time. Independent
-  // articles keep their own time and never date the ordinary group.
-  let sortAt: Date = article.timeline_at;
-  if (selected && membership?.fact_id && !isIndependentSelectedSource(source.id)) {
-    const [anchor] = await tx<{ t: Date | null }[]>`
-      SELECT min(p.timeline_at) AS t FROM publications p
-      WHERE p.fact_id = ${membership.fact_id} AND p.eligible AND p.visibility = 'public' AND p.article_id <> ${articleId}
-        AND ${foldableSelectionCondition()}`;
-    if (anchor?.t && anchor.t < sortAt) sortAt = anchor.t;
-  }
+  // Every publication is positioned at its own trusted timeline time.
+  const sortAt = article.timeline_at;
 
   const next = {
     source_id: source.id, first_party: source.tier === "T1",
@@ -493,22 +483,17 @@ export async function republishSource(sourceId: string, onProgress?: (done: numb
   return { total, changed, reduced };
 }
 
-/** One-time repair of stored timeline dates while publication writers are paused for the cutover. */
+/** One-time repair of stored timeline and sort dates while publication writers are paused for the cutover. */
 export async function rebuildPublicationTimeline(): Promise<{ articles: number; publications: number }> {
   return sql.begin(async (tx) => {
     const articles = await tx`UPDATE articles SET timeline_at = coalesce(published_at, discovered_at)
       WHERE timeline_at IS DISTINCT FROM coalesce(published_at, discovered_at)`;
-    const publications = await tx<{ fact_id: number | null }[]>`
+    const publications = await tx`
       UPDATE publications SET timeline_at = coalesce(published_at, discovered_at),
-        sort_at = CASE WHEN fact_id IS NULL THEN coalesce(published_at, discovered_at) ELSE sort_at END,
+        sort_at = coalesce(published_at, discovered_at),
         revision = revision + 1, updated_at = now()
       WHERE timeline_at IS DISTINCT FROM coalesce(published_at, discovered_at)
-      RETURNING fact_id`;
-    const facts = new Set(publications.map((p) => p.fact_id));
-    const now = new Date();
-    for (const id of facts) {
-      if (id !== null) await settleSeats(tx, id, null, now);
-    }
+        OR sort_at IS DISTINCT FROM coalesce(published_at, discovered_at)`;
     return { articles: articles.count, publications: publications.count };
   });
 }

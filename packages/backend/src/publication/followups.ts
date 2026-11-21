@@ -14,7 +14,7 @@ type Member = RepresentativeIdentity & {
 
 /**
  * Each fact of the story with a selected report still evidence of it: its representative, the facts
- * ordered by when they first appeared. Null for an unknown or merged story, or one without any.
+ * ordered by their earliest selected report time. Null for an unknown or merged story, or one without any.
  */
 export async function loadStoryFollowups(storyPublicId: string, now = new Date()): Promise<StoryFollowupsResponse | null> {
   if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(storyPublicId)) return null;
@@ -29,10 +29,10 @@ export async function loadStoryFollowups(storyPublicId: string, now = new Date()
   const facts = [...byFact.values()]
     .map((reports) => ({
       factId: reports[0]!.fact_public_id,
-      first: Math.min(...reports.map((r) => r.sort_at.getTime())),
+      firstSelectedAt: Math.min(...reports.map((r) => r.sort_at.getTime())),
       representative: pickRepresentative(reports),
     }))
-    .sort((a, b) => b.first - a.first || a.factId.localeCompare(b.factId));
+    .sort((a, b) => b.firstSelectedAt - a.firstSelectedAt || a.factId.localeCompare(b.factId));
   return {
     items: facts.slice(0, SHOWN).map(({ factId, representative: r }) => ({
       factId,
