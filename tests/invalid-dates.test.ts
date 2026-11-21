@@ -99,6 +99,7 @@ test("storage preserves finite future claims and existing timeline boundaries", 
   const cases = [
     { name: "future", claim: new Date(discoveredAt.getTime() + FUTURE_TOLERANCE_MS + 1), trusted: false, backfill: 'unknown-publication-time' },
     { name: "old", claim: new Date(discoveredAt.getTime() - STALE_ON_DISCOVERY_MS - 1), trusted: true, backfill: "stale-on-discovery" },
+    { name: "fresh-at-boundary", claim: new Date(discoveredAt.getTime() - STALE_ON_DISCOVERY_MS), trusted: true, backfill: null },
     { name: "explicit", claim: new Date(NaN), trusted: false, backfill: "manual-backfill" },
   ];
   for (const c of cases) {
@@ -109,7 +110,7 @@ test("storage preserves finite future claims and existing timeline boundaries", 
     assert.equal(row.published_at?.getTime() ?? null, c.trusted ? c.claim.getTime() : null, c.name);
     assert.equal(row.backfill, c.backfill !== null, c.name);
     assert.equal(row.backfill_reason, c.backfill, c.name);
-    assert.equal(row.timeline_at.getTime(), c.backfill && c.trusted ? c.claim.getTime() : discoveredAt.getTime(), c.name);
+    assert.equal(row.timeline_at.getTime(), c.trusted ? c.claim.getTime() : discoveredAt.getTime(), c.name);
   }
 });
 
@@ -146,7 +147,7 @@ test("a post listed up to a day before its stated time gets that time once it ar
     assert.equal(row.revision, c.filled ? 2 : 1, `${c.name}: a filled date is a new revision, judged again`);
     if (c.filled) {
       assert.equal(row.backfill, false, "news, not history");
-      assert.equal(row.timeline_at.getTime(), c.discovered);
+      assert.equal(row.timeline_at.getTime(), c.claim);
     }
   }
 });

@@ -9,7 +9,7 @@ import { after, before, test } from "node:test";
 import { closeDb, sql } from "@aihot/backend/db";
 import { upsertMaterial } from "@aihot/backend/content/materials";
 import { stopBoss } from "@aihot/backend/jobs/queue";
-import { publishArticle } from "@aihot/backend/publication/publish";
+import { publishArticle, rebuildPublicationTimeline } from "@aihot/backend/publication/publish";
 import { channelOf } from "@aihot/backend/publication/rules";
 import { ITEM_COPY } from "@aihot/site";
 import { encodeCursor, decodeCursor, queryBinding } from "@aihot/backend/lib/cursor";
@@ -42,11 +42,11 @@ after(async () => {
 // clock hold even when the VM's clock steps back (on the CI VMs by as much as 0.4 s).
 const start = Date.now() - 60_000;
 let n = 0;
-async function report(source: string, fact: number, options: { at?: Date; score?: number; selected?: boolean } = {}) {
+async function report(source: string, fact: number, options: { at?: Date; publishedAt?: Date; score?: number; selected?: boolean } = {}) {
   n += 1;
   const at = options.at ?? new Date(start + n * 1000);
   const { articleId } = await upsertMaterial({
-    sourceId: source, url: `https://example.com/seats-${T}-${n}`, title: `Seat ${n} ${T}`, bodyText: "body", bodyHtml: "<p>body</p>", bodyStatus: "ok", via: "fetch", publishedAt: at, discoveredAt: at,
+    sourceId: source, url: `https://example.com/seats-${T}-${n}`, title: `Seat ${n} ${T}`, bodyText: "body", bodyHtml: "<p>body</p>", bodyStatus: "ok", via: "fetch", publishedAt: options.publishedAt ?? at, discoveredAt: at,
   });
   await sql`INSERT INTO analyses (article_id, input_revision, origin, relevance, category, title_zh, summary_zh, reason_zh, score, selected, tags)
             VALUES (${articleId}, 1, 'rule', 'pass', 'industry', ${`标题${n}-${T}`}, ${`摘要${n}-${T}`}, ${`理由${n}`}, ${options.score ?? 80}, ${options.selected ?? true}, ${[`t-${T}`]})`;
@@ -126,6 +126,30 @@ test("one fact holds one selected seat on v1, RSS and the sync ledger", async ()
   const agent = (await get('/api/v1/agent/latest?limit=30')).body;
   assert.ok(agent.includes(evaluated) && agent.includes(official) && !agent.includes(first));
 
+});
+
+test("a report discovered after Beijing midnight anchors its fact on the original publication day", async () => {
+  const [fact] = await sql<{ id: number }[]>`INSERT INTO facts (public_id, title)
+    VALUES (${`cross-midnight-${T}`}, 'Launch') RETURNING id`;
+  const officialAt = new Date("2026-01-01T16:05:00Z");
+  const publicAt = new Date("2026-01-01T15:55:00Z");
+  const discoveredAt = new Date("2026-01-01T16:10:00Z");
+  const official = await report(OFFICIAL, fact!.id, { at: officialAt });
+  const earlier = await report(MEDIA, fact!.id, { at: discoveredAt, publishedAt: publicAt, selected: false });
+  const query = { channel: "all" as const, category: null, tag: `t-${T}`, now: new Date("2026-01-01T16:20:00Z") };
+  const checkTimeline = async () => {
+    const timeline = await loadTimeline(query);
+    assert.deepEqual(timeline.cards.map((card) => [card.item.id, card.anchorAt]), [[official, publicAt.toISOString()]]);
+    assert.deepEqual(timeline.dayCounts, { "2026-01-01": 1 });
+  };
+  await checkTimeline();
+
+  // Recreate the timestamps stored before the cutover, including the selected report's old anchor.
+  await sql`UPDATE articles SET timeline_at = discovered_at WHERE id = ${earlier}`;
+  await sql`UPDATE publications SET timeline_at = discovered_at, sort_at = discovered_at WHERE article_id IN (${official}, ${earlier})`;
+  await rebuildPublicationTimeline();
+  await checkTimeline();
+  assert.deepEqual(await rebuildPublicationTimeline(), { articles: 0, publications: 0 });
 });
 
 test("Weibo source IDs take precedence over X data in the publication channel", () => {

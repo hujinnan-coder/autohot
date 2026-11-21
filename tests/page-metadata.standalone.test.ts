@@ -28,6 +28,7 @@ import { dateLine } from "../apps/web/app/features/report/format.ts";
 import { startWebServer, type WebServer } from "../apps/web/tests/web-server.ts";
 
 const at = "2026-10-04T08:00:00.000Z";
+const undatedDiscovery = "2026-10-04T07:30:00.000Z";
 const item: FeedItemSummary = { id: "metadata-fixture", title: "可核实的测试报道", summary: "报道摘要", reason: null, source: { name: "Fixture" }, publishedAt: at, timelineAt: at, category: "new-car", tags: [], score: 80, selected: true, channel: "news", x: null, weibo: null };
 const detail: SiteItemDetail = { ...item, x: null, originalTitle: null, links: { original: "https://example.org/report" }, discoveredAt: at, story: null, readingMode: "full", author: null, body: { zh: "<p>可核实的测试正文。</p>", original: null, zhKind: "original", complete: true }, outline: [], relatedStories: [], topics: [], tagTopics: {}, daily: null, indexable: true, googleNoindex: false, markdownAvailable: true, group: null, hasTranslation: false, bodyLanguage: "zh", mentions: [] };
 /** Article pages by id: the fixture, one kept from Google only, one kept from every engine. */
@@ -35,7 +36,7 @@ const details: Record<string, SiteItemDetail> = {
   [item.id]: detail,
   "metadata-short": { ...detail, id: "metadata-short", googleNoindex: true },
   "metadata-hidden": { ...detail, id: "metadata-hidden", selected: false, indexable: false },
-  "metadata-undated": { ...detail, id: "metadata-undated", publishedAt: null, discoveredAt: "2026-10-04T07:30:00.000Z" },
+  "metadata-undated": { ...detail, id: "metadata-undated", publishedAt: null, discoveredAt: undatedDiscovery, timelineAt: undatedDiscovery },
 };
 const citation = (available: boolean): ReportCitation => ({ itemId: available ? item.id : "withdrawn", title: available ? item.title : "已撤下的旧头条", summary: item.summary, sourceName: item.source.name, sourceUrl: detail.links.original, sourceIconUrl: null, firstParty: true, publishedAt: at, available });
 /** A daily whose one entry was withdrawn: its highlights are only the reports a thin issue is filled with. */

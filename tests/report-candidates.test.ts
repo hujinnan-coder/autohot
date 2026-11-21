@@ -22,15 +22,15 @@ after(async () => {
   await closeDb();
 });
 
-async function analyzed(label: string, timelineAt: Date): Promise<string> {
+async function analyzed(label: string, discoveredAt: Date, publishedAt = discoveredAt): Promise<string> {
   const { articleId, backfill } = await upsertMaterial({
     sourceId: SOURCE,
     url: `https://example.com/report-boundary-${T}-${label}`,
     title: `Report boundary ${label}`,
     bodyText: `Report boundary ${label} body`,
     bodyStatus: "ok",
-    publishedAt: timelineAt,
-    discoveredAt: timelineAt,
+    publishedAt,
+    discoveredAt,
     via: "fetch",
   });
   assert.equal(backfill, false);
@@ -39,8 +39,8 @@ async function analyzed(label: string, timelineAt: Date): Promise<string> {
   return articleId;
 }
 
-async function selected(label: string, timelineAt: Date, releasedAt: Date): Promise<string> {
-  const articleId = await analyzed(label, timelineAt);
+async function selected(label: string, discoveredAt: Date, releasedAt: Date, publishedAt = discoveredAt): Promise<string> {
+  const articleId = await analyzed(label, discoveredAt, publishedAt);
   const published = await publishArticle(articleId, { now: releasedAt, releasedAt });
   assert.equal(published?.selected, true);
   return articleId;
@@ -48,7 +48,7 @@ async function selected(label: string, timelineAt: Date, releasedAt: Date): Prom
 
 test("reports assign delayed and boundary releases to the period readers first see them", async () => {
   const onTime = await selected("on-time", editionAt("daily", "2020-01-02", -120), editionAt("daily", "2020-01-02", -60));
-  const delayed = await selected("delayed", editionAt("daily", "2020-01-02", -60), editionAt("daily", "2020-01-02", 120));
+  const delayed = await selected("delayed", editionAt("daily", "2020-01-02", -60), editionAt("daily", "2020-01-02", 120), editionAt("daily", "2020-01-01", -60));
   const atBoundary = await selected("at-boundary", editionAt("daily", "2020-01-02", -60), editionAt("daily", "2020-01-02"));
   const groupedBefore = await analyzed("grouped-before", editionAt("daily", "2020-01-02", -120));
   await publishArticle(groupedBefore, { now: editionAt("daily", "2020-01-02", -120) });

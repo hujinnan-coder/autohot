@@ -1,5 +1,5 @@
 // Selected news timeline: ordinary reports fold by fact; standalone and independent-source articles
-// keep their own cards. Each ordinary fact stays at its first appearance.
+// keep their own cards. Each ordinary fact is dated by its earliest report's timeline time.
 import type { GroupInfo, TimelineCard, TimelineFilters, TimelineResponse } from "@aihot/contracts/site";
 import { beijingDate, beijingMidnight } from "@aihot/contracts/time";
 import { sql } from "../db.ts";

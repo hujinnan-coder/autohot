@@ -27,7 +27,9 @@ async function querySiteStats(now: Date): Promise<SiteStats> {
              (SELECT count(*) FROM publications p WHERE ${selectedCondition(now)})::int AS selected,
              (SELECT count(*) FROM reports WHERE kind = 'daily')::int AS dailies,
              (SELECT count(*) FROM publications p WHERE p.visibility <> 'withdrawn' AND p.discovered_at > ${dayAgo})::int AS collected,
-             (SELECT count(*) FROM publications p WHERE ${selectedCondition(now)} AND p.timeline_at > ${dayAgo})::int AS "selectedDay"`,
+             -- Measure recent site intake and keep the original date for archived selections.
+             (SELECT count(*) FROM publications p WHERE ${selectedCondition(now)}
+                AND (CASE WHEN p.backfill THEN p.timeline_at ELSE p.discovered_at END) > ${dayAgo})::int AS "selectedDay"`,
     sql<{ kind: string; n: number }[]>`SELECT kind, count(*)::int AS n FROM sources WHERE enabled GROUP BY kind ORDER BY kind`,
     // A shuffle that holds for the day, so the river keeps its sources between visits.
     sql<{ name: string; kind: string; heat_only: boolean }[]>`

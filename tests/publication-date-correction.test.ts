@@ -1,6 +1,6 @@
 // Failure cases: a verified historical date is rejected because imported discovery time is guessed;
-// correction changes content revisions, paid decisions or selection; an independent discovery sort is
-// overwritten; recent/future or malformed dates and stale identities are accepted; a retry applies a
+// correction changes content revisions, paid decisions or selection; a legacy discovery sort survives
+// the correction; recent/future or malformed dates and stale identities are accepted; a retry applies a
 // second edit; a changed publication decision is overwritten.
 // A feed's modification date can also make an old article look live: correcting it must archive
 // it and remove automatic event/heat evidence without buying another analysis or sending it again.
@@ -74,12 +74,12 @@ test('verified old dates correct publication and its existing date-based sort wi
   assert.equal((await sql`SELECT 1 FROM settings WHERE key=${`date-hook:${id}`}`).length,1);
 });
 
-test('an independently recorded discovery sort remains unchanged',async()=>{
+test('correcting an old date moves a legacy discovery-based timeline to the verified publication time',async()=>{
   const id=await fixture(true);const plan=(await previewPublicationDateCorrection(id,corrected))!;
-  assert.equal(plan.after.timelineAt,'2020-11-01T00:00:00.000Z');
+  assert.equal(plan.after.timelineAt,corrected);
   await correctPublicationDate(id,{version:plan.version,hash:plan.hash,publishedAt:corrected,requestId:`date-${id}`,reason:'Verified original date'},'test');
   const [a]=await sql`SELECT timeline_at FROM articles WHERE id=${id}`;
-  assert.equal(a!.timeline_at.toISOString(),'2020-11-01T00:00:00.000Z');
+  assert.equal(a!.timeline_at.toISOString(),corrected);
 });
 
 test('the request is idempotent and a reused request identity cannot approve a different date',async()=>{
@@ -196,9 +196,9 @@ test('verified recent publication corrects the date without archiving or repeati
   assert.equal(plan.archive,false);
   await correctPublicationDate(id,{version:plan.version,hash:plan.hash,publishedAt,requestId:`fresh-date-${id}`,reason:'Original publication verified; still fresh on first discovery'},'test');
   assert.deepEqual(await retained(id),before);
-  const [a]=await sql`SELECT published_at,timeline_at,discovered_at,backfill FROM articles WHERE id=${id}`;
+  const [a]=await sql`SELECT published_at,timeline_at,backfill FROM articles WHERE id=${id}`;
   assert.equal(a!.published_at.toISOString(),publishedAt);
-  assert.equal(a!.timeline_at.toISOString(),a!.discovered_at.toISOString());
+  assert.equal(a!.timeline_at.toISOString(),publishedAt);
   assert.equal(a!.backfill,false);
 });
 

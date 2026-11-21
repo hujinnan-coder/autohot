@@ -112,13 +112,13 @@ export async function periodReports(start: Date, end: Date): Promise<ReportRow[]
       FROM publications p JOIN sources s ON s.id = p.source_id
       LEFT JOIN facts f ON f.id = p.fact_id AND ${ownFactEvidenceCondition()}
       LEFT JOIN stories st ON st.id = f.story_id
-      -- Attribute each item by the later of arrival and release; either range can use its index.
+      -- Attribute each item by the later of arrival and release, independently of its timeline date.
       WHERE p.visibility = 'public' AND p.selected AND NOT p.backfill
         AND (
-          (p.visible_after <= p.timeline_at AND p.timeline_at >= ${start} AND p.timeline_at < ${end})
-          OR (p.visible_after > p.timeline_at AND p.visible_after >= ${start} AND p.visible_after < ${end})
+          (p.visible_after <= p.discovered_at AND p.discovered_at >= ${start} AND p.discovered_at < ${end})
+          OR (p.visible_after > p.discovered_at AND p.visible_after >= ${start} AND p.visible_after < ${end})
         )
-        AND p.timeline_at >= ${start}::timestamptz - interval '24 hours'`;
+        AND p.discovered_at >= ${start}::timestamptz - interval '24 hours'`;
   });
 }
 
@@ -230,7 +230,7 @@ export async function dailyPicks(date: string, start: Date, end: Date, issue: Ed
     LEFT JOIN facts f ON f.id = p.fact_id AND ${ownFactEvidenceCondition()}
     LEFT JOIN stories st ON st.id = f.story_id
     WHERE ${listedCondition(end)} AND NOT p.selected AND s.participation_mode = 'editorial' AND NOT p.backfill
-      AND p.timeline_at >= ${start} AND p.timeline_at < ${end} AND p.score >= ${PICK_FLOOR}
+      AND p.discovered_at >= ${start} AND p.discovered_at < ${end} AND p.score >= ${PICK_FLOOR}
     ORDER BY p.score DESC, p.timeline_at, p.article_id`;
   const picks: ReportEntry[] = [];
   const events = new Set<string>();
@@ -292,7 +292,7 @@ async function missedFacts(start: Date, end: Date): Promise<Array<{ key: string;
       SELECT DISTINCT fa.fact_id FROM fact_articles fa
       JOIN publications p ON p.article_id = fa.article_id JOIN sources s ON s.id = p.source_id
       WHERE ${evidenceCondition()} AND ${listedCondition(end)} AND s.participation_mode = 'editorial' AND NOT p.backfill
-        AND p.timeline_at >= ${start} AND p.timeline_at < ${end}
+        AND p.discovered_at >= ${start} AND p.discovered_at < ${end}
     )
     SELECT fa.fact_id
     FROM active JOIN fact_articles fa ON fa.fact_id = active.fact_id
@@ -309,7 +309,7 @@ async function missedFacts(start: Date, end: Date): Promise<Array<{ key: string;
     FROM fact_articles fa JOIN publications p ON p.article_id = fa.article_id JOIN sources s ON s.id = p.source_id
     JOIN facts f ON f.id = fa.fact_id LEFT JOIN stories st ON st.id = f.story_id
     WHERE fa.fact_id = ANY(${found.map((f) => f.fact_id)}::bigint[]) AND ${evidenceCondition()} AND ${listedCondition(end)}
-      AND s.participation_mode = 'editorial' AND s.tier <> 'EXCLUDE_MP' AND NOT p.backfill AND p.timeline_at < ${end}`;
+      AND s.participation_mode = 'editorial' AND s.tier <> 'EXCLUDE_MP' AND NOT p.backfill AND p.discovered_at < ${end}`;
   return [...groupBy(rows, factKeyOf)]
     .filter(([, members]) => members.some((r) => representativePriority(r) < 3))
     .map(([key, members]) => ({ key, rows: members }));
@@ -319,7 +319,7 @@ async function missedFacts(start: Date, end: Date): Promise<Array<{ key: string;
 async function judgedReports(start: Date, end: Date): Promise<number> {
   const [row] = await sql<{ n: number }[]>`
     SELECT count(*)::int AS n FROM publications p
-    WHERE ${listedCondition(end)} AND p.score IS NOT NULL AND NOT p.backfill AND p.timeline_at >= ${start} AND p.timeline_at < ${end}`;
+    WHERE ${listedCondition(end)} AND p.score IS NOT NULL AND NOT p.backfill AND p.discovered_at >= ${start} AND p.discovered_at < ${end}`;
   return row!.n;
 }
 

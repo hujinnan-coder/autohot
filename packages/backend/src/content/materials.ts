@@ -85,7 +85,11 @@ export interface TimelineDecision {
 const UNKNOWN_TIME = "unknown-publication-time";
 const STALE = "stale-on-discovery";
 
-/** The one timeline rule shared by every entrance. */
+/**
+ * The site owner chose original publication time for day grouping and ordering over the upstream
+ * received-time semantics. Backfill still marks stale, undated or explicitly imported arrivals
+ * for notification and release pacing.
+ */
 export function decideTimeline(claimed: Date | null | undefined, discoveredAt: Date, explicitBackfill?: string | null, aheadMs = FUTURE_TOLERANCE_MS): TimelineDecision {
   let publishedAt: Date | null = claimed && Number.isFinite(claimed.getTime()) ? claimed : null;
   if (publishedAt && publishedAt.getTime() > discoveredAt.getTime() + aheadMs) publishedAt = null;
@@ -94,7 +98,7 @@ export function decideTimeline(claimed: Date | null | undefined, discoveredAt: D
   else if (!publishedAt) backfillReason = UNKNOWN_TIME;
   else if (publishedAt && discoveredAt.getTime() - publishedAt.getTime() > STALE_ON_DISCOVERY_MS) backfillReason = STALE;
   const backfill = backfillReason !== null;
-  const timelineAt = backfill && publishedAt ? publishedAt : discoveredAt;
+  const timelineAt = publishedAt ?? discoveredAt;
   return { publishedAt, timelineAt, backfill, backfillReason };
 }
 

@@ -76,14 +76,15 @@ test('an original source can supply a missing date without changing the text; di
   for(const mode of ['old','fresh','first-import'] as const){
     const material={sourceId:SOURCE,url:`${base}/later-${mode}`,title:'Unchanged material',bodyText:body,via:'fetch' as const,discoveredAt,backfill:mode==='first-import'?'first-import':null};
     const created=await upsertMaterial(material);
-    const publishedAt=new Date(discoveredAt.getTime()-(mode==='old'?180*86400000:3600000));
+    // A newly discovered report may already be more than 12 hours old and still qualify for a push.
+    const publishedAt=new Date(discoveredAt.getTime()-(mode==='old'?180*86400000:13*3600000));
     const updated=await upsertMaterial({...material,publishedAt});
     assert.equal(updated.revised,true,'a newly verified time changes the analysis input');
     const a=await row(created.articleId);
     assert.equal(a.published_at.getTime(),publishedAt.getTime());
     assert.equal(a.discovered_at.getTime(),discoveredAt.getTime());
     assert.equal(a.backfill,mode!=='fresh');
-    assert.equal(a.timeline_at.getTime(),mode==='fresh'?discoveredAt.getTime():publishedAt.getTime());
+    assert.equal(a.timeline_at.getTime(),publishedAt.getTime());
     assert.equal((await upsertMaterial({...material,publishedAt})).revised,false);
     await highScore(created.articleId);
     assert.equal((await selectedContent(created.articleId)).status,mode==='fresh'?'ready':'skipped');

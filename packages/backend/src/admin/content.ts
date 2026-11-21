@@ -53,14 +53,12 @@ interface DatedFields { publishedAt: string | null; publishedAtClaim: string | n
 
 /**
  * An old date replaced by an older verified one keeps every decision of the material, history or not:
- * its discovery time may be an import's estimate, so the date is not judged against it. The sort
- * follows only where it was that date.
+ * its discovery time may be an import's estimate. The verified date also sets the timeline position.
  */
-function historicalDate(article: PublicationDateMaterial, published: Date, date: Date, now: number): DatedFields {
+function historicalDate(article: PublicationDateMaterial, date: Date, now: number): DatedFields {
   if (date.getTime() >= now - RECENT_MS) throw new Error("历史日期校正的真实发布时间须早于七天窗口");
   const iso = date.toISOString();
-  const timelineAt = article.timeline_at.getTime() === published.getTime() ? iso : article.timeline_at.toISOString();
-  return { publishedAt: iso, publishedAtClaim: iso, timelineAt, backfill: article.backfill, backfillReason: article.backfill_reason };
+  return { publishedAt: iso, publishedAtClaim: iso, timelineAt: iso, backfill: article.backfill, backfillReason: article.backfill_reason };
 }
 
 /**
@@ -92,7 +90,7 @@ export function publicationDateCorrectionPlan(article: PublicationDateMaterial, 
   const before: DatedFields = { publishedAt: published.toISOString(), publishedAtClaim: article.published_at_claim?.toISOString() ?? null,
     timelineAt: article.timeline_at.toISOString(), backfill: article.backfill, backfillReason: article.backfill_reason };
   const { mode, after, archive } = date && published.getTime() < now - RECENT_MS
-    ? { mode: "history" as const, after: historicalDate(article, published, date, now), archive: false }
+    ? { mode: "history" as const, after: historicalDate(article, date, now), archive: false }
     : { mode: "live" as const, ...liveDate(article, date) };
   const hash = sha256(stableJson({ id: article.id, identity: article.identity_key, source: article.source_id, url: article.url,
     version: article.revision, contentHash: article.content_hash, updatedAt: article.updated_at,

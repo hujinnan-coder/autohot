@@ -99,6 +99,10 @@ docker compose run --rm setup && docker compose up -d
 
 下面按时间从新到旧列出每次更新要注意的事。
 
+#### 原文发布时间用于时间线（2026 年 11 月 21 日）
+
+升级后新条目按原文发布时间分天和排序。已有站点在完成迁移后、重启 API 和 worker 前运行一次 `node --env-file=.env scripts/rebuild-timeline.ts`。Docker 部署在同一阶段运行 `docker compose run --rm --no-deps setup node scripts/rebuild-timeline.ts`。脚本在同一事务中重算旧条目的时间线、阅读组落位和精选席位，沿用已保存的评分、回灌标记和公开时间。
+
 #### 后台只用管理员密码登录（2026 年 11 月 15 日）
 
 后台不再提供飞书登录，只剩管理员密码。升级时 `setup` 自动执行两条迁移，删掉数据库里存的飞书身份（`admin_users.feishu_union_id`、`admin_sessions.auth_claims`），不用手动处理。用过飞书登录的，升级前先在 `.env` 设好 `ADMIN_PASSWORD`（至少 12 位），否则有后台页面的站点在生产环境拒绝启动；升级后用密码登录，原来的飞书登录会话自动失效。`FEISHU_LOGIN_APP_ID`、`FEISHU_LOGIN_APP_SECRET`、`ADMIN_FEISHU_UNION_IDS`、`ADMIN_EMAILS` 不再读取，可以从 `.env` 删掉，飞书开放平台上专为登录建的应用也可以停用。飞书的告警、反馈转发和内容推送不受影响。`site/site.ts` 的 `ADMIN` 为 `null`（不挂后台页面）的站点不再提供后台登录，也不再要求设管理员密码。

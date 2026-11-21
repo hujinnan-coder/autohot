@@ -74,7 +74,7 @@
               ],
               "default": "timeline"
             },
-            "description": "Which timestamp defines the window and ordering. 'timeline' (default) matches the site's published timeline: historical or backfilled items can retain their source publication time, including items first found more than 72h after publication; ordinary new items use discovery time, and selected representatives follow their reading group's first appearance. 'published' uses source publication time, falling back to discovery time when it is unknown. publishedAt may be null when the original time is unknown; discoveredAt is the site's receipt time. These returned fields are not client-side cursor or sort keys; pass the returned cursor unchanged."
+            "description": "Which timestamp defines the window and ordering. Both modes use the source publication time, falling back to discovery time when it is unknown. In 'timeline' mode (the default), selected representatives use the earliest timeline time in their reading group. In 'published' mode, every item uses its own time. publishedAt may be null when the original time is unknown. discoveredAt is the site's receipt time. Pass the returned cursor unchanged."
           },
           {
             "name": "q",
