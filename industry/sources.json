@@ -6224,6 +6224,164 @@
       ],
       "site_fulltext": false,
       "syndicate_fulltext": false
+    },
+    {
+      "id": "web-lixiang-official-news",
+      "name": "理想汽车·官方新闻",
+      "kind": "web_list",
+      "config": {
+        "url": "https://r.jina.ai/https://www.lixiang.com/news.html",
+        "parseMode": "html",
+        "itemSelector": ".media-card",
+        "linkSelector": "a[href^='/news/']",
+        "titleSelector": ".media-card-title",
+        "allowUrlPrefixes": [
+          "https://www.lixiang.com/news/"
+        ],
+        "detail": {
+          "maxFetches": 10,
+          "publishedAtRegex": "(20\\d{2}年\\d{1,2}月\\d{1,2}日)",
+          "publishedAtAuthoritative": true
+        },
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "官方",
+        "中国车市"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-xiaopeng-official-news",
+      "name": "小鹏汽车·资讯中心",
+      "kind": "web_list",
+      "config": {
+        "url": "https://r.jina.ai/https://www.xiaopeng.com/news",
+        "parseMode": "html",
+        "itemSelector": ".card-item",
+        "linkSelector": "a.card-item-wrap",
+        "publishedAtRegex": "(20\\d{2}[-/]\\d{1,2}[-/]\\d{1,2})",
+        "allowUrlPrefixes": [
+          "https://www.xiaopeng.com/news/"
+        ],
+        "detail": {
+          "maxFetches": 10
+        },
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "官方",
+        "中国车市"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-audi-official-news",
+      "name": "一汽奥迪·官方新闻",
+      "kind": "web_list",
+      "config": {
+        "url": "https://r.jina.ai/https://www.audi.cn/zh/audi_brand/news_experience.html",
+        "parseMode": "html",
+        "linkSelector": "a[href*='news_experience/news']",
+        "publishedAtRegex": "publishedDate(?:&quot;|\"): ?(?:&quot;|\")?((?:January|February|March|April|May|June|July|August|September|October|November|December) \\d{1,2}, \\d{4})",
+        "allowUrlPrefixes": [
+          "https://www.audi.cn/zh/audi_brand/news_experience/"
+        ],
+        "detail": {
+          "maxFetches": 10,
+          "titleSelector": "title",
+          "titleRegex": "<title>([^<]{5,200}?)(?:\\s*[-–—]\\s*(?:一汽奥迪|奥迪|Audi)[^<]{0,20})?</title>",
+          "titleAuthoritative": true
+        },
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "官方",
+        "中国车市"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-gwm-official-news",
+      "name": "长城汽车·官方新闻",
+      "kind": "web_list",
+      "config": {
+        "url": "https://r.jina.ai/https://www.gwm.com.cn/company.html",
+        "parseMode": "html",
+        "linkSelector": "a.top_news[href*='/news/']",
+        "allowUrlPrefixes": [
+          "https://www.gwm.com.cn/news/"
+        ],
+        "detail": {
+          "maxFetches": 10,
+          "titleSelector": "title",
+          "titleAuthoritative": true,
+          "publishedAtRegex": "(20\\d{2}-\\d{1,2}-\\d{1,2})",
+          "publishedAtAuthoritative": true,
+          "titleRegex": "<title>([^<]{5,200}?)(?:\\s*-\\s*长城汽车官网)?</title>"
+        },
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "官方",
+        "中国车市"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-baic-official-news",
+      "name": "北汽集团·新闻简讯",
+      "kind": "web_list",
+      "config": {
+        "url": "https://r.jina.ai/https://www.baicgroup.com.cn/baicgroup/News/NewsShort/A160003006Gone1.html",
+        "parseMode": "html",
+        "itemSelector": ".news-item",
+        "linkSelector": "a[href*='NewsShort/2026/']",
+        "titleSelector": "span",
+        "publishedAtSelector": "em",
+        "allowUrlPrefixes": [
+          "https://www.baicgroup.com.cn/baicgroup/News/NewsShort/"
+        ],
+        "detail": {
+          "maxFetches": 10
+        },
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "官方",
+        "中国车市"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
     }
   ]
 }

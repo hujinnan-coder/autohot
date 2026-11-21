@@ -413,7 +413,9 @@ export async function fetchDetail(url: string, source: SourceRow, need: DetailNe
   const jinaListing = String(source.config.url ?? "").startsWith(JINA_PREFIX);
   const dateInJina = need.date && jinaListing && !!d.publishedAtRegex;
   const titleInJina = need.title && jinaListing && !!d.titleRegex;
-  const jina = dateInJina || titleInJina ? (await jinaRead(url, { purpose: "source_detail", subject: `source:${source.id}` })).raw : null;
+  // A rule that reads markup (a tag or attribute regex) needs the rendered HTML, like a Jina listing does;
+  // plain-text rules match the HTML too, so one format serves both.
+  const jina = dateInJina || titleInJina ? (await jinaRead(url, { purpose: "source_detail", subject: `source:${source.id}`, format: "html" })).raw : null;
   let html: string | null = null;
   let page: { document: ReturnType<typeof contentDocument>; url: string; whole: boolean } | null = null;
   if ((need.date && !dateInJina) || (need.title && !titleInJina) || need.summary) {
