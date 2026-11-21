@@ -170,6 +170,15 @@ export const ENTITIES: Record<string, { name: string; displayTag: string | null;
   sinotruk: { name: "中国重汽", displayTag: null, aliases: ["中国重汽", "Sinotruk", "重汽集团"] },
   shacman: { name: "陕汽", displayTag: null, aliases: ["陕汽", "陕汽重卡", "Shacman"] },
   yutong: { name: "宇通", displayTag: null, aliases: ["宇通客车", "宇通集团", "Yutong"] },
+  "skyworth-auto": { name: "创维汽车", displayTag: null, aliases: ["创维汽车", "Skyworth", "创维汽车集团"] },
+  "livan": { name: "睿蓝", displayTag: null, aliases: ["睿蓝", "Livan", "吉利睿蓝", "睿蓝汽车"] },
+  "haima": { name: "海马", displayTag: null, aliases: ["海马汽车", "海马", "Haima"] },
+  "qoros": { name: "观致", displayTag: null, aliases: ["观致", "Qoros", "观致汽车"] },
+  "hycan": { name: "合创", displayTag: null, aliases: ["合创", "Hycan", "合创汽车", "广汽合创"] },
+  "hiphi": { name: "高合", displayTag: null, aliases: ["高合", "HiPhi", "高合汽车", "华人运通"] },
+  "hengchi": { name: "恒驰", displayTag: null, aliases: ["恒驰", "恒驰汽车", "Hengchi"] },
+  "landian": { name: "蓝电", displayTag: null, aliases: ["蓝电", "赛力斯蓝电", "蓝电汽车"] },
+  "sol": { name: "思皓", displayTag: null, aliases: ["思皓", "SOL", "大众思皓", "江淮大众"] },
   // 德系
   volkswagen: { name: "大众", displayTag: "大众", aliases: ["大众汽车", "Volkswagen", "上汽大众", "一汽-大众", "大众安徽", "捷达"], orgNames: ["大众汽车集团", "大众汽车集团（中国）"], otherNames: ["VW", "一汽大众", "大众中国", "ID. 系列"] },
   audi: { name: "奥迪", displayTag: "奥迪", aliases: ["奥迪", "Audi", "一汽奥迪", "上汽奥迪", "AUDI"] },
@@ -177,6 +186,7 @@ export const ENTITIES: Record<string, { name: string; displayTag: string | null;
   bmw: { name: "宝马", displayTag: "宝马", aliases: ["宝马", "BMW", "华晨宝马", "宝马集团"], otherNames: ["宝马中国", "BMW Group"] },
   mini: { name: "MINI", displayTag: null, aliases: ["MINI 品牌", "宝马 MINI", "MINI Cooper"] },
   mercedes: { name: "奔驰", displayTag: "奔驰", aliases: ["奔驰", "梅赛德斯-奔驰", "Mercedes-Benz", "北京奔驰"], otherNames: ["Mercedes", "梅赛德斯", "奔驰中国", "AMG", "迈巴赫"] },
+  "skoda": { name: "斯柯达", displayTag: null, aliases: ["斯柯达", "SKODA", "斯柯达汽车", "上汽斯柯达"] },
   // 日系
   toyota: { name: "丰田", displayTag: "丰田", aliases: ["丰田", "Toyota", "一汽丰田", "广汽丰田"], orgNames: ["丰田汽车公司", "丰田汽车"], otherNames: ["丰田中国", "bZ 系列"] },
   lexus: { name: "雷克萨斯", displayTag: null, aliases: ["雷克萨斯", "Lexus", "凌志"] },
@@ -184,6 +194,8 @@ export const ENTITIES: Record<string, { name: string; displayTag: string | null;
   nissan: { name: "日产", displayTag: null, aliases: ["日产", "Nissan", "东风日产", "郑州日产"], otherNames: ["英菲尼迪", "Infiniti", "启辰"] },
   mazda: { name: "马自达", displayTag: null, aliases: ["马自达", "Mazda", "长安马自达"] },
   subaru: { name: "斯巴鲁", displayTag: null, aliases: ["斯巴鲁", "Subaru"] },
+  "mitsubishi": { name: "三菱", displayTag: null, aliases: ["三菱汽车", "三菱", "Mitsubishi", "Mitsubishi Motors", "广汽三菱"] },
+  "suzuki": { name: "铃木", displayTag: null, aliases: ["铃木", "SUZUKI", "铃木汽车", "长安铃木"] },
   // 韩系
   hyundai: { name: "现代", displayTag: null, aliases: ["现代汽车", "Hyundai", "北京现代", "现代汽车集团"], otherNames: ["捷尼赛思", "Genesis"] },
   kia: { name: "起亚", displayTag: null, aliases: ["起亚", "Kia", "悦达起亚"] },
@@ -195,6 +207,8 @@ export const ENTITIES: Record<string, { name: string; displayTag: string | null;
   cadillac: { name: "凯迪拉克", displayTag: null, aliases: ["凯迪拉克", "Cadillac", "上汽通用凯迪拉克"] },
   ford: { name: "福特", displayTag: null, aliases: ["福特", "Ford", "长安福特", "江铃福特"], otherNames: ["福特中国", "Ford Motor"] },
   lincoln: { name: "林肯", displayTag: null, aliases: ["林肯", "Lincoln", "林肯中国"] },
+  "chrysler": { name: "克莱斯勒", displayTag: null, aliases: ["克莱斯勒", "Chrysler", "克莱斯勒集团"] },
+  "dodge": { name: "道奇", displayTag: null, aliases: ["道奇", "Dodge", "道奇公羊", "RAM"] },
   // 欧系其他
   stellantis: { name: "Stellantis", displayTag: null, aliases: ["Stellantis", "斯特兰蒂斯", "神龙汽车"], otherNames: ["标致", "雪铁龙", "Jeep", "Peugeot", "Citroën", "东风标致", "东风雪铁龙"] },
   renault: { name: "雷诺", displayTag: null, aliases: ["雷诺", "Renault", "雷诺集团"] },
@@ -204,6 +218,11 @@ export const ENTITIES: Record<string, { name: string; displayTag: string | null;
   bentley: { name: "宾利", displayTag: null, aliases: ["宾利", "Bentley"] },
   "rolls-royce": { name: "劳斯莱斯", displayTag: null, aliases: ["劳斯莱斯", "Rolls-Royce"] },
   maserati: { name: "玛莎拉蒂", displayTag: null, aliases: ["玛莎拉蒂", "Maserati"] },
+  "mclaren": { name: "迈凯伦", displayTag: null, aliases: ["迈凯伦", "McLaren", "迈凯伦汽车"] },
+  "bugatti": { name: "布加迪", displayTag: null, aliases: ["布加迪", "Bugatti"] },
+  "alfa-romeo": { name: "阿尔法·罗密欧", displayTag: null, aliases: ["阿尔法·罗密欧", "阿尔法罗密欧", "Alfa Romeo"] },
+  "aston-martin": { name: "阿斯顿·马丁", displayTag: null, aliases: ["阿斯顿·马丁", "阿斯顿马丁", "Aston Martin"] },
+  "opel": { name: "欧宝", displayTag: null, aliases: ["欧宝", "Opel"] },
   // 动力电池
   catl: { name: "宁德时代", displayTag: "宁德时代", aliases: ["宁德时代", "CATL", "宁王"], orgNames: ["宁德时代新能源科技"], otherNames: ["麒麟电池", "神行电池", "巧克力换电"] },
   fudi: { name: "弗迪", displayTag: null, aliases: ["弗迪电池", "弗迪科技", "FinDreams"] },
@@ -323,7 +342,26 @@ export const IDENTITY_LEXICON: ReadonlyArray<{ id: string; name: string; pattern
   { id: "pony", name: "小马智行", patterns: [/小马智行|pony\.?ai/i] },
   { id: "weride", name: "文远知行", patterns: [/文远知行|\bweride\b/i] },
   { id: "apollo", name: "萝卜快跑", patterns: [/萝卜快跑|apollo\s+go/i] },
-];
+
+  { id: "skoda", name: "斯柯达", patterns: [/斯柯达|\bskoda\b/i] },
+  { id: "mitsubishi", name: "三菱汽车", patterns: [/三菱(?:汽车|欧蓝德|奕歌|劲炫|帕杰罗)|mitsubishi\s+motors/i] },
+  { id: "suzuki", name: "铃木", patterns: [/铃木(?:汽车|雨燕|维特拉|吉姆尼)|\bsuzuki\b/i] },
+  { id: "mclaren", name: "迈凯伦", patterns: [/迈凯伦|\bmclaren\b/i] },
+  { id: "bugatti", name: "布加迪", patterns: [/布加迪|\bbugatti\b/i] },
+  { id: "alfa-romeo", name: "阿尔法·罗密欧", patterns: [/阿尔法[·‧\s]?罗密欧|\balfa\s+romeo\b/i] },
+  { id: "aston-martin", name: "阿斯顿·马丁", patterns: [/阿斯顿[·‧\s]?马丁|\baston\s+martin\b/i] },
+  { id: "chrysler", name: "克莱斯勒", patterns: [/克莱斯勒|\bchrysler\b/i] },
+  { id: "dodge", name: "道奇", patterns: [/道奇(?:汽车|公羊|战斧|Charger|Challenger|Durango|Hornet)/i] },
+  { id: "opel", name: "欧宝", patterns: [/欧宝|\bopel\b/i] },
+  { id: "skyworth-auto", name: "创维汽车", patterns: [/创维(?:汽车|氢能)|\bskyworth\b/i] },
+  { id: "livan", name: "睿蓝", patterns: [/睿蓝|\blivan\b/i] },
+  { id: "haima", name: "海马汽车", patterns: [/海马(?:汽车|S5|8S|7X|爱尚|福美来)|\bhaima\b/i] },
+  { id: "qoros", name: "观致", patterns: [/观致|\bqoros\b/i] },
+  { id: "hycan", name: "合创汽车", patterns: [/合创(?:汽车|Z|V|A06|007)|\bhycan\b/i] },
+  { id: "hiphi", name: "高合", patterns: [/高合(?:汽车)?|HiPhi|华人运通/i] },
+  { id: "hengchi", name: "恒驰", patterns: [/恒驰(?:汽车|[1-5])|\bhengchi\b/i] },
+  { id: "landian", name: "蓝电", patterns: [/蓝电|\blandian\b/i] },
+  { id: "sol", name: "思皓", patterns: [/思皓|江淮大众|大众思皓/i] },];
 
 /** 这些域名上的文章，发布方就是对应的公司（媒体和托管平台不算）。 */
 export const PUBLISHER_DOMAINS: ReadonlyArray<{ entityId: string; domains: readonly string[] }> = [
