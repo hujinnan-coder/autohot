@@ -3809,7 +3809,7 @@
       },
       "tier": "T2",
       "participation_mode": "editorial",
-      "interval_minutes": 240,
+      "interval_minutes": 1440,
       "tags": [
         "媒体",
         "微信公众号"
@@ -3827,7 +3827,7 @@
       },
       "tier": "T2",
       "participation_mode": "editorial",
-      "interval_minutes": 240,
+      "interval_minutes": 1440,
       "tags": [
         "媒体",
         "微信公众号"
@@ -3845,7 +3845,7 @@
       },
       "tier": "T2",
       "participation_mode": "editorial",
-      "interval_minutes": 240,
+      "interval_minutes": 1440,
       "tags": [
         "媒体",
         "微信公众号"
@@ -3899,7 +3899,7 @@
       },
       "tier": "T2",
       "participation_mode": "editorial",
-      "interval_minutes": 240,
+      "interval_minutes": 1440,
       "tags": [
         "媒体",
         "微信公众号"
@@ -3935,7 +3935,7 @@
       },
       "tier": "T2",
       "participation_mode": "editorial",
-      "interval_minutes": 240,
+      "interval_minutes": 1440,
       "tags": [
         "媒体",
         "微信公众号"
@@ -3953,7 +3953,7 @@
       },
       "tier": "T2",
       "participation_mode": "editorial",
-      "interval_minutes": 240,
+      "interval_minutes": 1440,
       "tags": [
         "媒体",
         "微信公众号"
@@ -3971,7 +3971,7 @@
       },
       "tier": "T2",
       "participation_mode": "editorial",
-      "interval_minutes": 240,
+      "interval_minutes": 1440,
       "tags": [
         "媒体",
         "微信公众号"
@@ -4043,7 +4043,7 @@
       },
       "tier": "T2",
       "participation_mode": "editorial",
-      "interval_minutes": 240,
+      "interval_minutes": 1440,
       "tags": [
         "媒体",
         "微信公众号"
@@ -4619,7 +4619,7 @@
       },
       "tier": "T2",
       "participation_mode": "editorial",
-      "interval_minutes": 240,
+      "interval_minutes": 1440,
       "tags": [
         "媒体",
         "微信公众号"
@@ -4720,6 +4720,66 @@
       "tags": [
         "官方",
         "产业"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-lexus-official-news",
+      "name": "雷克萨斯·官方新闻",
+      "kind": "web_list",
+      "config": {
+        "url": "https://www.lexus.com.cn/news",
+        "parseMode": "html",
+        "linkSelector": "a[href*='/node/']",
+        "allowUrlPrefixes": [
+          "https://www.lexus.com.cn/node/"
+        ],
+        "detail": {
+          "maxFetches": 10,
+          "publishedAtRegex": "(20\\d{2}年\\d{1,2}月\\d{1,2}日)",
+          "publishedAtAuthoritative": true
+        },
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "官方",
+        "中国车市"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-toyota-official-news",
+      "name": "丰田中国·媒体中心",
+      "kind": "web_list",
+      "config": {
+        "url": "https://www.toyota.com.cn/mediacenter/news/",
+        "parseMode": "html",
+        "linkSelector": "a[href*='show.php?newsid=']",
+        "allowUrlPrefixes": [
+          "https://www.toyota.com.cn/mediacenter/show.php"
+        ],
+        "detail": {
+          "maxFetches": 10,
+          "publishedAtRegex": "(20\\d{2}年\\d{1,2}月\\d{1,2}日)",
+          "publishedAtAuthoritative": true
+        },
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "官方",
+        "中国车市"
       ],
       "site_fulltext": false,
       "syndicate_fulltext": false
