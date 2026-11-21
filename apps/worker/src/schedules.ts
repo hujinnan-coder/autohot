@@ -16,6 +16,7 @@ import { composeDueReports } from "@aihot/backend/reports/compose";
 import { dailyRetention } from "@aihot/backend/operations/retention";
 import { submitIndexNow } from "@aihot/backend/operations/indexnow";
 import { submitBaiduPush } from "@aihot/backend/operations/baidu-push";
+import { balancesEnabled, fetchProviderBalances } from "@aihot/backend/operations/balances";
 import { checkAlerts, sendDigest } from "@aihot/backend/operations/alerts";
 import { recoverStaleWork } from "@aihot/backend/operations/recover";
 import { forwardPendingFeedback } from "@aihot/backend/operations/feedback";
@@ -41,6 +42,9 @@ const ENGINE_SCHEDULES: Scheduled[] = [
   { name: "seo.indexnow", cron: "50 * * * *", missed: "once", run: () => submitIndexNow() },
   // Baidu's push for URLs new since the last run, within its daily quota (off unless BAIDU_PUSH_ENABLED).
   { name: "seo.baidu-push", cron: "55 * * * *", missed: "once", run: () => submitBaiduPush() },
+  // Read provider balances for cost reconciliation (off unless PROVIDER_BALANCE_ENABLED).
+  // One catch-up GET refreshes the balance after downtime.
+  ...(balancesEnabled() ? [{ name: "ops.balances", cron: "*/15 * * * *", missed: "once" as const, run: fetchProviderBalances }] : []),
   // Work a stopped process left half way becomes visible, and unknown paid requests get their one
   // automatic release; ops.alerts runs in parallel and sees the result by its next run at the latest.
   { name: "ops.recover", cron: "*/10 * * * *", run: () => recoverStaleWork() },
@@ -57,8 +61,9 @@ const ENGINE_SCHEDULES: Scheduled[] = [
         { name: "sources.adapt-intervals", cron: "20 4 * * *", missed: "once" as const, run: adaptIntervals },
         // X accounts quiet for a day: a renamed one is followed to its new handle (SocialData, paid per lookup).
         { name: "sources.x-renames", cron: "50 4 * * *", missed: "once" as const, run: () => followXRenames() },
-        // Icons are read from the sources' own sites, so they stop with collection.
-        { name: "sources.icons", cron: "40 4 * * *", missed: "once" as const, run: () => refreshSourceIcons() },
+        // Icons are read from the sources' own sites, so they stop with collection. Every two hours:
+        // a source newly added by an operator or seed gets its icon the same day it joins.
+        { name: "sources.icons", cron: "40 */2 * * *", missed: "once" as const, run: () => refreshSourceIcons() },
       ]
     : []),
   // WeChat official accounts through Dajiala (paid), each once per its interval; only with its key.

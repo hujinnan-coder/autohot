@@ -14,7 +14,8 @@
 // The shared hub owns serial execution and retry; accepted events are never dispatched again here.
 // Delivery goes through sendAlert (alert webhook or ops chat, internal-chat fallback; off unless FEISHU_INTERNAL_ENABLED).
 import { randomUUID } from "node:crypto";
-import { addDays, beijingAt, beijingDate, beijingDay, beijingMidnight, beijingStamp, isValidDate } from "@aihot/contracts/time";
+import type { AdminCosts } from "@aihot/contracts/admin";
+import { addDays, beijingAt, beijingDate, beijingDay, beijingMidnight, beijingStamp, isValidDate, monthRange } from "@aihot/contracts/time";
 import { ALERTS, EDITION_TIMES } from "@aihot/site";
 import { audit } from "../audit.ts";
 import { sql } from "../db.ts";
@@ -22,6 +23,7 @@ import { agentConfigured, agentTransportFindings, flushAgentEvents, handoffs, wa
 import { duration, formatAlert, formatRecovery, formatReturn, sendAlert, type Finding, type Level } from "../notify/feishu.ts";
 import { stepsOnService } from "../editorial/models.ts";
 import { backupConfigured } from "./backup.ts";
+import { dailyAttemptCosts, latestProviderBalances } from "./balances.ts";
 import { GROUPING_WARN_AFTER_MS, waitingSelectedNews } from "./grouping.ts";
 import { upstreamFindings } from "../media/upstream.ts";
 import { serverModules } from "../modules.ts";
@@ -431,6 +433,72 @@ async function jinaMonthlyCost(now: number): Promise<Finding[]> {
   return [];
 }
 
+const COST_BALANCE_PREFIX = "cost.balance.";
+type CostBudget = Partial<Pick<AdminCosts["budget"], "alertBalance" | "monthlyCNY" | "monthlyUSD">>;
+
+function addDailyCNY(totals: Map<string, number>, day: string, spend: { amount: number; currency: string }[]) {
+  const cny = spend.reduce((sum, item) => item.currency === "CNY" ? sum + item.amount : sum, 0);
+  totals.set(day, (totals.get(day) ?? 0) + cny);
+}
+
+async function costSpendFindings(now: number, today: string, spikeKey: string | null, budgetKey: string, budgets: CostBudget): Promise<Finding[]> {
+  const yesterday = addDays(today, -1);
+  const month = monthRange(today.slice(0, 7))!;
+  const hasBudget = budgets.monthlyCNY != null || budgets.monthlyUSD != null;
+  const spikeStart = addDays(yesterday, -7);
+  // Both spend checks share the same pricing pass. The spike compares only completed Beijing days.
+  const from = spikeKey && (!hasBudget || spikeStart < month.start) ? spikeStart : month.start;
+  const usage = await dailyAttemptCosts(beijingMidnight(from), hasBudget ? new Date(now) : beijingMidnight(today));
+  const dailyCNY = new Map<string, number>();
+  const monthSpend = { CNY: 0, USD: 0 };
+  for (const { day, spend } of usage) {
+    if (spikeKey && day < today) addDailyCNY(dailyCNY, day, spend);
+    for (const { amount, currency } of spend) {
+      if (day >= month.start && (currency === "CNY" || currency === "USD")) monthSpend[currency] += amount;
+    }
+  }
+  const findings: Finding[] = [];
+  const yesterdaySpend = dailyCNY.get(yesterday) ?? 0;
+  if (spikeKey && yesterdaySpend > 10) {
+    const baseline = [...dailyCNY].filter(([day]) => day < yesterday).slice(-7).map(([, amount]) => amount);
+    if (baseline.length < 7) {
+      // Quiet days can push the baseline outside the first window. Price only the missing active days.
+      const before = beijingMidnight(from);
+      const [older] = await sql<{ first_day: string | null }[]>`
+        SELECT to_char(min(day), 'YYYY-MM-DD') AS first_day FROM (
+          SELECT DISTINCT (started_at AT TIME ZONE 'Asia/Shanghai')::date AS day
+          FROM receipt_attempts WHERE origin = 'live' AND started_at < ${before}
+          ORDER BY day DESC LIMIT ${7 - baseline.length}
+        ) days`;
+      if (older?.first_day) {
+        const olderCNY = new Map<string, number>();
+        for (const { day, spend } of await dailyAttemptCosts(beijingMidnight(older.first_day), before)) {
+          addDailyCNY(olderCNY, day, spend);
+        }
+        baseline.push(...olderCNY.values());
+      }
+    }
+    const average = baseline.reduce((sum, amount) => sum + amount, 0) / 7;
+    if (baseline.length === 7 && yesterdaySpend > average * 2) findings.push({
+      key: spikeKey, level: "today", title: "昨日消耗突增",
+      impact: `${yesterday} 花费 ¥${yesterdaySpend.toFixed(2)}，超过此前 7 个调用活动日日均 ¥${average.toFixed(2)} 的两倍`,
+      action: "去后台成本页核对各服务的消耗，确认是否有批量任务或异常调用",
+    });
+  }
+  const over = (["CNY", "USD"] as const).flatMap((currency) => {
+    const budget = budgets[`monthly${currency}`];
+    const forecast = monthSpend[currency] / Number(today.slice(8)) * Number(month.end.slice(8));
+    if (budget == null || forecast <= budget) return [];
+    return [`预计 ${currency === "CNY" ? "¥" : "$"}${forecast.toFixed(2)} 超 ${budget} ${currency === "CNY" ? "元" : "美元"}预算`];
+  });
+  if (over.length) findings.push({
+    key: budgetKey, level: "today", title: `本月${over.join("，")}`,
+    impact: "按本月截至今天的日均花费推算整月费用",
+    action: "去后台成本页核对消耗，决定是否调整用量或预算",
+  });
+  return findings;
+}
+
 type PrivateNotice = ReturnType<typeof formatAlert> & { id: string; recovery: boolean };
 
 interface AlertEntry {
@@ -441,12 +509,77 @@ interface AlertEntry {
   privateOwner?: true;
   privateNotice?: PrivateNotice;
   handedAt?: string;
+  costClosed?: true;
 }
 type AlertState = Record<string, AlertEntry>;
 
 async function saveAlertEntry(key: string, entry: AlertEntry) {
   await sql`INSERT INTO settings (key, value, updated_by) VALUES ('alerts.state', ${sql.json({ [key]: entry } as never)}, 'alerts')
             ON CONFLICT (key) DO UPDATE SET value = coalesce(settings.value, '{}'::jsonb) || EXCLUDED.value, updated_at = now()`;
+}
+
+/** Cost notices use the same persisted state, with a Beijing-day limit even across a balance recovery. */
+async function checkCostAlerts(now: number, state: AlertState, sent: string[]) {
+  const today = beijingDate(now);
+  const spikeKey = `cost.spike.${addDays(today, -1)}`;
+  const budgetKey = `cost.overbudget.${today.slice(0, 7)}`;
+  const sentToday = (key: string) => {
+    const at = state[key]?.sentAt;
+    return !!at && beijingDate(at) === today;
+  };
+  async function tell(finding: Finding) {
+    if (sentToday(finding.key)) return;
+    const open = state[finding.key];
+    const since = open ? new Date(open.since) : new Date(now);
+    const msg = formatAlert(finding, since, now, !!open);
+    await sendAlert(msg.title, msg.lines);
+    const entry = { title: finding.title, since: since.toISOString(), sentAt: new Date(now).toISOString() };
+    await saveAlertEntry(finding.key, entry);
+    state[finding.key] = entry;
+    sent.push(finding.key);
+  }
+  function close(key: string) {
+    if (sentToday(key)) state[key] = { ...state[key]!, costClosed: true };
+    else delete state[key];
+  }
+
+  const [row] = await sql<{ value: CostBudget }[]>`SELECT value FROM settings WHERE key = 'cost.budget'`;
+  const { alertBalance, monthlyCNY, monthlyUSD } = row?.value ?? {};
+  for (const [key, entry] of Object.entries(state)) {
+    if ((entry.costClosed && !sentToday(key)) || (key.startsWith("cost.spike.") && key !== spikeKey)
+      || (key.startsWith("cost.overbudget.") && key !== budgetKey)) delete state[key];
+    else if (key.startsWith(COST_BALANCE_PREFIX) && alertBalance == null) close(key);
+  }
+
+  if (alertBalance != null) {
+    for (const { account, currency, balance } of await latestProviderBalances()) {
+      const key = `${COST_BALANCE_PREFIX}${account}`;
+      if (balance < alertBalance) {
+        await tell({
+          key, level: "today", title: `${account} 余额低于阈值`,
+          impact: `当前余额 ${balance} ${currency}，提醒阈值 ${alertBalance} ${currency}`,
+          action: "去服务商控制台核对余额，按需充值",
+        });
+      } else {
+        // Only a snapshot that meets the threshold can confirm recovery.
+        const open = state[key];
+        if (!open || open.costClosed) continue;
+        const msg = formatRecovery(open.title, new Date(open.since), now);
+        await sendAlert(msg.title, [...msg.lines, `当前余额 ${balance} ${currency}`]);
+        await saveAlertEntry(key, { ...open, costClosed: true });
+        close(key);
+        sent.push(`${key}:recovered`);
+      }
+    }
+  }
+
+  const budgets = sentToday(budgetKey) ? {} : { monthlyCNY, monthlyUSD };
+  const checkSpike = !sentToday(spikeKey);
+  if (checkSpike || budgets.monthlyCNY != null || budgets.monthlyUSD != null) {
+    const findings = await costSpendFindings(now, today, checkSpike ? spikeKey : null, budgetKey, budgets);
+    if (!sentToday(budgetKey) && !findings.some(({ key }) => key === budgetKey)) delete state[budgetKey];
+    for (const finding of findings) await tell(finding);
+  }
 }
 
 const DAILY_PREFIX = "report.daily:";
@@ -637,7 +770,7 @@ export async function checkAlerts(now = Date.now()) {
   const dailies = await settleDailies(state, found, now);
   sent.push(...dailies.sent);
   for (const [key, open] of Object.entries(state)) {
-    if (found.has(key) || dailies.missing.has(key) || open.privateNotice) continue;
+    if (found.has(key) || dailies.missing.has(key) || open.privateNotice || key.startsWith("cost.")) continue;
     // An agent-only incident was never told to the owner, so clearing it stays quiet too.
     if (open.agentOnly || !open.sentAt) {
       delete state[key];
@@ -656,6 +789,7 @@ export async function checkAlerts(now = Date.now()) {
     sent.push(`${key}:${dropped?.n ? "closed" : "recovered"}`);
     delete state[key];
   }
+  await checkCostAlerts(now, state, sent);
   await sql`INSERT INTO settings (key, value, updated_by) VALUES ('alerts.state', ${sql.json(state as never)}, 'alerts')
             ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = now()`;
   await sql`INSERT INTO settings (key, value, updated_by) VALUES ('alerts.returns', ${sql.json(returns)}, 'alerts')
@@ -666,7 +800,7 @@ export async function checkAlerts(now = Date.now()) {
     await wakeAgent({ ...f, since: new Date(state[f.key]!.since) }, now);
   }
   await flushAgentEvents();
-  return { open: Object.keys(state), sent };
+  return { open: Object.keys(state).filter(key => !state[key]!.costClosed), sent };
 }
 
 /**

@@ -8,7 +8,8 @@ import { navCounts } from "@aihot/backend/admin/navigation";
 import { listAudit } from "@aihot/backend/audit";
 import { importSelectBenchRun, listSelectBenchRuns, selectBenchRun } from "@aihot/backend/admin/selectbench";
 import { modelsOverview, switchModel } from "@aihot/backend/admin/models";
-import { costsOverview } from "@aihot/backend/admin/costs";
+import { costsOverview, updateCostBudget, upsertCostPrice } from "@aihot/backend/admin/costs";
+import { costsCsv, isCostExportKind } from "@aihot/backend/admin/costs-export";
 import { contentChain, overrideFields, rerun, searchContent, setSeoIndexed, setVisibility } from "@aihot/backend/admin/content";
 import { detachFromFact, mergeStories } from "@aihot/backend/events/corrections";
 import { banFeedbackEmail, banSource, eraseFeedback, feedbackScreenshot, listFeedback, unbanSource, updateFeedback } from "@aihot/backend/admin/feedback";
@@ -122,6 +123,16 @@ export function registerAdmin(app: FastifyInstance) {
     return switchModel(param(req, "capability"), b.model ?? null, String(b.reason ?? ""), actorOf(admin));
   }));
   app.get("/api/admin/costs", adminHandler(async (req) => costsOverview(Number(q(req).days))));
+  app.put("/api/admin/costs/budget", adminHandler(async (req, _reply, admin) => updateCostBudget(body(req), actorOf(admin))));
+  app.put("/api/admin/costs/prices", adminHandler(async (req, _reply, admin) => upsertCostPrice(body(req), actorOf(admin))));
+  app.get("/api/admin/costs/export", adminHandler(async (req, reply) => {
+    const { kind, days } = q(req);
+    if (!isCostExportKind(kind)) return sendProblem(req, reply, { status: 400, code: "invalid_request", detail: "Expected daily, models, purposes or subjects." });
+    const data = await costsOverview(Number(days));
+    return reply.type("text/csv; charset=utf-8")
+      .header("Content-Disposition", `attachment; filename=cost-${kind}-${data.days}d.csv`)
+      .send(costsCsv(kind, data));
+  }));
 
   // SelectBench
   app.get("/api/admin/selectbench", adminHandler(async () => ({ runs: await listSelectBenchRuns() })));

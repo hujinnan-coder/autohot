@@ -14,9 +14,11 @@ import { assertAccepted, paidRequest } from "@aihot/backend/providers/receipts";
 import { READER_WORDING } from "@aihot/industry/wording";
 import { resolveDelivery } from "@aihot/backend/notify/deliver";
 import { runsOverview } from "@aihot/backend/admin/runs";
+import { addDays, beijingAt } from "@aihot/contracts/time";
 
 process.env.COLLECT_ENABLED = "false";
 process.env.MODEL_CALLS_ENABLED = "false";
+process.env.FEISHU_INTERNAL_ENABLED = "false";
 
 const T = tag();
 const SOURCE = `test-alerts-${T}`;
@@ -425,6 +427,83 @@ test("a refused provider stays open without a newer successful call", async () =
   assert.ok((await checkAlerts(now+2*3600_000)).open.includes("provider.refused.deepseek"), "silence cannot establish restored access");
   await sql`INSERT INTO receipt_attempts(receipt_id,attempt,service,status) VALUES(${r!.id},4,'deepseek','received')`;
   assert.ok((await checkAlerts(now+2*3600_000+60_000)).sent.includes("provider.refused.deepseek:recovered"));
+});
+
+async function costAlertsAt(day: string, time = "00:10") {
+  return (await checkAlerts(beijingAt(day, time).getTime())).sent.filter((key) => key.startsWith("cost."));
+}
+
+test("low account balance alerts once per Beijing day and reports recovery", async () => {
+  const account = "DEEPSEEK_API_KEY";
+  const key = `cost.balance.${account}`;
+  const day = "2026-11-12";
+  const snapshot = (balance: number, time: string) => sql`
+    INSERT INTO provider_balances (service, account, currency, balance, is_available, raw, fetched_at)
+    VALUES ('deepseek', ${account}, 'CNY', ${balance}, true, ${sql.json({ test: T })}, ${beijingAt(day, time)})`;
+  try {
+    await sql`INSERT INTO settings (key, value) VALUES ('cost.budget', ${sql.json({ alertBalance: 10 })})`;
+    await snapshot(5, "00:05");
+    await snapshot(20, "00:00");
+    assert.deepEqual(await costAlertsAt(day), [key]);
+    assert.deepEqual(await costAlertsAt(day, "00:20"), []);
+
+    await snapshot(10, "00:25");
+    assert.deepEqual(await costAlertsAt(day, "00:30"), [`${key}:recovered`]);
+    await snapshot(9, "00:35");
+    assert.deepEqual(await costAlertsAt(day, "00:40"), [], "a same-day relapse still respects the daily limit");
+    assert.deepEqual(await costAlertsAt(addDays(day, 1)), [key]);
+  } finally {
+    await sql`DELETE FROM provider_balances WHERE raw->>'test' = ${T}`;
+    await sql`DELETE FROM settings WHERE key = 'cost.budget'`;
+    await sql`UPDATE settings SET value = value - ${key}::text WHERE key = 'alerts.state'`;
+  }
+});
+
+test("yesterday's spend is compared with the previous seven active Beijing days", async () => {
+  const day = "2024-03-12";
+  const yesterday = addDays(day, -1);
+  const key = `cost.spike.${yesterday}`;
+  const [r] = await sql<{ id: number }[]>`INSERT INTO receipts (logical_key, service, purpose, status)
+    VALUES ('cost-spike', 'test-cost', 'test', 'completed') RETURNING id`;
+  const attempt = (n: number, date: string, amount: number, service = "test-cost") => sql`
+    INSERT INTO receipt_attempts (receipt_id, attempt, service, status, started_at, cost, currency, cost_basis)
+    VALUES (${r!.id}, ${n}, ${service}, 'received', ${beijingAt(date, "23:59")}, ${amount}, 'CNY', 'actual')`;
+  try {
+    // Gaps push some baseline days outside the initial window, and the eighth active day is excluded.
+    for (let n = 1; n <= 7; n++) await attempt(n, addDays(yesterday, -n * 2), 4);
+    await attempt(8, addDays(yesterday, -16), 100);
+    await attempt(9, yesterday, 10);
+    assert.deepEqual(await costAlertsAt(day), [], "spend must exceed ¥10");
+    await attempt(10, yesterday, 2, "test-cost-other");
+    assert.deepEqual(await costAlertsAt(day, "00:20"), [key]);
+    assert.deepEqual(await costAlertsAt(day, "00:30"), []);
+    assert.deepEqual(await costAlertsAt(addDays(day, 1)), [], "the dated notice expires without a recovery card");
+  } finally {
+    await sql`DELETE FROM receipts WHERE id = ${r!.id}`;
+    await sql`UPDATE settings SET value = value - ${key}::text WHERE key = 'alerts.state'`;
+  }
+});
+
+test("the monthly forecast compares each currency with its budget and sends once per Beijing day", async () => {
+  const day = "2024-05-10";
+  const key = "cost.overbudget.2024-05";
+  const [r] = await sql<{ id: number }[]>`INSERT INTO receipts (logical_key, service, purpose, status)
+    VALUES ('cost-forecast', 'test-cost', 'test', 'completed') RETURNING id`;
+  try {
+    await sql`INSERT INTO settings (key, value) VALUES ('cost.budget', ${sql.json({ monthlyCNY: 100, monthlyUSD: 5 })})`;
+    await sql`INSERT INTO receipt_attempts (receipt_id, attempt, service, status, started_at, cost, currency, cost_basis)
+      VALUES (${r!.id}, 1, 'test-cost', 'received', ${beijingAt(day, "00:05")}, 20, 'CNY', 'actual'),
+             (${r!.id}, 2, 'test-cost', 'received', ${beijingAt(day, "00:05")}, 3, 'USD', 'actual')`;
+    assert.deepEqual(await costAlertsAt(day), [key]);
+    const [state] = await sql<{ title: string }[]>`SELECT value->${key}::text->>'title' AS title FROM settings WHERE key = 'alerts.state'`;
+    assert.equal(state?.title, "本月预计 $9.30 超 5 美元预算");
+    assert.deepEqual(await costAlertsAt(day, "23:50"), []);
+    assert.deepEqual(await costAlertsAt(addDays(day, 1)), [key]);
+  } finally {
+    await sql`DELETE FROM receipts WHERE id = ${r!.id}`;
+    await sql`DELETE FROM settings WHERE key = 'cost.budget'`;
+    await sql`UPDATE settings SET value = value - ${key}::text WHERE key = 'alerts.state'`;
+  }
 });
 
 test("a deliberately dropped delivery closes without claiming successful delivery", async () => {

@@ -179,6 +179,7 @@ const convertsBeijingTime = (line: string) =>
 const CONVERTS_BEIJING_TIME: Record<string, string> = {
   "packages/contracts/src/time.ts": "the conversions themselves",
   "packages/backend/src/editorial/analyze.ts": "the score input keeps the form its prompt was tuned on (whole seconds without .000)",
+  "packages/backend/src/operations/alerts.ts": "cost-spike alerts group receipt attempts by Beijing day in SQL",
   "site/changelog/FeatureRelease.tsx": "a changelog entry's Beijing date and time with its zone, to the minute, in dateTime",
   "clients/watchdog/watchdog.mjs": "installed as one file away from the repository, so it cannot import time.ts",
   "clients/mp-watch/articles.ts": "installed away from the repository with only its module's contracts, so it cannot import time.ts",

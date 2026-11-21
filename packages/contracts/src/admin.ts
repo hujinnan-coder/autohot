@@ -410,18 +410,69 @@ export interface AdminModels {
 
 export interface AdminCosts {
   days: number;
+  localServices: string[];
   rows: Array<{
     service: string;
     model: string | null;
     purpose: string;
     calls: number;
+    retried: number;
     tokensIn: number;
     tokensOut: number;
     actualCost: number | null;
     recordedCost: number | null;
+    wasteCost: number | null;
+    failedCost: number | null;
     currency: string | null;
     estimate: { amount: number; currency: string } | null;
   }>;
+  topSubjects: Array<{
+    subject: string;
+    calls: number;
+    /** Total spend in the reported currency, including any estimate in that currency. */
+    cost: number | null;
+    currency: string | null;
+    estimate: { amount: number; currency: string } | null;
+  }>;
+  prices: Array<{
+    service: string;
+    model: string;
+    currency: string;
+    inputPerMtok: number | null;
+    cachedPerMtok: number | null;
+    outputPerMtok: number | null;
+  }>;
+  budget: {
+    monthlyCNY: number | null;
+    monthlyUSD: number | null;
+    alertBalance: number | null;
+    monthSpend: Record<string, number>;
+    forecast: Record<string, number>;
+  };
+  platform: Array<{
+    service: string;
+    account: string;
+    currency: string;
+    balance: number;
+    granted: number | null;
+    toppedUp: number | null;
+    isAvailable: boolean;
+    fetchedAt: Timestamp;
+    spendWindow: { days: number; amount: number } | null;
+    sinceFirst: number;
+    samples: number;
+  }>;
+  daily: Array<{ day: string; calls: number; spend: Array<{ amount: number; currency: string }> }>;
+  monthly: Array<{ month: string; spend: Array<{ amount: number; currency: string }> }>;
+  outputs: { selectedArticles: number; reports: number; pipelineCost: Record<string, number> };
+  runway: Array<{
+    accounts: string[];
+    currency: string;
+    balance: number;
+    dailySpend: number | null;
+    daysLeft: number | null;
+  }>;
+  budgets: Array<{ service: string; perDay: number; used24h: number }>;
 }
 
 export interface AdminSelectBenchRun {

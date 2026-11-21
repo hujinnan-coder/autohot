@@ -8,7 +8,7 @@ import { capabilities, capabilityAcceptsModel, fallbackModelFor, invalidateModel
 import { MODELS } from "../providers/llm.ts";
 import { modelCircuits } from "../providers/circuit.ts";
 import { audit } from "../audit.ts";
-import { estimateUsage, type ServicePrice, type UncostedUsage } from "./pricing.ts";
+import { estimateUsage, type ServicePrice, type UncostedUsage } from "../providers/pricing.ts";
 
 interface UsageRow extends UncostedUsage {
   purpose: string;
