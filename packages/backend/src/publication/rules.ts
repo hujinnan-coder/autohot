@@ -35,17 +35,30 @@ export function channelOf(sourceId: string, sourceKind: string, hasXPost: boolea
   return sourceKind === "x_search" || hasXPost ? "x" : "news";
 }
 
-/** A Weibo account can post several updates on one fact; its latest report gets the account's seat. */
-export function latestWeiboBySource<T extends { source_id: string; article_id: string; timeline_at: Date; score: number | null }>(reports: T[]): Map<string, T> {
-  const latest = new Map<string, T>();
+export function isSocialChannel(channel: string): boolean {
+  return channel === "weibo" || channel === "x";
+}
+
+export function sameTimeSocialKey(sourceId: string, publishedAt: Date): string {
+  return `${sourceId}:${publishedAt.getTime()}`;
+}
+
+/**
+ * Posts published together share a timestamp, so matching it preserves updates posted at other times.
+ * An undated post has no timestamp to match.
+ */
+export function sameTimeSocialSeats<T extends { source_id: string; article_id: string; published_at: Date | null; timeline_at: Date; score: number | null }>(reports: T[]): Map<string, T> {
+  const seats = new Map<string, T>();
   for (const report of reports) {
-    const current = latest.get(report.source_id);
-    const priority = current && (report.timeline_at.getTime() - current.timeline_at.getTime()
-      || (report.score ?? -Infinity) - (current.score ?? -Infinity)
+    if (report.published_at === null) continue;
+    const key = sameTimeSocialKey(report.source_id, report.published_at);
+    const current = seats.get(key);
+    const priority = current && ((report.score ?? -Infinity) - (current.score ?? -Infinity)
+      || report.timeline_at.getTime() - current.timeline_at.getTime()
       || current.article_id.localeCompare(report.article_id));
-    if (priority === undefined || priority > 0) latest.set(report.source_id, report);
+    if (priority === undefined || priority > 0) seats.set(key, report);
   }
-  return latest;
+  return seats;
 }
 
 /** Public pool (/all): editorial sources, AI relevant, with usable copy or an original post. */

@@ -9,7 +9,7 @@ import { isEmptyOrLinkOnly, withXArticle } from "../content/posts.ts";
 import { proxiedImage, proxiedImageSet } from "../media/imgproxy.ts";
 import { sourceOwnsPost } from "../sources/account.ts";
 import { pickRepresentative, REPRESENTATIVE_COLUMNS, type RepresentativeRow } from "./representative.ts";
-import { displayTags, latestWeiboBySource, publicSourceName } from "./rules.ts";
+import { displayTags, isSocialChannel, publicSourceName, sameTimeSocialKey, sameTimeSocialSeats } from "./rules.ts";
 import { foldableSelectionCondition, ownFactEvidenceCondition, seatedCondition, storyReportCondition } from "./scope.ts";
 
 export interface ItemRow {
@@ -252,33 +252,36 @@ export function exportTranslation(a: { language?: string | null; body_text?: str
 }
 
 /**
- * For listed rows that are selected but yield a seat: their account's latest Weibo post or their fact's representative.
+ * For listed rows that are selected but yield a seat: a social post points to its account-and-time
+ * group's winner, any other report to its fact's representative.
  * (The home timeline folds these into reading groups; flat lists say which report stands for them.)
  */
 export async function seatHolders(rows: ItemRow[], now: Date, db: Db = sql): Promise<Map<string, { id: string; title: string }>> {
   const yielding = rows.filter((r) => r.selected && !r.seat && r.fact_id !== null);
   if (!yielding.length) return new Map();
-  type Holder = RepresentativeRow & Pick<ItemRow, "channel" | "source_id" | "title"> & {
+  type Holder = RepresentativeRow & Pick<ItemRow, "channel" | "source_id" | "published_at" | "title"> & {
     fact_id: number; article_id: string; foldable: boolean; seated: boolean; evidence: boolean;
   };
   const holders = await db<Holder[]>`
-    SELECT p.fact_id, p.article_id, p.source_id, p.channel, p.title, p.body_mode, p.score, p.timeline_at,
+    SELECT p.fact_id, p.article_id, p.source_id, p.channel, p.published_at, p.title, p.body_mode, p.score, p.timeline_at,
       ${REPRESENTATIVE_COLUMNS}, ${foldableSelectionCondition()} AS foldable,
       (${seatedCondition(now)}) AS seated, ${ownFactEvidenceCondition()} AS evidence
     FROM publications p JOIN sources s ON s.id = p.source_id JOIN facts f ON f.id = p.fact_id
     WHERE p.fact_id IN ${db([...new Set(yielding.map((r) => r.fact_id!))])}
-      AND p.visibility = 'public' AND p.selected AND p.seat AND (${foldableSelectionCondition()} OR p.channel = 'weibo')`;
+      AND p.visibility = 'public' AND p.selected AND p.seat AND (${foldableSelectionCondition()} OR p.channel IN ('weibo', 'x'))`;
   const byFact = Map.groupBy(holders, (h) => Number(h.fact_id));
   const targets = new Map([...byFact].map(([factId, members]) => {
     const ordinary = members.filter((m) => m.foldable);
     // The fact may now have several holders. Ordinary reports still point to its representative.
     const representative = ordinary.length ? pickRepresentative(ordinary) : null;
-    const weibo = latestWeiboBySource(members.filter((m) => m.channel === "weibo" && m.evidence));
-    return [factId, { representative, weibo }] as const;
+    // A yielded social post points to the post that took its seat: the same account's same-time group winner.
+    const social = sameTimeSocialSeats(members.filter((m) => isSocialChannel(m.channel) && m.evidence));
+    return [factId, { representative, social }] as const;
   }));
   return new Map(yielding.flatMap((row) => {
     const fact = targets.get(Number(row.fact_id));
-    const holder = row.channel === "weibo" ? fact?.weibo.get(row.source_id) : fact?.representative;
+    const socialKey = isSocialChannel(row.channel) && row.published_at ? sameTimeSocialKey(row.source_id, row.published_at) : null;
+    const holder = socialKey && fact?.social ? fact.social.get(socialKey) : fact?.representative;
     return holder?.seated ? [[row.id, { id: holder.article_id, title: holder.title }] as const] : [];
   }));
 }
