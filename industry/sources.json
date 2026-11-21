@@ -7290,6 +7290,37 @@
       ],
       "site_fulltext": false,
       "syndicate_fulltext": false
+    },
+    {
+      "id": "web-yiche-autocarweekly-13805639",
+      "name": "易车号·autocarweekly",
+      "kind": "web_list",
+      "config": {
+        "url": "https://i.yiche.com/u13805639/!article/",
+        "parseMode": "html",
+        "itemSelector": ".article-item",
+        "linkSelector": "h2.title a",
+        "titleSelector": "h2.title a",
+        "listSummarySelector": "a.desc",
+        "listSummaryDropSelector": ".queryMore",
+        "publishedAtSelector": ".bottom-right span",
+        "allowUrlPrefixes": [
+          "https://news.yiche.com/",
+          "https://hao.yiche.com/wenzhang/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "易车号",
+        "创作者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
     }
   ]
 }
