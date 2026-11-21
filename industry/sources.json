@@ -3683,7 +3683,7 @@
       },
       "tier": "T2",
       "participation_mode": "editorial",
-      "interval_minutes": 240,
+      "interval_minutes": 480,
       "tags": [
         "媒体",
         "微信公众号"
@@ -3773,7 +3773,7 @@
       },
       "tier": "T2",
       "participation_mode": "editorial",
-      "interval_minutes": 240,
+      "interval_minutes": 480,
       "tags": [
         "媒体",
         "微信公众号"
@@ -4259,7 +4259,7 @@
       },
       "tier": "T2",
       "participation_mode": "editorial",
-      "interval_minutes": 240,
+      "interval_minutes": 480,
       "tags": [
         "媒体",
         "微信公众号"
@@ -4623,6 +4623,103 @@
       "tags": [
         "媒体",
         "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-saic-official-news",
+      "name": "上汽集团·官方新闻",
+      "kind": "web_list",
+      "config": {
+        "url": "https://www.saicmotor.com/chinese/xwzx/xwk/index.shtml",
+        "parseMode": "html",
+        "itemSelector": ".item-box",
+        "linkSelector": "h3 a",
+        "titleSelector": "h3 a",
+        "allowUrlPrefixes": [
+          "https://www.saicmotor.com/chinese/xwzx/xwk/"
+        ],
+        "detail": {
+          "maxFetches": 10,
+          "publishedAtRegex": "(20\\d{2}-\\d{1,2}-\\d{1,2} \\d{1,2}:\\d{2})",
+          "publishedAtAuthoritative": true
+        },
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "官方",
+        "中国车市"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-jac-official-news",
+      "name": "江汽集团·官方新闻",
+      "kind": "web_list",
+      "config": {
+        "url": "https://www.jac.com.cn/news/",
+        "parseMode": "html",
+        "itemSelector": "ul.newslist li",
+        "linkSelector": "p.tit a",
+        "titleSelector": "p.tit a",
+        "publishedAtSelector": "p.date",
+        "allowUrlPrefixes": [
+          "https://www.jac.com.cn/news/"
+        ],
+        "detail": {
+          "maxFetches": 10,
+          "publishedAtRegex": "(20\\d{2}-\\d{2}-\\d{2} \\d{2}:\\d{2})",
+          "publishedAtAuthoritative": true
+        },
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "官方",
+        "中国车市"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "web-sinotruk-official-news",
+      "name": "中国重汽·官方新闻",
+      "kind": "web_list",
+      "config": {
+        "url": "https://www.sinotruk.com/sinotruk_xg/xwzx/jtxw/index.html",
+        "parseMode": "html",
+        "itemSelector": ".news_list",
+        "linkSelector": ".news_text h1 a",
+        "titleSelector": ".news_text h1 a",
+        "allowUrlPrefixes": [
+          "https://www.sinotruk.com/sinotruk/"
+        ],
+        "detail": {
+          "maxFetches": 10,
+          "publishedAtRegex": "(20\\d{2}-\\d{2}-\\d{2})",
+          "publishedAtAuthoritative": true
+        },
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "官方",
+        "产业"
       ],
       "site_fulltext": false,
       "syndicate_fulltext": false
