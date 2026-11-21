@@ -115,7 +115,8 @@
       "group": "company",
       "entityId": "polestar",
       "aliases": [
-        "Polestar"
+        "Polestar",
+        "Polestar极星"
       ],
       "definition": "极星的新车、价格、销量、营销与企业动态。"
     },
@@ -545,6 +546,7 @@
       "entityId": "arcfox",
       "aliases": [
         "ARCFOX",
+        "ARCFOX极狐",
         "极狐汽车"
       ],
       "definition": "极狐的新车、价格、销量、营销与企业动态。"
@@ -592,6 +594,7 @@
       "entityId": "aito",
       "aliases": [
         "AITO",
+        "AITO 问界",
         "鸿蒙智行问界"
       ],
       "definition": "问界的新车、价格、销量、营销与企业动态。"
@@ -603,6 +606,7 @@
       "entityId": "seres",
       "aliases": [
         "SERES",
+        "SERES赛力斯",
         "赛力斯集团",
         "赛力斯汽车"
       ],
@@ -772,6 +776,108 @@
       "definition": "宇通的商用车新品、销量、出海与企业动态。"
     },
     {
+      "slug": "skyworth-auto",
+      "name": "创维汽车",
+      "group": "company",
+      "entityId": "skyworth-auto",
+      "aliases": [
+        "Skyworth",
+        "创维汽车集团"
+      ],
+      "definition": "创维汽车的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "livan",
+      "name": "睿蓝",
+      "group": "company",
+      "entityId": "livan",
+      "aliases": [
+        "Livan",
+        "吉利睿蓝",
+        "睿蓝汽车"
+      ],
+      "definition": "睿蓝的换电车型、价格与吉利体系内的定位调整。"
+    },
+    {
+      "slug": "haima",
+      "name": "海马",
+      "group": "company",
+      "entityId": "haima",
+      "aliases": [
+        "海马汽车",
+        "Haima"
+      ],
+      "definition": "海马的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "qoros",
+      "name": "观致",
+      "group": "company",
+      "entityId": "qoros",
+      "aliases": [
+        "Qoros",
+        "观致汽车"
+      ],
+      "definition": "观致的历史沿革、资产处置与宝能系相关动态。"
+    },
+    {
+      "slug": "hycan",
+      "name": "合创",
+      "group": "company",
+      "entityId": "hycan",
+      "aliases": [
+        "Hycan",
+        "合创汽车",
+        "广汽合创"
+      ],
+      "definition": "合创的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "hiphi",
+      "name": "高合",
+      "group": "company",
+      "entityId": "hiphi",
+      "aliases": [
+        "HiPhi",
+        "高合汽车",
+        "华人运通"
+      ],
+      "definition": "高合的停产重组进展、债权人动作与华人运通相关事务。"
+    },
+    {
+      "slug": "hengchi",
+      "name": "恒驰",
+      "group": "company",
+      "entityId": "hengchi",
+      "aliases": [
+        "恒驰汽车",
+        "Hengchi"
+      ],
+      "definition": "恒驰的量产与交付状况、恒大集团债务重组相关进展。"
+    },
+    {
+      "slug": "landian",
+      "name": "蓝电",
+      "group": "company",
+      "entityId": "landian",
+      "aliases": [
+        "赛力斯蓝电",
+        "蓝电汽车"
+      ],
+      "definition": "赛力斯旗下蓝电品牌的新车、价格与销量表现。"
+    },
+    {
+      "slug": "sol",
+      "name": "思皓",
+      "group": "company",
+      "entityId": "sol",
+      "aliases": [
+        "大众思皓",
+        "江淮大众"
+      ],
+      "definition": "思皓的历史车型、江淮与大众合作关系的演变。"
+    },
+    {
       "slug": "volkswagen",
       "name": "大众",
       "group": "company",
@@ -847,6 +953,18 @@
       "definition": "奔驰的新车、价格、销量、营销与企业动态。"
     },
     {
+      "slug": "skoda",
+      "name": "斯柯达",
+      "group": "company",
+      "entityId": "skoda",
+      "aliases": [
+        "SKODA",
+        "斯柯达汽车",
+        "上汽斯柯达"
+      ],
+      "definition": "斯柯达的新车、价格与在华动态，以及大众集团层面的相关安排。"
+    },
+    {
       "slug": "toyota",
       "name": "丰田",
       "group": "company",
@@ -913,6 +1031,31 @@
         "Subaru"
       ],
       "definition": "斯巴鲁的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "mitsubishi",
+      "name": "三菱",
+      "group": "company",
+      "entityId": "mitsubishi",
+      "aliases": [
+        "三菱汽车",
+        "Mitsubishi",
+        "Mitsubishi Motors",
+        "广汽三菱"
+      ],
+      "definition": "三菱汽车的新车与海外动态，广汽三菱历史与联盟事务。"
+    },
+    {
+      "slug": "suzuki",
+      "name": "铃木",
+      "group": "company",
+      "entityId": "suzuki",
+      "aliases": [
+        "SUZUKI",
+        "铃木汽车",
+        "长安铃木"
+      ],
+      "definition": "铃木的新车与全球业务，长安铃木历史与小型车战略。"
     },
     {
       "slug": "hyundai",
@@ -1016,6 +1159,28 @@
       "definition": "林肯的新车、价格、销量、营销与企业动态。"
     },
     {
+      "slug": "chrysler",
+      "name": "克莱斯勒",
+      "group": "company",
+      "entityId": "chrysler",
+      "aliases": [
+        "Chrysler",
+        "克莱斯勒集团"
+      ],
+      "definition": "克莱斯勒的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "dodge",
+      "name": "道奇",
+      "group": "company",
+      "entityId": "dodge",
+      "aliases": [
+        "Dodge",
+        "道奇公羊"
+      ],
+      "definition": "道奇的新车、价格、销量、营销与企业动态。"
+    },
+    {
       "slug": "stellantis",
       "name": "Stellantis",
       "group": "company",
@@ -1098,6 +1263,59 @@
         "Maserati"
       ],
       "definition": "玛莎拉蒂的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "mclaren",
+      "name": "迈凯伦",
+      "group": "company",
+      "entityId": "mclaren",
+      "aliases": [
+        "McLaren",
+        "迈凯伦汽车"
+      ],
+      "definition": "迈凯伦的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "bugatti",
+      "name": "布加迪",
+      "group": "company",
+      "entityId": "bugatti",
+      "aliases": [
+        "Bugatti"
+      ],
+      "definition": "布加迪的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "alfa-romeo",
+      "name": "阿尔法·罗密欧",
+      "group": "company",
+      "entityId": "alfa-romeo",
+      "aliases": [
+        "阿尔法罗密欧",
+        "Alfa Romeo"
+      ],
+      "definition": "阿尔法·罗密欧的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "aston-martin",
+      "name": "阿斯顿·马丁",
+      "group": "company",
+      "entityId": "aston-martin",
+      "aliases": [
+        "阿斯顿马丁",
+        "Aston Martin"
+      ],
+      "definition": "阿斯顿·马丁的新车、价格、销量、营销与企业动态。"
+    },
+    {
+      "slug": "opel",
+      "name": "欧宝",
+      "group": "company",
+      "entityId": "opel",
+      "aliases": [
+        "Opel"
+      ],
+      "definition": "欧宝的新车、价格、销量、营销与企业动态。"
     },
     {
       "slug": "catl",
