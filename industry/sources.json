@@ -2309,50 +2309,6 @@
       "syndicate_fulltext": false
     },
     {
-      "id": "weibo-1749127163",
-      "name": "雷军（小米）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "1749127163"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
       "id": "web-caam-stats",
       "name": "中汽协·产销简析",
       "kind": "web_list",
@@ -2376,3702 +2332,6 @@
       "tags": [
         "行业组织",
         "产销数据"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-1882934071",
-      "name": "托马斯电火车（小鹏）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "1882934071"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-2245894771",
-      "name": "蔚来余东明",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "2245894771"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-7883130603",
-      "name": "比亚迪王朝路天",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "7883130603"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-1804134502",
-      "name": "腾势汽车李慧",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "1804134502"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-7909008288",
-      "name": "赛力斯康波",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "7909008288"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-7841262120",
-      "name": "长城炮保哥",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "7841262120"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-2047735024",
-      "name": "比亚迪何志奇",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "2047735024"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-7902080403",
-      "name": "方程豹熊甜波（比亚迪）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "7902080403"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-7796842527",
-      "name": "零跑Tiger",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "7796842527"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-1915347140",
-      "name": "比亚迪海洋张卓",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "1915347140"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-7961361901",
-      "name": "吉超超有材（理想）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "7961361901"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-1085536624",
-      "name": "XP-WilLiaM郑荣卿（小鹏）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "1085536624"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-7915954986",
-      "name": "Maggie_阿维塔",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "7915954986"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-7902110866",
-      "name": "仰望汽车胡晓庆",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "7902110866"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-1679013335",
-      "name": "李斌（蔚来）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "1679013335"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-1971874241",
-      "name": "姜海荣-Harrison（深蓝）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "1971874241"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-7990049885",
-      "name": "增程强哥（理想）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "7990049885"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-5629836576",
-      "name": "哈弗欧拉吕文斌（长城）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "5629836576"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-1774963862",
-      "name": "深蓝汽车邓承浩",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "1774963862"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-7748789887",
-      "name": "东风汽车卢放",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "7748789887"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-6934904193",
-      "name": "邵景峰_上汽设计",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "6934904193"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-4086652259",
-      "name": "昊铂埃安BU杨龙",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "4086652259"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-2551989497",
-      "name": "李学用-奇瑞集团",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "2551989497"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-7921069583",
-      "name": "昊铂埃安BU张雄",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "7921069583"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-6366801446",
-      "name": "曹力_零跑科技",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "6366801446"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-1705212365",
-      "name": "单爱富William（吉利）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "1705212365"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-7968396264",
-      "name": "造个理想的徐爸",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "7968396264"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-7968023662",
-      "name": "东哥聊聊车（理想）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "7968023662"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-7992085799",
-      "name": "神龙汽车余岳峰（东风）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "7992085799"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-1915631251",
-      "name": "赵长江Pro（智界）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "1915631251"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-7740678459",
-      "name": "乔心昱（北汽）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "7740678459"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-7881826489",
-      "name": "坦克品牌谷玉坤（长城）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "7881826489"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-1087385463",
-      "name": "李肖爽（小米）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "1087385463"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-2106315923",
-      "name": "张福志_Jacob（长城）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "2106315923"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-2455476364",
-      "name": "XP-何小鹏",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "2455476364"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-2070182667",
-      "name": "魏建军（长城）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "2070182667"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-7861540767",
-      "name": "姜海鹏_GWM（长城）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "7861540767"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-1261412894",
-      "name": "长安汽车米梦冬",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "1261412894"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-2631528431",
-      "name": "极氪赵春林",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "2631528431"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-7870009678",
-      "name": "岚图李博晓",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "7870009678"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-8374450716",
-      "name": "中国长安汽车赵非",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "8374450716"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-1653368082",
-      "name": "蔚来的杨波",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "1653368082"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-3158576864",
-      "name": "老Tango（理想）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "3158576864"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-1904328862",
-      "name": "比亚迪李云飞",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "1904328862"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-1130738561",
-      "name": "我想我是海阿杜（比亚迪）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "1130738561"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-4084920448",
-      "name": "底盘神顿橘（理想）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "4084920448"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-2151574834",
-      "name": "嘉禾车（理想）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "2151574834"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-5777800092",
-      "name": "吴会肖（长城）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "5777800092"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-6995454758",
-      "name": "加电的沈斐（蔚来）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "6995454758"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-7878584808",
-      "name": "刘莉娅_长城GWM",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "7878584808"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-7929218006",
-      "name": "比亚迪王朝赵炳根",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "7929218006"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-1661028834",
-      "name": "Auto米黎明（吉利）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "1661028834"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-1040331325",
-      "name": "中国长安汽车朱华荣",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "1040331325"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-6405869568",
-      "name": "东风日产王骞",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "6405869568"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-7704198387",
-      "name": "赵德力（小鹏）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "7704198387"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-1928374301",
-      "name": "罗博士懂点电池（理想）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "1928374301"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-7863687999",
-      "name": "中国长安汽车谭本宏",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "7863687999"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-9123861444",
-      "name": "车控万事屋栾掌柜（理想）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "9123861444"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-2105511073",
-      "name": "大通森哥（上汽）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "2105511073"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-7848714574",
-      "name": "魏牌赵永坡_Bert（长城）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "7848714574"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-9087591604",
-      "name": "猛士汽车万良渝",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "9087591604"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-7899305885",
-      "name": "陈卓_阿维塔",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "7899305885"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-1892653244",
-      "name": "卢伟冰（小米）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "1892653244"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-1100856704",
-      "name": "余承东（华为）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "1100856704"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-7935653316",
-      "name": "Miss_xiao001（比亚迪）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "7935653316"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-1434624975",
-      "name": "杨学良Victor（吉利）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "1434624975"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-7992484609",
-      "name": "日产汽车马智欣StephenMa（东风）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "7992484609"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-7929588012",
-      "name": "吉利汽车范峻毅",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "7929588012"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-7926427432",
-      "name": "东风日产孙豪",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "7926427432"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-1092220835",
-      "name": "布莱恩罗昊_Brian（比亚迪）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "1092220835"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-7994285559",
-      "name": "岚图汽车邵明峰",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "7994285559"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-7497343997",
-      "name": "长城汽车石庆松",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "7497343997"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-1401579593",
-      "name": "文飞-神行者（奇瑞）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "1401579593"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-7834442951",
-      "name": "李昕旸（理想）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "7834442951"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-7682675972",
-      "name": "智界郭锐博士",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "7682675972"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-3243882235",
-      "name": "penglay_磊（享界）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "3243882235"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-1862459915",
-      "name": "余凯_地平线民工",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "1862459915"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-2181179477",
-      "name": "XP-Jacky（小鹏）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "2181179477"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-7802450527",
-      "name": "零跑超哥",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "7802450527"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-7907175097",
-      "name": "吉利穆军",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "7907175097"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-6277775185",
-      "name": "GWM李飞（长城）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "6277775185"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-2986959960",
-      "name": "阿维塔-张志鸿",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "2986959960"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-1871299764",
-      "name": "刘杰-理想",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "1871299764"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-2001356571",
-      "name": "Grace陶琳-Tesla（特斯拉）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "2001356571"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
       ],
       "site_fulltext": false,
       "syndicate_fulltext": false
@@ -6158,50 +2418,6 @@
       "tags": [
         "官方",
         "贸易"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "weibo-1243861097",
-      "name": "李想（理想汽车CEO）",
-      "kind": "json_list",
-      "config": {
-        "url": "https://a.sina.cn/topic/inside/shortnews/shortnews/?page=1&limit=20&tagid=0",
-        "itemsPath": "data",
-        "itemUrlPrefixRewrite": {
-          "from": "https://m.weibo.cn/detail/",
-          "to": "https://m.weibo.cn/status/"
-        },
-        "requireBoolean": {
-          "path": "uid",
-          "equals": "1243861097"
-        },
-        "urlTemplate": "{raw:wapURL}",
-        "titlePaths": [
-          "summary"
-        ],
-        "summaryPaths": [
-          "summary"
-        ],
-        "summaryIsBody": true,
-        "authorPaths": [
-          "userinfo.screen_name"
-        ],
-        "publishedAtPath": "cTime",
-        "allowUrlPrefixes": [
-          "https://m.weibo.cn/detail/"
-        ],
-        "_aihot": {
-          "initialBackfillLimit": 10
-        }
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 60,
-      "tags": [
-        "高管",
-        "微博"
       ],
       "site_fulltext": false,
       "syndicate_fulltext": false
@@ -7591,6 +3807,1086 @@
       "config": {
         "ghid": "AI-Drive",
         "nickname": "新智驾"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-cailianpress",
+      "name": "财联社",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "cailianshe",
+        "nickname": "财联社"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-pengpainews",
+      "name": "澎湃新闻",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "pengpaixinwen",
+        "nickname": "澎湃新闻"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-eeo",
+      "name": "经济观察报",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "eeo-com-cn",
+        "nickname": "经济观察报"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-21jingji",
+      "name": "21世纪经济报道",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "21jingji",
+        "nickname": "21世纪经济报道"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-cnauto",
+      "name": "中国汽车报",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "CNauto2014",
+        "nickname": "中国汽车报"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-rm-auto",
+      "name": "人民汽车",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "rm-rbqiche",
+        "nickname": "人民汽车"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-xinhua-auto",
+      "name": "新华网汽车",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "newsqiche",
+        "nickname": "新华网汽车"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-cctv-caijing",
+      "name": "央视财经",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "cctv-cj",
+        "nickname": "央视财经"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-1bef1f435dab",
+      "name": "财经网汽车",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_1bef1f435dab",
+        "nickname": "财经网汽车"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-93119cc8064a",
+      "name": "界面新闻",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_93119cc8064a",
+        "nickname": "界面新闻"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-caixinwang",
+      "name": "财新",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "caixinwang",
+        "nickname": "财新"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-831073310871",
+      "name": "中国经营报",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "wxid_8310733108711",
+        "nickname": "中国经营报"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-8a28da92dd9d",
+      "name": "华夏时报",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_8a28da92dd9d",
+        "nickname": "华夏时报"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-8d686ee3eca2",
+      "name": "北京商报",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_8d686ee3eca2",
+        "nickname": "北京商报"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-c5071fb91bfb",
+      "name": "时代周报",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_c5071fb91bfb",
+        "nickname": "时代周报"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-0363ffcb9324",
+      "name": "证券时报",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_0363ffcb9324",
+        "nickname": "证券时报"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-0e34ec8fea29",
+      "name": "汽车纵横AutoReview",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_0e34ec8fea29",
+        "nickname": "汽车纵横AutoReview"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-970ddb659adf",
+      "name": "易车",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_970ddb659adf",
+        "nickname": "易车"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-de693f16ba81",
+      "name": "懂车帝",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_de693f16ba81",
+        "nickname": "懂车帝"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-0268cf97d33f",
+      "name": "太平洋汽车",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_0268cf97d33f",
+        "nickname": "太平洋汽车"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-7d2d539a37af",
+      "name": "网上车市",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_7d2d539a37af",
+        "nickname": "网上车市"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-809b6b8d088f",
+      "name": "车讯网",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_809b6b8d088f",
+        "nickname": "车讯网"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-369e2b8d0ac6",
+      "name": "中华网汽车",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_369e2b8d0ac6",
+        "nickname": "中华网汽车"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-08d482d19ab0",
+      "name": "凤凰网汽车",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_08d482d19ab0",
+        "nickname": "凤凰网汽车"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-40a3165b1d9f",
+      "name": "新浪汽车",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_40a3165b1d9f",
+        "nickname": "新浪汽车"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-7bf83e8e6711",
+      "name": "网易汽车",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_7bf83e8e6711",
+        "nickname": "网易汽车"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-de1517ddf4e9",
+      "name": "搜狐汽车",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_de1517ddf4e9",
+        "nickname": "搜狐汽车"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-aaacc1c13b92",
+      "name": "环球网汽车",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_aaacc1c13b92",
+        "nickname": "环球网汽车"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-21b5351f09f0",
+      "name": "中国网汽车",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_21b5351f09f0",
+        "nickname": "中国网汽车"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-92adc4e72b56",
+      "name": "汽车洋葱圈",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_92adc4e72b56",
+        "nickname": "汽车洋葱圈"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-eedbb20b1659",
+      "name": "汽车周刊",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_eedbb20b1659",
+        "nickname": "汽车周刊"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-203adcbf2ab8",
+      "name": "车早茶",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_203adcbf2ab8",
+        "nickname": "车早茶"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-78fc1408e69b",
+      "name": "小新说车",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_78fc1408e69b",
+        "nickname": "小新说车"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-63fc3c853726",
+      "name": "车叫兽",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_63fc3c853726",
+        "nickname": "车叫兽"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-a81cde8b0cfe",
+      "name": "38号车评中心",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_a81cde8b0cfe",
+        "nickname": "38号车评中心"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-aeafa20ee170",
+      "name": "萝卜报告",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_aeafa20ee170",
+        "nickname": "萝卜报告"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-7338f8064a91",
+      "name": "韩路游记",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_7338f8064a91",
+        "nickname": "韩路游记"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-09aced0bb148",
+      "name": "车若初见",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_09aced0bb148",
+        "nickname": "车若初见"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-593bedfdaef8",
+      "name": "踢车帮",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_593bedfdaef8",
+        "nickname": "踢车帮"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-67c6d826f2d9",
+      "name": "此地无垠",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_67c6d826f2d9",
+        "nickname": "此地无垠"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-1f42a2ae6675",
+      "name": "胖哥说车",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_1f42a2ae6675",
+        "nickname": "胖哥说车"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-448d31bd8ac7",
+      "name": "逗斗车",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_448d31bd8ac7",
+        "nickname": "逗斗车"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-4a50237168ce",
+      "name": "懂车老王",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_4a50237168ce",
+        "nickname": "懂车老王"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-3a4c59512699",
+      "name": "二师兄玩车",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_3a4c59512699",
+        "nickname": "二师兄玩车"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-583b5137b78e",
+      "name": "汽车志",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_583b5137b78e",
+        "nickname": "汽车志"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-c2214cb9a8f6",
+      "name": "高工智能汽车",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_c2214cb9a8f6",
+        "nickname": "高工智能汽车"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-48bdaf836ebe",
+      "name": "NE时代",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_48bdaf836ebe",
+        "nickname": "NE时代"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-6c8e0174cb0d",
+      "name": "电车汇",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_6c8e0174cb0d",
+        "nickname": "电车汇"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-e4e7c712fb5f",
+      "name": "第一电动网",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_e4e7c712fb5f",
+        "nickname": "第一电动网"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-9fcda0409843",
+      "name": "佐思汽研",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_9fcda0409843",
+        "nickname": "佐思汽研"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-1255c350a395",
+      "name": "亿欧汽车",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_1255c350a395",
+        "nickname": "亿欧汽车"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-a38c213c3893",
+      "name": "车云网",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_a38c213c3893",
+        "nickname": "车云网"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-bce12d0e33a9",
+      "name": "汽车预言家",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_bce12d0e33a9",
+        "nickname": "汽车预言家"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-719db5308e14",
+      "name": "第一商用车网",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_719db5308e14",
+        "nickname": "第一商用车网"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-404551a1824a",
+      "name": "方得网",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_404551a1824a",
+        "nickname": "方得网"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-e34d540d7a41",
+      "name": "商车邦",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_e34d540d7a41",
+        "nickname": "商车邦"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-7db9098a6d56",
+      "name": "洋葱商用车",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_7db9098a6d56",
+        "nickname": "洋葱商用车"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-a0f1dab9407d",
+      "name": "客车网",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_a0f1dab9407d",
+        "nickname": "客车网"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-2d40f2749e86",
+      "name": "商用车联盟",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_2d40f2749e86",
+        "nickname": "商用车联盟"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-539bcf97e979",
+      "name": "轮胎世界网",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_539bcf97e979",
+        "nickname": "轮胎世界网"
       },
       "tier": "T2",
       "participation_mode": "editorial",
