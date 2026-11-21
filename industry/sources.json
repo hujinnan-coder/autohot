@@ -7321,6 +7321,24 @@
       ],
       "site_fulltext": false,
       "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-30sdongche",
+      "name": "30秒懂车",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "miaodongche30",
+        "nickname": "30秒懂车"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "公众号",
+        "视频媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
     }
   ]
 }
