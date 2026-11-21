@@ -5907,6 +5907,27 @@
       ],
       "site_fulltext": false,
       "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-polestar-press",
+      "name": "极星",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://media.polestar.com/rss",
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "官方",
+        "海外",
+        "电动车"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
     }
   ]
 }
