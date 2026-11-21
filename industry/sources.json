@@ -4188,7 +4188,9 @@
         "微信公众号"
       ],
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "disabled_reason": "官网源（web-163/web-sina）已在采同等内容且更全，公众号重复"
     },
     {
       "id": "mp-7bf83e8e6711",
@@ -4206,7 +4208,9 @@
         "微信公众号"
       ],
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "disabled_reason": "官网源（web-163/web-sina）已在采同等内容且更全，公众号重复"
     },
     {
       "id": "mp-de1517ddf4e9",
