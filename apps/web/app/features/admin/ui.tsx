@@ -239,7 +239,7 @@ export function FilterChips({ param, options, resets = [] }: { param: string; op
   );
 }
 
-export function Pager({ page, hasMore }: { page: number; hasMore: boolean }) {
+export function Pager({ page, hasMore, totalPages }: { page: number; hasMore: boolean; totalPages?: number }) {
   const [sp] = useSearchParams();
   const to = (p: number) => {
     const next = new URLSearchParams(sp);
@@ -248,11 +248,22 @@ export function Pager({ page, hasMore }: { page: number; hasMore: boolean }) {
     return `?${next}`;
   };
   if (page <= 1 && !hasMore) return null;
+  // Page numbers with the ends and the current page's neighbours kept, gaps as "…": 1 … 4 5 6 … 20.
+  const numbers = totalPages && totalPages > 1
+    ? [...new Set([1, page - 1, page, page + 1, totalPages].filter((p) => p >= 1 && p <= totalPages))]
+      .flatMap((p, i, all) => (i > 0 && p - all[i - 1]! > 1 ? ["…", p] : [p]))
+    : null;
   return (
-    <div className="mt-4 flex items-center justify-center gap-2 text-[13px]">
+    <div className="mt-4 flex flex-wrap items-center justify-center gap-1.5 text-[13px]">
       {page > 1 && <ButtonLink to={to(page - 1)} size="sm">上一页</ButtonLink>}
-      <span className="num px-2 text-ink-3">第 {page} 页</span>
-      {hasMore && <ButtonLink to={to(page + 1)} size="sm">下一页</ButtonLink>}
+      {numbers
+        ? numbers.map((p, i) => p === "…"
+          ? <span key={`gap${i}`} className="px-1 text-ink-4">…</span>
+          : p === page
+            ? <span key={p} className="num inline-flex h-7 min-w-7 items-center justify-center rounded-control bg-accent px-2 font-medium text-accent-contrast">{p}</span>
+            : <ButtonLink key={p} to={to(p as number)} size="sm"><span className="num">{p}</span></ButtonLink>)
+        : <span className="num px-2 text-ink-3">第 {page} 页</span>}
+      {(hasMore || (totalPages !== undefined && page < totalPages)) && <ButtonLink to={to(page + 1)} size="sm">下一页</ButtonLink>}
     </div>
   );
 }

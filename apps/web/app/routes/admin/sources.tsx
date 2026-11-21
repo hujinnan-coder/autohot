@@ -114,7 +114,7 @@ export default function Sources({ loaderData }: Route.ComponentProps) {
           ]}
         />
       </Card>
-      <Pager page={page} hasMore={rows.length === 100} />
+      <Pager page={page} hasMore={rows.length === 100} totalPages={Math.max(1, Math.ceil(totals.total / 100))} />
     </AdminPage>
   );
 }
