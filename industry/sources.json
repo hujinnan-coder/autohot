@@ -3399,7 +3399,8 @@
       ],
       "site_fulltext": false,
       "syndicate_fulltext": false,
-      "enabled": false
+      "enabled": false,
+      "disabled_reason": "站长 2026-11-21 停用：车家号平台内容下线，大家车言论改由公众号版本监控"
     },
     {
       "id": "mp-djcy",
