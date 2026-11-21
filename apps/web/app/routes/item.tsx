@@ -2,7 +2,7 @@ import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } fro
 import { Await, isRouteErrorResponse, Link, useAsyncError, useLoaderData, useNavigate, useRevalidator, type ClientLoaderFunctionArgs } from "react-router";
 import type { Route } from "./+types/item";
 import { REPORT_NAMES, reportDateLabel, type FeedItemSummary, type SiteItemDetail, type StoryFollowupsResponse } from "@aihot/contracts/site";
-import { ITEM_COPY, SITE, withSubject } from "@aihot/site";
+import { ITEM_COPY, SITE } from "@aihot/site";
 import { linkMentions } from "@aihot/contracts/mentions";
 import { addressRuns } from "@aihot/contracts/addresses";
 import { cachedPage, loadOr404 } from "../lib/api.server";
@@ -169,7 +169,7 @@ function bylineOf(author: string | null, source: string): string | null {
 
 /** "11月7日 AI 日报 · 头条": the daily that carries the article, named as the site names its issues. */
 function dailyName(daily: NonNullable<SiteItemDetail["daily"]>): string {
-  return `${reportDateLabel("daily", daily.key)} ${withSubject(REPORT_NAMES.daily)}${daily.lead ? " · 头条" : ""}`;
+  return `${reportDateLabel("daily", daily.key)} ${REPORT_NAMES.daily}${daily.lead ? " · 头条" : ""}`;
 }
 
 /**

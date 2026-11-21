@@ -1,7 +1,7 @@
 // Reports through the public read layer: website DTOs and the v1 shapes. Only real reports are
 // listed; a missing date is a 404, never another day. Withdrawn citations are marked, not shown.
 import type { ReportCitation, ReportDetail, ReportIndexEntry, ReportNavigationEntry, ReportKind } from "@aihot/contracts/site";
-import { REPORTS, SITE, withSubject } from "@aihot/site";
+import { REPORTS, SITE } from "@aihot/site";
 import { sql } from "../db.ts";
 import { cached, type Cached } from "../lib/cache.ts";
 import { proxiedImage, proxiedImageSet } from "../media/imgproxy.ts";
@@ -389,7 +389,7 @@ export async function loadReport(kind: ReportKind, key: string): Promise<ReportD
     ? (named ? { title: named.title, leadParagraph: (kind === "daily" ? named.leadParagraph : overview) ?? "" } : null)
     : kind === "daily" ? c.lead ?? null
       : c.lead ? { ...c.lead, leadParagraph: overview ?? "" } : (headline ? { title: headline, leadParagraph: overview ?? "" } : null);
-  const title = kind === "daily" ? `${withSubject("日报")} · ${key}`
+  const title = kind === "daily" ? `日报 · ${key}`
     : String((hasCitedLead && c.title === headline ? named?.title : c.title) ?? (kind === "weekly" ? `${SITE.name} 周报 · ${key}` : `${SITE.name} 月报 · ${key}`));
   return {
     kind,

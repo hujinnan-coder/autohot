@@ -35,7 +35,7 @@ export default function DailyArchive() {
       <div className="@container">
         <header className="pt-5 lg:pt-0">
           <div className="flex items-center justify-between gap-4 text-[12px] text-ink-4">
-            <span>{`${SITE.name} · ${withSubject("日报")}`}</span>
+            <span>{`${SITE.name} · 日报`}</span>
             <span>
               共 <span className="num">{index[0]?.issueNumber ?? 0}</span> 期
             </span>
@@ -58,7 +58,7 @@ export default function DailyArchive() {
                     <span className="mt-1.5 text-[10.5px] leading-none text-ink-4">{weekdayShort(e.key)}</span>
                   </span>
                   <span className="min-w-0">
-                    <span className="block text-[15px] font-bold leading-[1.55] text-ink transition-colors group-hover:text-accent">{e.title ?? `${withSubject("日报")} ${e.key}`}</span>
+                    <span className="block text-[15px] font-bold leading-[1.55] text-ink transition-colors group-hover:text-accent">{e.title ?? `日报 ${e.key}`}</span>
                     {!!e.count && (
                       <span className="mt-1 block text-[12px] text-ink-4">
                         <span className="num">{e.count}</span>{` ${ENTRIES_UNIT}`}

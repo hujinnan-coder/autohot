@@ -9,7 +9,7 @@ import { IntentLink } from "../../components/ui/IntentLink";
 import { createContext, useContext, useState, type ReactNode } from "react";
 import { Link } from "react-router";
 import { REPORT_NAMES, type ReportCitation, type ReportDetail, type ReportNavigationEntry } from "@aihot/contracts/site";
-import { REPORTS, SEO_TITLES, SITE, subjectAfter, withSubject } from "@aihot/site";
+import { REPORTS, SEO_TITLES, SITE } from "@aihot/site";
 import { linkMentions, type MentionRun } from "@aihot/contracts/mentions";
 import { MentionText } from "../../components/ui/MentionText";
 import { Badge } from "../../components/ui/Badge";
@@ -422,7 +422,7 @@ const COLUMNS = "@[760px]:columns-2 @[760px]:gap-x-12 @[760px]:[column-rule:1px_
 
 /** Issues change through these links, never by a sideways swipe: on iOS that would fight the edge swipe back. */
 function Neighbours({ report, index }: { report: ReportDetail; index: ReportNavigationEntry[] }) {
-  const titleOf = (key: string) => index.find((e) => e.key === key)?.title ?? `${withSubject(REPORT_NAMES[report.kind])} · ${key}`;
+  const titleOf = (key: string) => index.find((e) => e.key === key)?.title ?? `${REPORT_NAMES[report.kind]} · ${key}`;
   const cell = "group flex min-w-0 flex-col py-6";
   const title = "mt-2.5 line-clamp-2 text-[16px] font-bold leading-[1.5] text-ink transition-colors group-hover:text-accent @[880px]:text-[18px]";
   return (
@@ -457,7 +457,7 @@ function History({ report, index }: { report: ReportDetail; index: ReportNavigat
   const label = REPORT_NAMES[report.kind];
   return (
     <section id="report-history" className="scroll-mt-[calc(var(--bar-h)+1.5rem)] pt-12">
-      <Kicker>{before(subjectAfter("往期", label), label)}{label}</Kicker>
+      <Kicker>往期{label}</Kicker>
       <ul className="mt-3">
         {others.map((e) => (
           <li key={e.key}>
