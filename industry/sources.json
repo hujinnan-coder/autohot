@@ -5932,6 +5932,298 @@
       ],
       "site_fulltext": false,
       "syndicate_fulltext": false
+    },
+    {
+      "id": "web-porsche-newsroom",
+      "name": "保时捷·全球新闻室",
+      "kind": "web_list",
+      "config": {
+        "url": "https://newsroom.porsche.com/en/",
+        "parseMode": "html",
+        "itemSelector": "article.teaser",
+        "linkSelector": "a[href^='/en/20'], a[href^='/en/ppdb/']",
+        "publishedAtSelector": "time.teaser-date",
+        "publishedAtDayFirst": true,
+        "allowUrlPrefixes": [
+          "https://newsroom.porsche.com/en/20",
+          "https://newsroom.porsche.com/en/ppdb/"
+        ],
+        "detail": {
+          "maxFetches": 10,
+          "publishedAtRegex": "datetime=\"(\\d{1,2}/\\d{1,2}/\\d{4})\"",
+          "publishedAtDayFirst": true
+        },
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 60,
+      "tags": [
+        "官方",
+        "海外"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-jensenhuang",
+      "name": "黄仁勋（英伟达创始人）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:JensenHuang -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "高管"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-icannot-enough",
+      "name": "James Stephenson（特斯拉分析）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:ICannot_Enough -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-jonathanoosting",
+      "name": "Jonathan Oosting（底特律新闻）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:jonathanoosting -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-gaytonausa",
+      "name": "Kevin Williams（InsideEVs）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:GaytonaUSA -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-emilyjanelawler",
+      "name": "Emily Lawler（Crain's Detroit）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:emilyjanelawler -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-tedcannis",
+      "name": "Ted Cannis（Ford Pro CEO）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:tedcannis -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "高管"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-russ1mitchell",
+      "name": "Russ Mitchell（洛杉矶时报）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:russ1mitchell -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-baglino",
+      "name": "Drew Baglino（前特斯拉 SVP）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:baglino -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "高管"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-electricfelix",
+      "name": "Felix Hamer（EV 自媒体）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:electricfelix -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-theevuniverse",
+      "name": "Jaan（EVwire）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:TheEVuniverse -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-tommolog",
+      "name": "Tom Moloughney（State of Charge）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:tommolog -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-dmitri-dolgov",
+      "name": "Dmitri Dolgov（Waymo 联合 CEO）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:dmitri_dolgov -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "高管"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-stevelevine",
+      "name": "Steve LeVine（The Electric）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:stevelevine -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-joelfeder",
+      "name": "Joel Feder（The Drive）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:joelfeder -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "rss-the-autopian",
+      "name": "The Autopian",
+      "kind": "rss",
+      "config": {
+        "feedUrl": "https://www.theautopian.com/feed/",
+        "_aihot": {
+          "initialBackfillLimit": 10
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "媒体",
+        "美国"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
     }
   ]
 }
