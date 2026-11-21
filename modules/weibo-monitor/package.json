@@ -1,0 +1,11 @@
+{
+  "name": "@aihot/weibo-monitor",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./server": "./server.ts"
+  },
+  "dependencies": {
+    "@aihot/backend": "*"
+  }
+}
