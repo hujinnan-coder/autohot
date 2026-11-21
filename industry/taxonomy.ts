@@ -12,11 +12,11 @@
  * feedLabel 是分类 RSS 标题里的名字（不写就用 label）。公开接口、RSS 和 MCP 里要把一类并进另一类发布，写在站点设置里（site/site.ts 的 PUBLIC_CATEGORIES）。
  */
 export const CATEGORIES = [
-  { key: "new-car", tagColor: "indigo", label: "新车", feedLabel: "新车", section: "新车", guide: "具体车型的亮相、申报、预售、上市、改款换代，以及随之公布的配置、售价和交付时间。重心是这款车本身；新车带来的技术只是卖点时仍归新车，已上市车型后来的调价和权益归市场。" },
-  { key: "tech", tagColor: "turquoise", label: "技术", feedLabel: "汽车技术", section: "技术", guide: "智能驾驶、智能座舱、三电与电池、芯片、平台架构、制造工艺等技术的发布、量产搭载、OTA 升级、测试与认证结果，以及供应链公司的技术与产品进展。重心是技术本身；随新车一起发布且重心在车的归新车。" },
-  { key: "industry", tagColor: "orange", label: "行业", feedLabel: "行业政策", section: "行业", guide: "作用于全行业或一大类企业的事：政策、法规、标准、补贴与税收、关税与贸易、监管部门的通报与约谈、行业协会的倡议与口径、充换电等基础设施、行业整体走势。只涉及一家企业的处罚、诉讼和事故归企业。" },
-  { key: "company", tagColor: "violet", label: "企业", feedLabel: "企业动态", section: "企业", guide: "一家或几家具体企业自身的事：人事变动、财报与业绩、融资并购与重组、战略合作、建厂与停产、诉讼与处罚、召回与质量事故、高管言论与舆情争议、经销商集团的经营变化。新闻由当事人发帖、带有态度，仍按这件事归类。" },
-  { key: "market", tagColor: "green", label: "市场", feedLabel: "市场动态", section: "市场", guide: "销量、交付与上险数据及榜单，已上市车型的调价、限时权益与金融政策，营销活动与传播事件，渠道与门店，出海与海外市场表现，二手车、汽车金融与保险、后市场。行业协会发布的月度销量归市场；据此出台的政策归行业。" },
+  { key: "new-car", tagColor: "indigo", label: "新车", feedLabel: "新车", section: "新车上市", guide: "具体车型的亮相、申报、预售、上市、改款换代，以及随之公布的配置、售价和交付时间。重心是这款车本身；新车带来的技术只是卖点时仍归新车，已上市车型后来的调价和权益归市场。" },
+  { key: "tech", tagColor: "turquoise", label: "技术", feedLabel: "汽车技术", section: "技术与供应链", guide: "智能驾驶、智能座舱、三电与电池、芯片、平台架构、制造工艺等技术的发布、量产搭载、OTA 升级、测试与认证结果，以及供应链公司的技术与产品进展。重心是技术本身；随新车一起发布且重心在车的归新车。" },
+  { key: "industry", tagColor: "orange", label: "行业", feedLabel: "行业政策", section: "政策与监管", guide: "作用于全行业或一大类企业的事：政策、法规、标准、补贴与税收、关税与贸易、监管部门的通报与约谈、行业协会的倡议与口径、充换电等基础设施、行业整体走势。只涉及一家企业的处罚、诉讼和事故归企业。" },
+  { key: "company", tagColor: "violet", label: "企业", feedLabel: "企业动态", section: "企业与人物", guide: "一家或几家具体企业自身的事：人事变动、财报与业绩、融资并购与重组、战略合作、建厂与停产、诉讼与处罚、召回与质量事故、高管言论与舆情争议、经销商集团的经营变化。新闻由当事人发帖、带有态度，仍按这件事归类。" },
+  { key: "market", tagColor: "green", label: "市场", feedLabel: "市场动态", section: "市场与销量", guide: "销量、交付与上险数据及榜单，已上市车型的调价、限时权益与金融政策，营销活动与传播事件，渠道与门店，出海与海外市场表现，二手车、汽车金融与保险、后市场。行业协会发布的月度销量归市场；据此出台的政策归行业。" },
 ] as const satisfies ReadonlyArray<{ key: string; tagColor: string; label: string; feedLabel?: string; section: string; guide: string; commentary?: true }>;
 
 /**
