@@ -16,9 +16,9 @@ import { FetchError, type Candidate, type SourceRow } from "./types.ts";
 
 
 /** A date rule names one element; unrelated tooltips must not hide its visible publication date. */
-function elementDate(el: ReturnType<cheerio.CheerioAPI>, utcOffset?: string): PublicationDate {
+function elementDate(el: ReturnType<cheerio.CheerioAPI>, utcOffset?: string, dayFirst = false): PublicationDate {
   for (const value of [el.attr("datetime"), el.attr("content"), el.attr("title"), el.text()]) {
-    const date = readPublicationDate(value, utcOffset);
+    const date = readPublicationDate(value, utcOffset, dayFirst);
     if (date.publishedAt) return date;
   }
   return readRelativeDate(el.text(), new Date(), utcOffset);
@@ -175,16 +175,17 @@ export function fromHtml(html: string, base: string, source: SourceRow): Candida
     if (isSignInUrl(url)) continue;
     if (!sectionsArePosts && listingItself(url, listing)) continue;
     const titleEl = c.titleSelector ? (el.is(c.titleSelector) ? el : el.find(c.titleSelector).first()) : linkEl;
-    const title = collapseWhitespace(titleEl.text() || linkEl.attr("title") || "");
+    // Whitespace-only card text (a picture-only link) is no title: fall through to the link's title attribute.
+    const title = collapseWhitespace(titleEl.text()) || collapseWhitespace(linkEl.attr("title") ?? "");
     if (!title) continue;
     let date: PublicationDate = { publishedAt: null, publicationTime: null };
     if (c.publishedAtSelector) {
       const dateEl = el.find(c.publishedAtSelector).first();
-      date = elementDate(dateEl, c.publishedAtUtcOffset);
+      date = elementDate(dateEl, c.publishedAtUtcOffset, c.publishedAtDayFirst === true);
     }
     if (!date.publishedAt && c.publishedAtRegex) {
       const m = new RegExp(c.publishedAtRegex).exec($.html(el));
-      date = readPublicationDate(m?.[1], c.publishedAtUtcOffset);
+      date = readPublicationDate(m?.[1], c.publishedAtUtcOffset, c.publishedAtDayFirst === true);
     }
     const candidate: Candidate = { url, title, ...date };
     if (c.listSummarySelector) {
@@ -431,8 +432,8 @@ export async function fetchDetail(url: string, source: SourceRow, need: DetailNe
     // The source's rule first. An authoritative rule is the only source of the date: when its byline is
     // missing, no other timestamp on the page (an update time, a related post) stands in for it.
     const dateText = dateInJina ? jina : html;
-    if ($ && !dateInJina && d.publishedAtSelector) date = elementDate($(d.publishedAtSelector).first(), offset);
-    if (!date.publishedAt && d.publishedAtRegex && dateText !== null) date = readPublicationDate(new RegExp(d.publishedAtRegex).exec(dateText)?.[1], offset);
+    if ($ && !dateInJina && d.publishedAtSelector) date = elementDate($(d.publishedAtSelector).first(), offset, d.publishedAtDayFirst === true);
+    if (!date.publishedAt && d.publishedAtRegex && dateText !== null) date = readPublicationDate(new RegExp(d.publishedAtRegex).exec(dateText)?.[1], offset, d.publishedAtDayFirst === true);
     const authoritative = d.publishedAtAuthoritative === true && !!(d.publishedAtSelector || d.publishedAtRegex);
     if (!date.publishedAt && page && !authoritative) date = pagePublicationDate(page.document, offset);
   }

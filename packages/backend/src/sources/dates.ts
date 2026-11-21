@@ -31,7 +31,7 @@ function atOffset(y: string | number, mo: string | number, d: string | number, h
  * on every host: a time with its zone. A calendar day always belongs to the source, including ISO date-only text. Anything else it would read
  * in the server's local zone (UTC in Docker), so "2026-09-26 10:00" is read in the source's offset instead.
  */
-export function parseLooseDate(value: string | null | undefined, utcOffset = "+08:00"): Date | null {
+export function parseLooseDate(value: string | null | undefined, utcOffset = "+08:00", dayFirst = false): Date | null {
   if (!value) return null;
   // "Sep 26, 2026 at 10:30": "at" joins a date and its time like a space.
   const v = value.trim().replace(/(\d),?\s+at\s+(?=\d{1,2}:\d{2})/gi, "$1 ");
@@ -49,7 +49,14 @@ export function parseLooseDate(value: string | null | undefined, utcOffset = "+0
   }
   const yearFirst = /(\d{4})[-/.年](\d{1,2})[-/.月](\d{1,2})日?(?:(?:T|\s*)(\d{1,2}):(\d{2})(?::(\d{2}))?)?/.exec(v);
   const monthFirst = /\b(\d{1,2})\/(\d{1,2})\/(\d{4})(?:(?:T|\s+)(\d{1,2}):(\d{2})(?::(\d{2}))?)?/.exec(v);
-  const numeric = yearFirst ?? monthFirst?.map((part, i, match) => i === 1 ? match[3]! : i === 2 ? match[1]! : i === 3 ? match[2]! : part);
+  // A slash date is US month-first unless the source says its pages print day-first (e.g. Porsche's newsroom).
+  const swapDayMonth = dayFirst;
+  const numeric = yearFirst ?? monthFirst?.map((part, i, match) => {
+    if (i === 1) return match[3]!;
+    if (i === 2) return swapDayMonth ? match[2]! : match[1]!;
+    if (i === 3) return swapDayMonth ? match[1]! : match[2]!;
+    return part;
+  });
   if (numeric && !calendarDay(numeric[1]!, numeric[2]!, numeric[3]!)) return null;
   const english = /\b([a-z]{3,9})\.?\s+(\d{1,2})(?:st|nd|rd|th)?[,]?\s+(\d{4})\b/i.exec(v)
     ?? /\b(\d{1,2})\s+([a-z]{3,9})\.?[,]?\s+(\d{2}|\d{4})\b/i.exec(v)?.map((part, i, match) => i === 1 ? match[2]! : i === 2 ? match[1]! : part);
@@ -89,8 +96,8 @@ export interface PublicationDate {
   publicationTime: string | null;
 }
 
-export function readPublicationDate(value: string | null | undefined, utcOffset = "+08:00"): PublicationDate {
-  const publishedAt = parseLooseDate(value, utcOffset);
+export function readPublicationDate(value: string | null | undefined, utcOffset = "+08:00", dayFirst = false): PublicationDate {
+  const publishedAt = parseLooseDate(value, utcOffset, dayFirst);
   if (!publishedAt) return { publishedAt: null, publicationTime: null };
   const text = value!.trim();
   const monthDay = CHINESE_MONTH_DAY.exec(text);

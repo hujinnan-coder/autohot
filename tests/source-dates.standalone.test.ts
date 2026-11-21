@@ -7,7 +7,7 @@ import { batchUser, describeReport } from "@aihot/backend/events/relate";
 import { readable } from "@aihot/backend/content/extract";
 import { parseLooseDate, readPublicationDate, readRelativeDate, describePublicationTime } from "@aihot/backend/sources/dates";
 
-const iso = (v: string, offset?: string) => parseLooseDate(v, offset)?.toISOString() ?? null;
+const iso = (v: string, offset?: string, dayFirst?: boolean) => parseLooseDate(v, offset, dayFirst)?.toISOString() ?? null;
 
 test("a date and time without a zone is in the source's offset, not the server's", () => {
   assert.equal(iso("2026-09-26 10:00"), "2026-09-26T02:00:00.000Z");
@@ -200,6 +200,17 @@ test("legacy JSON and RSS formats keep their source date and zone", () => {
       assert.deepEqual(readPublicationDate("Sun, 18 Oct 26 10:00:00 GMT"), { publishedAt: new Date("2026-10-18T10:00:00Z"), publicationTime: "2026-10-18T10:00:00.000Z" });
     } finally { if (previous === undefined) delete process.env.TZ; else process.env.TZ = previous; }
   }
+});
+
+test("a day-first source's slash dates swap month and day, ambiguous ones do not silently flip", () => {
+  // Default stays US month-first: 05/11/2026 is May 11th.
+  assert.equal(iso("05/11/2026", "+00:00"), "2026-05-11T00:00:00.000Z");
+  // Day-first (e.g. Porsche's newsroom): 20/11/2026 is November 20th, 05/11/2026 is November 5th.
+  assert.equal(iso("20/11/2026", "+00:00", true), "2026-11-20T00:00:00.000Z");
+  assert.equal(iso("05/11/2026", "+00:00", true), "2026-11-05T00:00:00.000Z");
+  assert.equal(iso("05/11/2026 10:30", "+00:00", true), "2026-11-05T10:30:00.000Z");
+  // Without the flag an impossible US month stays unread rather than guessed.
+  assert.equal(iso("20/11/2026", "+00:00"), null);
 });
 
 test("a date rule's element that prints an age counts back from the moment it is read", () => {
