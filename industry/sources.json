@@ -463,7 +463,7 @@
           "initialBackfillLimit": 10
         }
       },
-      "tier": "T2",
+      "tier": "EXCLUDE_MP",
       "participation_mode": "editorial",
       "interval_minutes": 60,
       "tags": [
@@ -472,7 +472,9 @@
         "原创"
       ],
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "disabled_reason": "站长 2026-11-21 停用：易车号与凤凰汽车全部下线，不再采集"
     },
     {
       "id": "web-pcauto-nation",
@@ -6338,7 +6340,7 @@
           "initialBackfillLimit": 8
         }
       },
-      "tier": "T2",
+      "tier": "EXCLUDE_MP",
       "participation_mode": "editorial",
       "interval_minutes": 240,
       "tags": [
@@ -6346,7 +6348,9 @@
         "创作者"
       ],
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "disabled_reason": "站长 2026-11-21 停用：易车号与凤凰汽车全部下线，不再采集"
     },
     {
       "id": "web-yiche-yancheshe-2983127",
@@ -6369,7 +6373,7 @@
           "initialBackfillLimit": 8
         }
       },
-      "tier": "T2",
+      "tier": "EXCLUDE_MP",
       "participation_mode": "editorial",
       "interval_minutes": 240,
       "tags": [
@@ -6377,7 +6381,9 @@
         "创作者"
       ],
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "disabled_reason": "站长 2026-11-21 停用：易车号与凤凰汽车全部下线，不再采集"
     },
     {
       "id": "web-yiche-shijieguan-9964884",
@@ -6400,7 +6406,7 @@
           "initialBackfillLimit": 8
         }
       },
-      "tier": "T2",
+      "tier": "EXCLUDE_MP",
       "participation_mode": "editorial",
       "interval_minutes": 240,
       "tags": [
@@ -6408,7 +6414,9 @@
         "创作者"
       ],
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "disabled_reason": "站长 2026-11-21 停用：易车号与凤凰汽车全部下线，不再采集"
     },
     {
       "id": "web-yiche-tianya-13404851",
@@ -6431,7 +6439,7 @@
           "initialBackfillLimit": 8
         }
       },
-      "tier": "T2",
+      "tier": "EXCLUDE_MP",
       "participation_mode": "editorial",
       "interval_minutes": 240,
       "tags": [
@@ -6439,7 +6447,9 @@
         "创作者"
       ],
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "disabled_reason": "站长 2026-11-21 停用：易车号与凤凰汽车全部下线，不再采集"
     },
     {
       "id": "web-yiche-xincheping-13416648",
@@ -6462,7 +6472,7 @@
           "initialBackfillLimit": 8
         }
       },
-      "tier": "T2",
+      "tier": "EXCLUDE_MP",
       "participation_mode": "editorial",
       "interval_minutes": 240,
       "tags": [
@@ -6470,7 +6480,9 @@
         "创作者"
       ],
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "disabled_reason": "站长 2026-11-21 停用：易车号与凤凰汽车全部下线，不再采集"
     },
     {
       "id": "web-yiche-chegulu-14838927",
@@ -6493,7 +6505,7 @@
           "initialBackfillLimit": 8
         }
       },
-      "tier": "T2",
+      "tier": "EXCLUDE_MP",
       "participation_mode": "editorial",
       "interval_minutes": 240,
       "tags": [
@@ -6501,7 +6513,9 @@
         "创作者"
       ],
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "disabled_reason": "站长 2026-11-21 停用：易车号与凤凰汽车全部下线，不再采集"
     },
     {
       "id": "web-yiche-wanchejiaoshou-14956882",
@@ -6524,7 +6538,7 @@
           "initialBackfillLimit": 8
         }
       },
-      "tier": "T2",
+      "tier": "EXCLUDE_MP",
       "participation_mode": "editorial",
       "interval_minutes": 240,
       "tags": [
@@ -6532,7 +6546,9 @@
         "创作者"
       ],
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "disabled_reason": "站长 2026-11-21 停用：易车号与凤凰汽车全部下线，不再采集"
     },
     {
       "id": "web-yiche-aichebingtuan-15349471",
@@ -6555,7 +6571,7 @@
           "initialBackfillLimit": 8
         }
       },
-      "tier": "T2",
+      "tier": "EXCLUDE_MP",
       "participation_mode": "editorial",
       "interval_minutes": 240,
       "tags": [
@@ -6563,7 +6579,9 @@
         "创作者"
       ],
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "disabled_reason": "站长 2026-11-21 停用：易车号与凤凰汽车全部下线，不再采集"
     },
     {
       "id": "web-yiche-goche-17455257",
@@ -6586,7 +6604,7 @@
           "initialBackfillLimit": 8
         }
       },
-      "tier": "T2",
+      "tier": "EXCLUDE_MP",
       "participation_mode": "editorial",
       "interval_minutes": 240,
       "tags": [
@@ -6594,7 +6612,9 @@
         "创作者"
       ],
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "disabled_reason": "站长 2026-11-21 停用：易车号与凤凰汽车全部下线，不再采集"
     },
     {
       "id": "web-yiche-wufeiyang-18382956",
@@ -6617,7 +6637,7 @@
           "initialBackfillLimit": 8
         }
       },
-      "tier": "T2",
+      "tier": "EXCLUDE_MP",
       "participation_mode": "editorial",
       "interval_minutes": 240,
       "tags": [
@@ -6625,7 +6645,9 @@
         "创作者"
       ],
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "disabled_reason": "站长 2026-11-21 停用：易车号与凤凰汽车全部下线，不再采集"
     },
     {
       "id": "web-yiche-woweichekuang-18475398",
@@ -6648,7 +6670,7 @@
           "initialBackfillLimit": 8
         }
       },
-      "tier": "T2",
+      "tier": "EXCLUDE_MP",
       "participation_mode": "editorial",
       "interval_minutes": 240,
       "tags": [
@@ -6656,7 +6678,9 @@
         "创作者"
       ],
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "disabled_reason": "站长 2026-11-21 停用：易车号与凤凰汽车全部下线，不再采集"
     },
     {
       "id": "web-yiche-chezhishi-20724739",
@@ -6679,7 +6703,7 @@
           "initialBackfillLimit": 8
         }
       },
-      "tier": "T2",
+      "tier": "EXCLUDE_MP",
       "participation_mode": "editorial",
       "interval_minutes": 240,
       "tags": [
@@ -6687,7 +6711,9 @@
         "创作者"
       ],
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "disabled_reason": "站长 2026-11-21 停用：易车号与凤凰汽车全部下线，不再采集"
     },
     {
       "id": "web-yiche-malache-21297664",
@@ -6710,7 +6736,7 @@
           "initialBackfillLimit": 8
         }
       },
-      "tier": "T2",
+      "tier": "EXCLUDE_MP",
       "participation_mode": "editorial",
       "interval_minutes": 240,
       "tags": [
@@ -6718,7 +6744,9 @@
         "创作者"
       ],
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "disabled_reason": "站长 2026-11-21 停用：易车号与凤凰汽车全部下线，不再采集"
     },
     {
       "id": "web-yiche-youshi-22415783",
@@ -6741,7 +6769,7 @@
           "initialBackfillLimit": 8
         }
       },
-      "tier": "T2",
+      "tier": "EXCLUDE_MP",
       "participation_mode": "editorial",
       "interval_minutes": 240,
       "tags": [
@@ -6749,7 +6777,9 @@
         "创作者"
       ],
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "disabled_reason": "站长 2026-11-21 停用：易车号与凤凰汽车全部下线，不再采集"
     },
     {
       "id": "web-yiche-woniu-24109259",
@@ -6772,7 +6802,7 @@
           "initialBackfillLimit": 8
         }
       },
-      "tier": "T2",
+      "tier": "EXCLUDE_MP",
       "participation_mode": "editorial",
       "interval_minutes": 240,
       "tags": [
@@ -6780,7 +6810,9 @@
         "创作者"
       ],
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "disabled_reason": "站长 2026-11-21 停用：易车号与凤凰汽车全部下线，不再采集"
     },
     {
       "id": "web-yiche-tiantian-25959781",
@@ -6803,7 +6835,7 @@
           "initialBackfillLimit": 8
         }
       },
-      "tier": "T2",
+      "tier": "EXCLUDE_MP",
       "participation_mode": "editorial",
       "interval_minutes": 240,
       "tags": [
@@ -6811,7 +6843,9 @@
         "创作者"
       ],
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "disabled_reason": "站长 2026-11-21 停用：易车号与凤凰汽车全部下线，不再采集"
     },
     {
       "id": "web-yiche-fengxing-31597693",
@@ -6834,7 +6868,7 @@
           "initialBackfillLimit": 8
         }
       },
-      "tier": "T2",
+      "tier": "EXCLUDE_MP",
       "participation_mode": "editorial",
       "interval_minutes": 240,
       "tags": [
@@ -6842,7 +6876,9 @@
         "创作者"
       ],
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "disabled_reason": "站长 2026-11-21 停用：易车号与凤凰汽车全部下线，不再采集"
     },
     {
       "id": "web-yiche-qipai-44278304",
@@ -6865,7 +6901,7 @@
           "initialBackfillLimit": 8
         }
       },
-      "tier": "T2",
+      "tier": "EXCLUDE_MP",
       "participation_mode": "editorial",
       "interval_minutes": 240,
       "tags": [
@@ -6873,7 +6909,9 @@
         "创作者"
       ],
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "disabled_reason": "站长 2026-11-21 停用：易车号与凤凰汽车全部下线，不再采集"
     },
     {
       "id": "web-yiche-cjiache-49092279",
@@ -6896,7 +6934,7 @@
           "initialBackfillLimit": 8
         }
       },
-      "tier": "T2",
+      "tier": "EXCLUDE_MP",
       "participation_mode": "editorial",
       "interval_minutes": 240,
       "tags": [
@@ -6904,7 +6942,9 @@
         "创作者"
       ],
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "disabled_reason": "站长 2026-11-21 停用：易车号与凤凰汽车全部下线，不再采集"
     },
     {
       "id": "web-yiche-jiaxiang-216970071",
@@ -6927,7 +6967,7 @@
           "initialBackfillLimit": 8
         }
       },
-      "tier": "T2",
+      "tier": "EXCLUDE_MP",
       "participation_mode": "editorial",
       "interval_minutes": 240,
       "tags": [
@@ -6935,7 +6975,9 @@
         "创作者"
       ],
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "disabled_reason": "站长 2026-11-21 停用：易车号与凤凰汽车全部下线，不再采集"
     },
     {
       "id": "web-d1ev-newsflash",
@@ -7069,7 +7111,7 @@
           "initialBackfillLimit": 8
         }
       },
-      "tier": "T2",
+      "tier": "EXCLUDE_MP",
       "participation_mode": "editorial",
       "interval_minutes": 240,
       "tags": [
@@ -7078,7 +7120,8 @@
       ],
       "site_fulltext": false,
       "syndicate_fulltext": false,
-      "enabled": false
+      "enabled": false,
+      "disabled_reason": "站长 2026-11-21 停用：易车号与凤凰汽车全部下线，不再采集"
     },
     {
       "id": "web-chedongxi",
@@ -7312,7 +7355,7 @@
           "initialBackfillLimit": 8
         }
       },
-      "tier": "T2",
+      "tier": "EXCLUDE_MP",
       "participation_mode": "editorial",
       "interval_minutes": 240,
       "tags": [
@@ -7320,7 +7363,9 @@
         "创作者"
       ],
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "disabled_reason": "站长 2026-11-21 停用：易车号与凤凰汽车全部下线，不再采集"
     },
     {
       "id": "mp-30sdongche",
@@ -7387,13 +7432,17 @@
       "tier": "T2",
       "participation_mode": "editorial",
       "interval_minutes": 240,
-      "tags": ["媒体", "微信公众号"],
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
       "site_fulltext": false,
       "syndicate_fulltext": false
     },
     {
       "id": "mp-nbdnews",
       "name": "每日经济新闻",
+      "enabled": false,
       "kind": "mp_account",
       "config": {
         "ghid": "nbdnews",
@@ -7402,7 +7451,10 @@
       "tier": "T2",
       "participation_mode": "editorial",
       "interval_minutes": 240,
-      "tags": ["媒体", "微信公众号"],
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
       "site_fulltext": false,
       "syndicate_fulltext": false
     },
@@ -7417,7 +7469,10 @@
       "tier": "T2",
       "participation_mode": "editorial",
       "interval_minutes": 240,
-      "tags": ["媒体", "微信公众号"],
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
       "site_fulltext": false,
       "syndicate_fulltext": false
     },
@@ -7432,7 +7487,10 @@
       "tier": "T2",
       "participation_mode": "editorial",
       "interval_minutes": 240,
-      "tags": ["媒体", "微信公众号"],
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
       "site_fulltext": false,
       "syndicate_fulltext": false
     },
@@ -7447,7 +7505,10 @@
       "tier": "T2",
       "participation_mode": "editorial",
       "interval_minutes": 240,
-      "tags": ["媒体", "微信公众号"],
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
       "site_fulltext": false,
       "syndicate_fulltext": false
     },
@@ -7462,7 +7523,10 @@
       "tier": "T2",
       "participation_mode": "editorial",
       "interval_minutes": 240,
-      "tags": ["媒体", "微信公众号"],
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
       "site_fulltext": false,
       "syndicate_fulltext": false
     },
@@ -7477,7 +7541,10 @@
       "tier": "T2",
       "participation_mode": "editorial",
       "interval_minutes": 240,
-      "tags": ["媒体", "微信公众号"],
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
       "site_fulltext": false,
       "syndicate_fulltext": false
     },
@@ -7492,7 +7559,10 @@
       "tier": "T2",
       "participation_mode": "editorial",
       "interval_minutes": 240,
-      "tags": ["媒体", "微信公众号"],
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
       "site_fulltext": false,
       "syndicate_fulltext": false
     },
@@ -7507,7 +7577,10 @@
       "tier": "T2",
       "participation_mode": "editorial",
       "interval_minutes": 240,
-      "tags": ["媒体", "微信公众号"],
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
       "site_fulltext": false,
       "syndicate_fulltext": false
     },
@@ -7522,7 +7595,10 @@
       "tier": "T2",
       "participation_mode": "editorial",
       "interval_minutes": 240,
-      "tags": ["媒体", "微信公众号"],
+      "tags": [
+        "媒体",
+        "微信公众号"
+      ],
       "site_fulltext": false,
       "syndicate_fulltext": false
     }
