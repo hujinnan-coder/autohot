@@ -6993,7 +6993,7 @@
       "name": "汽车商业评论",
       "kind": "mp_account",
       "config": {
-        "ghid": "autoreview",
+        "ghid": "gh_67ca2acb5e45",
         "nickname": "汽车商业评论"
       },
       "tier": "T2",
@@ -7006,7 +7006,7 @@
       "site_fulltext": false,
       "syndicate_fulltext": false,
       "enabled": false,
-      "disabled_reason": "官网 m-new.inabr.com 可抓（Jina 渲染），公众号版本停用备用"
+      "disabled_reason": "ghid 已验证；官网版（Jina 渲染）在跑，公众号版停用避免重复，需要时可启用"
     },
     {
       "id": "web-latepost",
@@ -7157,7 +7157,9 @@
         "公众号"
       ],
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false,
+      "disabled_reason": "应为“新出行”的笔误；新出行已按正确微信号建档，此占位停用"
     },
     {
       "id": "mp-djcy",
@@ -7239,6 +7241,24 @@
       "tags": [
         "杂志",
         "深度报道"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-xinchuxing",
+      "name": "新出行",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "xchuxing",
+        "nickname": "新出行"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "公众号",
+        "新能源"
       ],
       "site_fulltext": false,
       "syndicate_fulltext": false
