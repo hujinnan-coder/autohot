@@ -7339,6 +7339,192 @@
       ],
       "site_fulltext": false,
       "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-latepost-auto",
+      "name": "晚点Auto",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gh_30ebd85b0f58",
+        "nickname": "晚点Auto"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "公众号",
+        "深度报道"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-bangning",
+      "name": "帮宁工作室",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gbngzs",
+        "nickname": "帮宁工作室"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "公众号",
+        "深度报道"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-qqauto",
+      "name": "腾讯汽车",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "qqauto",
+        "nickname": "腾讯汽车"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": ["媒体", "微信公众号"],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-nbdnews",
+      "name": "每日经济新闻",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "nbdnews",
+        "nickname": "每日经济新闻"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": ["媒体", "微信公众号"],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-idongche",
+      "name": "懂车",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "idongche",
+        "nickname": "懂车"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": ["媒体", "微信公众号"],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-gzwcjs",
+      "name": "玩车教授",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "gzwcjs",
+        "nickname": "玩车教授"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": ["媒体", "微信公众号"],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-beitaishuoche",
+      "name": "备胎说车",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "beitaishuoche",
+        "nickname": "备胎说车"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": ["媒体", "微信公众号"],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-i42how",
+      "name": "42号车库",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "i42how",
+        "nickname": "42号车库"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": ["媒体", "微信公众号"],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-Gasgoo",
+      "name": "盖世汽车",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "Gasgoo",
+        "nickname": "盖世汽车"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": ["媒体", "微信公众号"],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-my360che",
+      "name": "卡车之家",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "my360che",
+        "nickname": "卡车之家"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": ["媒体", "微信公众号"],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-autoWechat",
+      "name": "汽车行业关注",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "autoWechat",
+        "nickname": "汽车行业关注"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": ["媒体", "微信公众号"],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "mp-AI-Drive",
+      "name": "新智驾",
+      "kind": "mp_account",
+      "config": {
+        "ghid": "AI-Drive",
+        "nickname": "新智驾"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": ["媒体", "微信公众号"],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
     }
   ]
 }
