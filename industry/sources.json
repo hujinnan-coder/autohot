@@ -4358,24 +4358,6 @@
       "syndicate_fulltext": false
     },
     {
-      "id": "mp-7338f8064a91",
-      "name": "韩路游记",
-      "kind": "mp_account",
-      "config": {
-        "ghid": "gh_7338f8064a91",
-        "nickname": "韩路游记"
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 240,
-      "tags": [
-        "媒体",
-        "微信公众号"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
       "id": "mp-09aced0bb148",
       "name": "车若初见",
       "kind": "mp_account",
@@ -4472,24 +4454,6 @@
       "config": {
         "ghid": "gh_6c8e0174cb0d",
         "nickname": "电车汇"
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 240,
-      "tags": [
-        "媒体",
-        "微信公众号"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false
-    },
-    {
-      "id": "mp-9fcda0409843",
-      "name": "佐思汽研",
-      "kind": "mp_account",
-      "config": {
-        "ghid": "gh_9fcda0409843",
-        "nickname": "佐思汽研"
       },
       "tier": "T2",
       "participation_mode": "editorial",
