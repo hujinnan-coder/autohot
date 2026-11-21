@@ -7262,6 +7262,34 @@
       ],
       "site_fulltext": false,
       "syndicate_fulltext": false
+    },
+    {
+      "id": "web-autoreport",
+      "name": "汽车产经网",
+      "kind": "web_list",
+      "config": {
+        "url": "https://www.autoreport.cn/newslist/a1143/",
+        "parseMode": "html",
+        "itemSelector": "li.news-item",
+        "linkSelector": "a",
+        "titleSelector": ".title",
+        "publishedAtSelector": "span.time",
+        "allowUrlPrefixes": [
+          "https://www.autoreport.cn/"
+        ],
+        "_aihot": {
+          "initialBackfillLimit": 8
+        }
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 240,
+      "tags": [
+        "媒体",
+        "行业深度"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
     }
   ]
 }
