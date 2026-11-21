@@ -1,23 +1,35 @@
 // Small building blocks shared by feed items, detail pages and lists.
 import { useState } from "react";
-import type { FeedItemSummary, MediaView } from "@aihot/contracts/site";
+import type { FeedItemSummary, MediaView, XPostView } from "@aihot/contracts/site";
 import { IconBookmark } from "../../components/icons";
 import { SourceAvatar } from "../../components/ui/SourceAvatar";
 import { Lightbox } from "../../components/ui/Lightbox";
 import { Picture } from "../../components/ui/Picture";
 import { toggleStar, useIsStarred } from "../../lib/local-state";
 
-/** The source's name, or, for X, avatar + display name + @handle. */
 /** The text colour of a report: grey once this browser has opened it, so the unread ones stand out. */
 export const readTone = (read: boolean, unread: string) => (read ? "text-ink-4" : unread);
 
-export function SourceLine({ item, className = "" }: { item: Pick<FeedItemSummary, "source" | "x" | "channel">; className?: string }) {
+type SourceLineItem = Pick<FeedItemSummary, "source" | "channel"> & {
+  x: Pick<XPostView, "authorName" | "handle" | "avatarUrl" | "avatarSrcSet"> | null;
+};
+
+/** The source's name with its icon when available, or, for X, avatar + display name + @handle. */
+export function SourceLine({ item, className = "" }: { item: SourceLineItem; className?: string }) {
   if (item.channel === "x" && item.x) {
     return (
       <span className={`flex min-w-0 items-center gap-1.5 ${className}`}>
         <SourceAvatar name={item.x.authorName} avatarUrl={item.x.avatarUrl} avatarSrcSet={item.x.avatarSrcSet} size={16} />
         <span className="truncate text-ink-3">{item.x.authorName}</span>
         <span className="hidden shrink-0 text-ink-4 min-[400px]:inline">@{item.x.handle}</span>
+      </span>
+    );
+  }
+  if (item.channel === "news" && item.source.iconUrl) {
+    return (
+      <span className={`flex min-w-0 items-center gap-1.5 ${className}`}>
+        <SourceAvatar name={item.source.name} iconUrl={item.source.iconUrl} size={16} />
+        <span className="truncate">{item.source.name}</span>
       </span>
     );
   }

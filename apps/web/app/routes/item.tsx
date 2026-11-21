@@ -17,7 +17,7 @@ import { ScoreLabel, shownScore } from "../components/ui/Score";
 import { PillTabs } from "../components/ui/Tabs";
 import { ArticleLayout, RailSection, useContainedScroll } from "../components/ui/Page";
 import { Menu, MenuItem } from "../components/ui/Menu";
-import { StarButton } from "../features/feed/parts";
+import { SourceLine, StarButton } from "../features/feed/parts";
 import { GroupButton, GroupSources } from "../features/feed/ReadingGroup";
 import { StoryFollowups } from "../features/item/StoryFollowups";
 import { MediaGallery } from "../features/item/MediaGallery";
@@ -245,7 +245,8 @@ function ItemPreview({ preview }: { preview: FeedItemSummary }) {
       <PhoneBar back={{ to: preview.selected ? "/" : "/all", label: preview.selected ? "精选" : "全部" }} title={isPost ? preview.x!.authorName : preview.title} />
       <article className="pb-6 pt-3" aria-busy="true">
         <div className={`flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[13px] text-ink-3 ${isPost ? "" : "mb-3"}`}>
-          <span className="font-semibold text-ink-2">{isX ? preview.x!.authorName : preview.source.name}</span>
+          {isX ? <span className="font-semibold text-ink-2">{preview.x!.authorName}</span>
+            : <SourceLine item={preview} className="font-semibold text-ink-2" />}
           {isX && <span>· @{preview.x!.handle} · X</span>}
           <span>·</span>
           {!preview.publishedAt && <span>收录于</span>}
@@ -433,7 +434,7 @@ function ItemView({ item, followups }: Loaded) {
   // under the facts (or under the notes when only the right rail shows).
   const facts = (
     <RailSection title="来源">
-      <div className="text-[14px] font-semibold leading-snug text-ink">{isX ? item.x!.authorName : item.source.name}</div>
+      <div className="text-[14px] font-semibold leading-snug text-ink">{isX ? item.x!.authorName : <SourceLine item={item} />}</div>
       <div className="mt-1 text-[12.5px] leading-relaxed text-ink-3">
         {isX ? `@${item.x!.handle} · X` : byline ?? hostOf(item.links.original)}
       </div>
@@ -540,7 +541,8 @@ function ItemView({ item, followups }: Loaded) {
         </div>
         <article className="pb-6 pt-3 lg:pt-2 2xl:pt-1">
           <div className={`flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[13px] text-ink-3 2xl:hidden ${isPost ? "" : "mb-3"}`}>
-            <span className="font-semibold text-ink-2">{isX ? item.x!.authorName : item.source.name}</span>
+            {isX ? <span className="font-semibold text-ink-2">{item.x!.authorName}</span>
+              : <SourceLine item={item} className="font-semibold text-ink-2" />}
             {isX && <span>· @{item.x!.handle} · X</span>}
             {byline && <span>· {byline}</span>}
             <span>·</span>

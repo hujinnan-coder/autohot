@@ -7,6 +7,8 @@ import { isoWeekRange, monthDay } from "./time.ts";
 export interface SourceRef {
   /** The name readers see (publication/rules.ts publicSourceName), as is every source name here. */
   name: string;
+  /** The proxied source icon, included only when the source has an icon to display. */
+  iconUrl?: string | null;
 }
 
 export interface MediaView {
