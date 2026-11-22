@@ -1,6 +1,6 @@
 # One image for every role: setup (migrations and seed), api, worker and web.
 # Build arg NPM_REGISTRY switches the npm registry (e.g. https://registry.npmmirror.com in mainland China).
-FROM node:24-trixie-slim AS base
+FROM node:24.22-trixie-slim AS base
 WORKDIR /app
 # pg_dump for the optional database backups (Debian's client matches the PostgreSQL 17 server in compose).
 RUN apt-get update \
@@ -19,6 +19,7 @@ COPY industry/package.json industry/
 COPY site/package.json site/
 COPY modules/following/package.json modules/following/
 COPY modules/labeling/package.json modules/labeling/
+COPY modules/weibo-monitor/package.json modules/weibo-monitor/
 RUN npm ci --no-audit --no-fund ${NPM_REGISTRY:+--registry=$NPM_REGISTRY}
 COPY . .
 RUN npm run build -w @aihot/web && npm prune --omit=dev --no-audit --no-fund
