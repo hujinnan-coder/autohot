@@ -13,7 +13,7 @@ import { after, test } from "node:test";
 import { promisify } from "node:util";
 import { REPO_ROOT } from "@aihot/backend/config";
 import { closeDb, sql } from "@aihot/backend/db";
-import { buildStoryDigestInput, composeStoryDigest } from "@aihot/backend/events/digest";
+import { buildStoryDigestInput, composeStoryDigest, digestSelection } from "@aihot/backend/events/digest";
 import { parseDigestEvalJsonl } from "../scripts/eval-story-digests-core.ts";
 
 const exec = promisify(execFile);
@@ -45,8 +45,23 @@ test("a digest rewrite keeps early first-party reports and a representative of e
 
   const incremental = buildStoryDigestInput(story, reports, { corrected: false, knownArticleIds: reports.slice(0, -1).map((r) => r.id) });
   assert.match(incremental, /上一版综述/);
-  assert.doesNotMatch(incremental, /报道 report-5｜/);
+  assert.deepEqual([...incremental.matchAll(/报道 (report-\d+)｜/g)].map(match => match[1]), digestSelection(reports).map(r => r.id));
   assert.match(incremental, /【新】报道 report-60｜/);
+});
+
+test("digest input labels corrections before early and first-party labels", () => {
+  const reports = Array.from({ length: 41 }, (_, i) => ({
+    id: `r${i}`, title: `报道 ${i}`, summary: null, source_name: "测试信源",
+    at: at(41 - i), first_party: i === 0, fact_id: 1,
+    fact_subject: null, fact_action: null, fact_object: null, fact_conditions: null, evidence: null, structured_fact: null,
+  }));
+  const story = { title: "测试事件", digest: "上一版综述" };
+  const input = buildStoryDigestInput(story, reports, { corrected: true, changedIds: ["r0", "r40"] });
+  assert.deepEqual(input.match(/^【已更正】.*$/gm)?.map(line => line.split("｜")[0]), [
+    "【已更正】【早期】【一手】报道 r0",
+    "【已更正】报道 r40",
+  ]);
+  assert.match(input, /标【已更正】的报道，其当前内容与此前综述所依据的不同/);
 });
 
 /** Runs the script against a provider stub; a refusal comes back as its exit code and output. */
@@ -106,7 +121,7 @@ async function storyState(storyId: number) {
   return { ...row! };
 }
 
-test("a case exported from an event reaches the model exactly as the site's own digest request", async (t) => {
+test("an exported case matches the site's first digest and its rewrite of a version without report fingerprints", async (t) => {
   const bodies: string[] = [];
   // An empty title keeps the event's title, so later steps read the same event the export read.
   const provider = await stub((_hit, req) => {
@@ -131,7 +146,11 @@ test("a case exported from an event reaches the model exactly as the site's own 
   await report(media, g, { suffix: "withdrawn", title: "WITHDRAWN REPORT", hours: 4, visibility: "withdrawn" });
 
   for (const step of ["first digest", "rewrite after a correction"] as const) {
-    if (step === "rewrite after a correction") await sql`UPDATE publications SET summary = '已经更正的摘要' WHERE article_id = ${first}`;
+    if (step === "rewrite after a correction") {
+      // A legacy version has no per-report fingerprints, as with a standalone evaluation case.
+      await sql`UPDATE story_digests SET report_hashes = NULL WHERE story_id = ${g.id}`;
+      await sql`UPDATE publications SET summary = '已经更正的摘要' WHERE article_id = ${first}`;
+    }
     const snapshot = path.join(dir, `${step.replace(/\W+/g, "-")}.jsonl`);
     const before = await storyState(g.id);
     const exported = await run(["--stories", g.publicId.toUpperCase(), "--out", snapshot], provider.url);
@@ -145,7 +164,11 @@ test("a case exported from an event reaches the model exactly as the site's own 
 
     assert.equal((await composeStoryDigest(g.id)).updated, true);
     const site = bodies.at(-1)!;
-    assert.ok(step === "first digest" ? site.includes("【新】") : site.includes("经过更正") && site.includes("已经更正的摘要"), step);
+    if (step === "first digest") assert.match(site, /【新】/);
+    else {
+      assert.match(site, /已经更正的摘要/);
+      assert.doesNotMatch(site, /【已更正】(?:【一手】)?报道/);
+    }
     const evaluated = await run(["--cases", snapshot, "--out-dir", dir], provider.url);
     assert.equal(evaluated.code, 0, evaluated.stderr);
     assert.equal(bodies.at(-1), site, `${step}: model, system prompt, input and sampling are the site's, byte for byte`);

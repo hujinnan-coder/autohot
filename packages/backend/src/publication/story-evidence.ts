@@ -49,6 +49,15 @@ export async function digestReports(db: Db, storyIds: number[], now = new Date()
     ORDER BY f.story_id, p.article_id, (fa.role = 'primary') DESC, f.id`;
 }
 
+function digestReportInput(r: Omit<DigestReport, "story_id">) {
+  return [r.id, r.fact_id, r.title, r.summary ?? "", r.source_name, r.first_party, r.at.toISOString(), digestFactEvidence(r)];
+}
+
+/** Fingerprint of the current published evidence from one report. */
+export function digestReportHash(report: Omit<DigestReport, "story_id">): string {
+  return sha256(stableJson(digestReportInput(report)));
+}
+
 export function digestInputsHash(reports: DigestReport[]): string {
-  return sha256(stableJson([...reports].sort((a, b) => a.id.localeCompare(b.id)).map((r) => [r.id, r.fact_id, r.title, r.summary ?? "", r.source_name, r.first_party, r.at.toISOString(), digestFactEvidence(r)])));
+  return sha256(stableJson([...reports].sort((a, b) => a.id.localeCompare(b.id)).map(digestReportInput)));
 }

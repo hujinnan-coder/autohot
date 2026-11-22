@@ -10,7 +10,7 @@ import { loadGroupReports } from "@aihot/backend/publication/groups";
 import { loadItemDetail } from "@aihot/backend/publication/detail";
 import { loadStoryDetail, v1HotTopics, v1Story } from "@aihot/backend/publication/stories";
 import { candidates } from "@aihot/backend/reports/edition";
-import { composeStoryDigest, DIGEST_PROMPT_VERSION, DIGEST_SYSTEM, DigestSchema } from "@aihot/backend/events/digest";
+import { byReportTime, composeStoryDigest, digestSelection, DIGEST_PROMPT_VERSION, DIGEST_SYSTEM, DigestSchema } from "@aihot/backend/events/digest";
 import { chatJson } from "@aihot/backend/providers/llm";
 import { computeHotRanking } from "@aihot/backend/events/hot";
 import { detachFromFact, moveToFact, rewriteStoryDigest } from "@aihot/backend/events/corrections";
@@ -18,6 +18,7 @@ import { overrideFields, setVisibility } from "@aihot/backend/admin/content";
 import { stopBoss } from "@aihot/backend/jobs/queue";
 import { latestHotRanking } from "@aihot/backend/publication/hot";
 import { storyTexts } from "@aihot/backend/publication/story-text";
+import { digestInputsHash, digestReportHash, digestReports } from "@aihot/backend/publication/story-evidence";
 
 const key = `evidence-${tag()}`;
 const now = new Date();
@@ -204,6 +205,59 @@ test("digest input excludes mentions and preserves scoped conditions", async () 
   assert.equal(provider.hits(), beforeClear, "clearing an empty story does not call a model");
   const [cleared] = await sql`SELECT digest FROM stories WHERE id=${g.storyId}`;
   assert.equal(cleared!.digest, null);
+});
+
+test("a long story stores and checks only the reports sent to the digest writer", async () => {
+  const s = await source("digest-selection", "T2");
+  const g = await story();
+  const ids: string[] = [];
+  for (let i = 1; i <= 45; i++) {
+    ids.push(await report(s, g, { title: `第 ${i} 篇报道`, hours: 46 - i }));
+  }
+  const latestVersion = async () => (await sql`
+    SELECT article_ids, inputs_hash, report_hashes, version FROM story_digests
+    WHERE story_id = ${g.storyId} ORDER BY version DESC LIMIT 1`)[0]!;
+  const receipts = async () => (await sql`
+    SELECT id FROM receipts WHERE purpose = 'story_digest' AND subject = ${`story:${g.storyId}@40`} ORDER BY id`).map(r => r.id);
+  async function verifyInputs() {
+    const saved = await latestVersion();
+    const selection = digestSelection((await digestReports(sql, [g.storyId])).sort(byReportTime));
+    assert.deepEqual([...digestPrompt.matchAll(/报道 (evidence-[^｜]+)｜/g)].map(match => match[1]), ids.slice(-40));
+    assert.deepEqual(saved.article_ids, ids.slice(-40).sort());
+    assert.equal(saved.inputs_hash, digestInputsHash(selection));
+    assert.deepEqual(saved.report_hashes, Object.fromEntries(selection.map(r => [r.id, digestReportHash(r)])));
+  }
+
+  assert.equal((await composeStoryDigest(g.storyId)).updated, true);
+  await verifyInputs();
+  const originalReports = await digestReports(sql, [g.storyId]);
+  await sql`UPDATE story_digests SET article_ids = ${[...ids].sort()}, inputs_hash = ${digestInputsHash(originalReports)}, report_hashes = NULL
+    WHERE story_id = ${g.storyId}`;
+  assert.equal((await composeStoryDigest(g.storyId)).updated, true, "a legacy long story is rewritten once");
+  assert.doesNotMatch(digestPrompt, /^【已更正】/m, "legacy versions have no per-report baseline");
+  await verifyInputs();
+  assert.deepEqual(await composeStoryDigest(g.storyId), { updated: false });
+
+  const saved = await latestVersion();
+  const paid = await receipts();
+  const calls = provider.hits();
+  const initialDigest = (await storyTexts([g.storyId])).get(g.storyId)!.digest;
+  assert.ok(initialDigest);
+  await sql`UPDATE publications SET summary = '更正了一条未选取的旧报道' WHERE article_id = ${ids[2]!}`;
+  assert.deepEqual(await composeStoryDigest(g.storyId), { updated: false });
+  assert.equal(provider.hits(), calls);
+  assert.deepEqual(await receipts(), paid);
+  assert.equal((await latestVersion()).version, saved.version);
+  assert.equal((await storyTexts([g.storyId])).get(g.storyId)!.digest, initialDigest);
+
+  await sql`UPDATE publications SET summary = '更正了最新报道的摘要' WHERE article_id = ${ids[44]!}`;
+  assert.equal((await storyTexts([g.storyId])).get(g.storyId)!.digest, null);
+  assert.equal((await composeStoryDigest(g.storyId)).updated, true);
+  assert.equal(provider.hits(), calls + 1);
+  assert.deepEqual(digestPrompt.match(/^【已更正】报道 .+$/gm)?.map(line => line.split("｜")[0]), [`【已更正】报道 ${ids[44]}`]);
+  assert.match(digestPrompt, /更正了最新报道的摘要/);
+  assert.equal((await storyTexts([g.storyId])).get(g.storyId)!.digest, initialDigest);
+  await verifyInputs();
 });
 
 // A prompt change reaches a story only when its reports change; the rewrite writes it again now, from the
