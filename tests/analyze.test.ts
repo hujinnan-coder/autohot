@@ -325,12 +325,17 @@ test("scoresSelect needs two scores at the threshold, and both of them", () => {
   assert.equal(scoresSelect(null), false);
 });
 
-test("the gold set parses, when one exists", (t) => {
-  const file = path.resolve(REPO_ROOT, ".data/gold.jsonl");
-  if (!existsSync(file)) return t.skip("缺少 .data/gold.jsonl，护栏未生效");
-  const rows = parseSelectionGoldJsonl(readFileSync(file, "utf8"));
-  assert.ok(rows.length > 0);
-  assert.equal(new Set(rows.map((r) => r.caseId)).size, rows.length);
+test("the gold sets parse and have no duplicate case ids", () => {
+  const readGold = (file: string) => {
+    const rows = parseSelectionGoldJsonl(readFileSync(file, "utf8"));
+    assert.ok(rows.length >= 3, file);
+    assert.equal(new Set(rows.map((r) => r.caseId)).size, rows.length, file);
+    return rows;
+  };
+  const smoke = readGold(path.resolve(REPO_ROOT, "tests/fixtures/gold-smoke.jsonl"));
+  assert.deepEqual([...new Set(smoke.map((r) => r.gold.decision))].sort(), ["either", "reject", "select"]);
+  const full = path.resolve(REPO_ROOT, ".data/gold.jsonl");
+  if (existsSync(full)) readGold(full);
 });
 
 test("a source class raises its tier's threshold to the class floor and never lowers one", () => {
