@@ -31,8 +31,9 @@ export { pageHeaders as headers } from "../lib/api.server";
 export const { clientLoader, shouldRevalidate } = pageReuse<typeof loader>();
 
 export async function loader({ params, request }: Route.LoaderArgs) {
-  const story = await loadOr404<StoryDetail>(`/api/site/stories/${encodeURIComponent(params.publicId)}`, { signal: request.signal, merged: (id) => `/story/${id}` });
-  return cachedPage(300, { story });
+  const upstream = new Headers();
+  const story = await loadOr404<StoryDetail>(`/api/site/stories/${encodeURIComponent(params.publicId)}`, { responseHeaders: upstream, signal: request.signal, merged: (id) => `/story/${id}` });
+  return cachedPage(300, { story }, upstream);
 }
 
 export function meta({ loaderData }: Route.MetaArgs) {

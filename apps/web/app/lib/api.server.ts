@@ -31,7 +31,15 @@ export async function apiGet<T>(path: string, init?: { signal?: AbortSignal; hea
       const body = (await res.json().catch(() => null)) as { mergedInto?: string } | null;
       throw new ApiError(res.status, res.status === 308 ? (body?.mergedInto ?? null) : null, res.headers.get("X-Request-Id"));
     }
-    res.headers.forEach((value, name) => init?.responseHeaders?.set(name, value));
+    res.headers.forEach((value, name) => {
+      const target = init?.responseHeaders;
+      if (!target) return;
+      const prior = target.get(name);
+      // A page backed by multiple responses can only be cached until the earliest deadline.
+      if (name.toLowerCase() === "x-accel-expires" && prior?.startsWith("@") && value.startsWith("@")) {
+        target.set(name, `@${Math.min(Number(prior.slice(1)), Number(value.slice(1)))}`);
+      } else target.set(name, value);
+    });
     return (await res.json()) as T;
   } catch (error) {
     if (!init?.signal?.aborted && (!(error instanceof ApiError) || error.status >= 500)) {

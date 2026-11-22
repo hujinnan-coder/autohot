@@ -18,7 +18,9 @@ export { pageHeaders as headers } from "../lib/api.server";
 export const { clientLoader, shouldRevalidate } = pageReuse<typeof loader>();
 
 export async function loader({ request }: { request: Request }) {
-  return cachedPage(300, await apiGet<TopicsResponse>("/api/site/topics", { signal: request.signal }));
+  const upstream = new Headers();
+  const data = await apiGet<TopicsResponse>("/api/site/topics", { responseHeaders: upstream, signal: request.signal });
+  return cachedPage(300, data, upstream);
 }
 
 export function meta({ loaderData }: Route.MetaArgs) {

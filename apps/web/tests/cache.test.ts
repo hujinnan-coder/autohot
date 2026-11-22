@@ -1,6 +1,7 @@
 // Run after `npm run build -w @aihot/web`. Real production server/router, synthetic HTTP API only.
 import assert from "node:assert/strict";
-import { after, before, test } from "node:test";
+import { readdirSync, readFileSync } from "node:fs";
+import { after, test } from "node:test";
 import { ADMIN } from "@aihot/site";
 import { SIGN_IN_HOME } from "@aihot/contracts/admin";
 import { isPrivatePage } from "@aihot/contracts/http-policy";
@@ -8,7 +9,53 @@ import { CATEGORY_KEYS } from "@aihot/contracts/taxonomy";
 import { UNSAFE_decodeViaTurboStream } from "react-router";
 import { fakeApi, itemDetail, startWebServer, type WebServer } from "./web-server.ts";
 
-let web: WebServer;
+/** A health probe's no-store describes the probe itself, not the page data. */
+const NO_UPSTREAM: Record<string, string> = {
+  "agent.tsx": "/api/health returns no-store; forwarding it would reduce the page's 300 seconds to zero",
+};
+
+// Start just after the first comma. Ignore commas inside literals, objects, arrays and nested calls.
+function hasUpstream(args: string): boolean {
+  let depth = 0;
+  let afterSecondArg = false;
+  for (const [token] of args.matchAll(/\/\/[^\n]*|\/\*[\s\S]*?\*\/|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\[\s\S]|[^`\\])*`|\S/g)) {
+    if (token.startsWith("//") || token.startsWith("/*")) continue;
+    if (depth === 0 && token === ")") return false;
+    if (afterSecondArg) return true;
+    if (depth === 0 && token === ",") afterSecondArg = true;
+    if (token === "(" || token === "{" || token === "[") depth++;
+    if (token === ")" || token === "}" || token === "]") depth--;
+  }
+  return false;
+}
+
+test("route cache architecture forwards upstream headers for long-lived API pages", () => {
+  const routes = new URL("../app/routes/", import.meta.url);
+  const files = readdirSync(routes).filter((file) => file.endsWith(".tsx"));
+  for (const file of Object.keys(NO_UPSTREAM)) assert.ok(files.includes(file), `${file}: remove the obsolete NO_UPSTREAM entry`);
+  for (const file of files) {
+    const source = readFileSync(new URL(file, routes), "utf8");
+    const calls = [...source.matchAll(/\bcachedPage\s*\(\s*(\d+)\s*,/g)];
+    const longLived = calls.filter((call) => Number(call[1]) > 60);
+    const reason = NO_UPSTREAM[file];
+    if (/\bcachedPage\s*\(/.test(source)) {
+      assert.match(source, /export\s*\{\s*pageHeaders\s+as\s+headers\s*\}/, `${file}: export pageHeaders as headers`);
+    }
+    if (reason) {
+      assert.ok(longLived.length, `${file}: remove the obsolete NO_UPSTREAM entry`);
+      for (const call of calls) {
+        assert.ok(!hasUpstream(source.slice(call.index + call[0].length)), `${file}: NO_UPSTREAM forbids the third argument (${reason})`);
+      }
+    } else if (longLived.length && /\b(?:apiGet|loadOr404)\s*[<(]/.test(source)) {
+      for (const call of longLived) {
+        assert.ok(hasUpstream(source.slice(call.index + call[0].length)), `${file}: cachedPage needs a third argument`);
+      }
+      assert.match(source, /\bresponseHeaders\s*:/, `${file}: collect upstream responseHeaders`);
+    }
+  }
+});
+
+let web: WebServer | undefined;
 let origin: string;
 let deadline: number;
 let itemDeadline: number;
@@ -54,14 +101,19 @@ const api = fakeApi(async (url, res, req) => {
   }
 });
 
-before(async () => {
-  deadline = Math.floor(Date.now() / 1000) + 20;
-  web = await startWebServer(api);
-  origin = web.origin;
-});
-after(() => web.stop());
+function httpTest(name: string, body: () => Promise<void>) {
+  test(name, async () => {
+    if (!web) {
+      deadline = Math.floor(Date.now() / 1000) + 20;
+      web = await startWebServer(api);
+      origin = web.origin;
+    }
+    await body();
+  });
+}
+after(() => web?.stop());
 
-test("public route subsets produce the same complete navigation data; filters still differ", async () => {
+httpTest("public route subsets produce the same complete navigation data; filters still differ", async () => {
   const answers = await Promise.all(["", "?_routes=root", "?_routes=routes%2Fhome", "?_routes=unknown"].map(async (query) => {
     const res = await fetch(`${origin}/_.data${query}`);
     assert.equal(res.status, 200);
@@ -80,7 +132,7 @@ test("public route subsets produce the same complete navigation data; filters st
   assert.notEqual(body, answers[0]);
 });
 
-test("navigation streams are plain text for download managers, including errors", async () => {
+httpTest("navigation streams are plain text for download managers, including errors", async () => {
   for (const [pathname, status] of [["/_.data?_routes=root", 200], ["/items/missing.data", 404]] as const) {
     const res = await fetch(origin + pathname);
     assert.equal(res.status, status, pathname);
@@ -94,7 +146,7 @@ test("navigation streams are plain text for download managers, including errors"
   assert.equal(await download.text(), "# Article");
 });
 
-test("HTML and navigation share freshness; cookies do not personalize public results", async () => {
+httpTest("HTML and navigation share freshness; cookies do not personalize public results", async () => {
   const html = await fetch(`${origin}/`);
   assert.equal(html.status, 200);
   assert.equal(html.headers.get("X-Accel-Expires"), `@${deadline}`);
@@ -109,7 +161,7 @@ test("HTML and navigation share freshness; cookies do not personalize public res
   assert.ok(apiCookies.every((cookie) => !cookie));
 });
 
-test("missing routes cannot be hidden by a root-only request; errors and redirects stay uncached", async () => {
+httpTest("missing routes cannot be hidden by a root-only request; errors and redirects stay uncached", async () => {
   for (const pathname of ["/items/missing.data?_routes=root", "/does-not-exist.data?_routes=root", "/items/missing"]) {
     const res = await fetch(origin + pathname);
     assert.equal(res.status, 404, pathname);
@@ -125,7 +177,7 @@ test("missing routes cannot be hidden by a root-only request; errors and redirec
   }
 });
 
-test("admin data and actions never become public cache entries", async () => {
+httpTest("admin data and actions never become public cache entries", async () => {
   if (ADMIN) {
     const admin = await fetch(`${origin}/admin/sources.data?_routes=admin-layout`);
     assert.equal(admin.status, 202);
@@ -144,7 +196,7 @@ test("admin data and actions never become public cache entries", async () => {
   await action.text();
 });
 
-test("gray pages are private like the admin's, whatever their route asks for", async () => {
+httpTest("gray pages are private like the admin's, whatever their route asks for", async () => {
   for (const pathname of ["/preview", "/preview/", "/preview/models", "/Preview/models", "/admin", "/admin/runs", "/admin/expiry"]) assert.equal(isPrivatePage(pathname), true, pathname);
   for (const pathname of ["/", "/previews", "/all", "/items/preview", "/administer"]) assert.equal(isPrivatePage(pathname), false, pathname);
   for (const pathname of ["/preview/missing", "/preview/missing.data", "/preview/missing.data?_routes=root"]) {
@@ -155,7 +207,7 @@ test("gray pages are private like the admin's, whatever their route asks for", a
   }
 });
 
-test("browser freshness shares the selected deadline, including slow sibling loaders", async () => {
+httpTest("browser freshness shares the selected deadline, including slow sibling loaders", async () => {
   const savedDeadline = deadline;
   try {
     deadline = Math.floor(Date.now() / 1000) + 20;
@@ -188,7 +240,7 @@ test("browser freshness shares the selected deadline, including slow sibling loa
   }
 });
 
-test("item and original pages share the upstream deadline, at most a minute", async () => {
+httpTest("item and original pages share the upstream deadline, at most a minute", async () => {
   for (const seconds of [60, 20]) {
     itemFreshness = seconds;
     for (const path of ["/items/freshness.data", "/items/freshness/original.data"]) {
@@ -206,7 +258,7 @@ test("item and original pages share the upstream deadline, at most a minute", as
 
 // A tab opened before a page lost its loader still asks for that page's result, and its router rejects
 // a missing one before React's release recovery can run.
-test("a page without a loader still answers navigation with an empty result", async () => {
+httpTest("a page without a loader still answers navigation with an empty result", async () => {
   const res = await fetch(`${origin}/terms.data?_routes=routes%2Fterms`);
   assert.equal(res.status, 200);
   const { value } = await UNSAFE_decodeViaTurboStream(res.body!, globalThis);
@@ -215,7 +267,7 @@ test("a page without a loader still answers navigation with an empty result", as
   assert.equal(result["routes/terms"]!.data, null);
 });
 
-test("browser caching preserves noindex and private sign-in responses", async () => {
+httpTest("browser caching preserves noindex and private sign-in responses", async () => {
   const feedback = await fetch(origin + "/feedback");
   assert.equal(feedback.status, 200);
   assert.match(await feedback.text(), /name="robots" content="noindex/);
@@ -255,7 +307,7 @@ test("a signed-in admin is sent past the sign-in page", { skip: !ADMIN && "this 
   }
 });
 
-test("a visitor cannot name its own address to the api without a trusted proxy in front", async () => {
+httpTest("a visitor cannot name its own address to the api without a trusted proxy in front", async () => {
   const res = await fetch(`${origin}/api/site/echo-client`, { headers: { "X-Forwarded-For": "6.6.6.6", "X-Real-IP": "6.6.6.6" } });
   assert.deepEqual(await res.json(), { forwarded: "127.0.0.1", real: "127.0.0.1" });
 });

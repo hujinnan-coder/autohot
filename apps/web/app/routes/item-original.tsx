@@ -3,7 +3,8 @@ import type { SiteItemDetail } from "@aihot/contracts/site";
 import { cachedPage, loadOr404 } from "../lib/api.server";
 import { loadFollowups } from "../features/item/followups.server";
 import { pageReuse } from "../lib/page-reuse";
-export { default, handle, headers, meta } from "./item";
+export { default, handle, meta } from "./item";
+export { pageHeaders as headers } from "../lib/api.server";
 
 export const { clientLoader, shouldRevalidate } = pageReuse<typeof loader>();
 export async function loader({ params, request }: Route.LoaderArgs) {

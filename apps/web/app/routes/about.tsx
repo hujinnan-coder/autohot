@@ -18,11 +18,12 @@ export { pageHeaders as headers } from "../lib/api.server";
 export const { clientLoader, shouldRevalidate } = pageReuse<typeof loader>();
 
 export async function loader({ request }: { request: Request }) {
+  const upstream = new Headers();
   const [contact, stats] = await Promise.all([
-    apiGet<SiteContact>("/api/site/contact", { signal: request.signal }).catch(() => null),
-    apiGet<SiteStats>("/api/site/stats", { signal: request.signal }).catch(() => null),
+    apiGet<SiteContact>("/api/site/contact", { responseHeaders: upstream, signal: request.signal }).catch(() => null),
+    apiGet<SiteStats>("/api/site/stats", { responseHeaders: upstream, signal: request.signal }).catch(() => null),
   ]);
-  return cachedPage(300, { contact, stats });
+  return cachedPage(300, { contact, stats }, upstream);
 }
 
 export function meta() {
