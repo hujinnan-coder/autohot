@@ -63,6 +63,7 @@ export function isPoolEligible(input: {
  * Item detail page (and its Markdown export): every unwithdrawn item from an editorial source has one,
  * with or without a Chinese summary (noindex unless indexable). hot_signal material is heat evidence
  * only and has none. A paused source keeps its pages.
+ * publish.ts projects blocked relevance as withdrawn by default. This rule reads the projected visibility.
  */
 export function hasItemPage(p: { visibility: string; sourceMode: string }): boolean {
   return p.visibility !== "withdrawn" && p.sourceMode === "editorial";

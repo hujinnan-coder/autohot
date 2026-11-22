@@ -307,9 +307,13 @@ export async function publishArticleTx(tx: Tx, articleId: string, options: Publi
   const relevance = typeof f.relevance === "string" ? (f.relevance as string) : analysis?.relevance ?? null;
   const judgedSelected = typeof f.selected === "boolean" ? (f.selected as boolean) : analysis?.selected ?? null;
   // Material from an isolated source reaches no public surface at all: not even a detail page.
+  // A blocked item goes too, unless an editor's index decision keeps the archive readable: like
+  // override.visibility, a human curation outranks the model's relevance verdict.
   const visibility = source.participation_mode === "isolated"
     ? "withdrawn"
-    : (override?.visibility ?? (withdrawnByAnalysis || (suppressOriginal && !title) ? "withdrawn" : "public"));
+    : (override?.visibility
+        ?? (withdrawnByAnalysis || (relevance === "block" && !previous?.seo_indexed_at) || (suppressOriginal && !title)
+              ? "withdrawn" : "public"));
 
   // An undated archive has a readable detail page, but its discovery is not a news timestamp.
   // Explicit imports can retain an editorial decision already published elsewhere.

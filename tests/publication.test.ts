@@ -13,7 +13,10 @@ import { closeDb, sql } from "@aihot/backend/db";
 import { overrideFields, setVisibility } from "@aihot/backend/admin/content";
 import { updateSource } from "@aihot/backend/admin/sources";
 import { upsertMaterial } from "@aihot/backend/content/materials";
+import { reconcileMaterialSource } from "@aihot/backend/content/provenance";
 import { stopBoss } from "@aihot/backend/jobs/queue";
+import { installModules, serverModules } from "@aihot/backend/modules";
+import { loadItemDetail } from "@aihot/backend/publication/detail";
 import { publishArticle, republishSource } from "@aihot/backend/publication/publish";
 import { computeHotRanking } from "@aihot/backend/events/hot";
 import { latestHotRanking } from "@aihot/backend/publication/hot";
@@ -43,14 +46,14 @@ after(async () => {
 
 let n = 0;
 /** A selected article with full text and a summary, found and published a minute ago: a rolling window that ends at the reader's clock holds it. */
-async function article(): Promise<string> {
+async function article(relevance: "pass" | "block" = "pass"): Promise<string> {
   n += 1;
   const minuteAgo = new Date(Date.now() - 60_000);
   const { articleId } = await upsertMaterial({
     sourceId: SOURCE, url: `https://example.com/${T}-${n}`, title: `Test ${n}`, bodyText: BODY, bodyHtml: `<p>${BODY}</p>`, bodyStatus: "ok", via: "fetch", publishedAt: minuteAgo, discoveredAt: minuteAgo,
   });
   await sql`INSERT INTO analyses (article_id, input_revision, origin, relevance, category, title_zh, summary_zh, reason_zh, score, selected)
-            VALUES (${articleId}, 1, 'rule', 'pass', 'new-car', ${`标题${n}-${T}`}, ${`SUMMARY-${n}-${T}`}, '理由', 90, true)`;
+            VALUES (${articleId}, 1, 'rule', ${relevance}, 'new-car', ${`标题${n}-${T}`}, ${`SUMMARY-${n}-${T}`}, '理由', 90, ${relevance === "pass"})`;
   return articleId;
 }
 
@@ -775,7 +778,7 @@ test("suppressOriginal keeps compliant Chinese copy selected while withholding r
   assert.equal(xList.items.find((i) => i.id === xId)?.x ?? null, null, "X card in pool also withholds post");
 });
 
-test("an analysis marked withdrawn publishes directly as withdrawn unless an admin overrides visibility", async () => {
+test("an analysis marked withdrawn publishes directly as withdrawn", async () => {
   const minuteAgo = new Date(Date.now() - 60_000);
   const { articleId } = await upsertMaterial({
     sourceId: SOURCE,
@@ -789,12 +792,50 @@ test("an analysis marked withdrawn publishes directly as withdrawn unless an adm
     discoveredAt: minuteAgo,
   });
   await sql`INSERT INTO analyses (article_id, input_revision, origin, relevance, title_zh, summary_zh, score, selected, output)
-            VALUES (${articleId}, 1, 'model', 'block', '', '', null, false, ${sql.json({ withdrawn: true })})`;
+            VALUES (${articleId}, 1, 'model', 'pass', '', '', null, false, ${sql.json({ withdrawn: true })})`;
   await publishArticle(articleId, released());
 
   assert.equal((await get(`/api/site/items/${articleId}`)).status, 404, "detail returns 404 when analysis sets withdrawn");
   const [pub] = await sql<{ visibility: string }[]>`SELECT visibility FROM publications WHERE article_id = ${articleId}`;
   assert.equal(pub!.visibility, "withdrawn");
+});
+
+test("a blocked analysis withdraws the publication and its detail page", async () => {
+  const id = await article("block");
+  await publishArticle(id, released());
+
+  const [pub] = await sql`SELECT visibility FROM publications WHERE article_id = ${id}`;
+  assert.equal(pub!.visibility, "withdrawn");
+  assert.equal((await loadItemDetail(id)).kind, "not_found");
+});
+
+test("an explicit public visibility override keeps a blocked article readable", async () => {
+  const id = await article("block");
+  await publishArticle(id, released());
+  await setVisibility(id, { visibility: "public", reason: "Reviewed for public display", version: 0 }, "test");
+
+  const [pub] = await sql`SELECT visibility FROM publications WHERE article_id = ${id}`;
+  assert.equal(pub!.visibility, "public");
+  assert.equal((await get(`/api/site/items/${id}`)).status, 200);
+});
+
+test("provenance repair does not announce a change to a blocked article as previously readable", async () => {
+  const id = await article("block");
+  await publishArticle(id, released());
+  const [articleRow] = await sql<{ url: string }[]>`SELECT url FROM articles WHERE id = ${id}`;
+  const publisher = `${SOURCE}-block-publisher`;
+  await sql`INSERT INTO sources (id, name, kind, tier, participation_mode, config, next_fetch_at)
+    VALUES (${publisher}, 'Verified publisher', 'rss', 'T1', 'editorial', ${sql.json({ publisherUrlPrefixes: [articleRow!.url] })}, '2100-01-01')`;
+
+  const installed = serverModules();
+  const announcements: string[] = [];
+  installModules([...installed, { name: "provenance-test", on: { articleChanged: async (change) => { announcements.push(change.id); } } }]);
+  try {
+    assert.equal(await sql.begin((tx) => reconcileMaterialSource(tx, id)), true);
+    const [pub] = await sql`SELECT source_id FROM publications WHERE article_id = ${id}`;
+    assert.equal(pub!.source_id, publisher);
+    assert.deepEqual(announcements, []);
+  } finally { installModules(installed); }
 });
 
 test("restoring normal display after a clean update never re-exposes pre-suppression ledger payloads", async () => {
