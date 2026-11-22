@@ -23,6 +23,11 @@ after(async () => {
 test("a late run writes the issue that was due, not today's", () => {
   assert.equal(dueDaily(editionAt("daily", "2026-09-29", 6)), "2026-09-29");
   assert.equal(dueDaily(editionAt("daily", "2026-09-30", -60)), "2026-09-29", "the 29th's run delayed until just before the next issue");
+  // The Beijing edition time is 07:00. The same issue is due on both sides of midnight.
+  assert.equal(dueDaily(editionAt("daily", "2020-02-10", -25_260)), "2020-02-09", "前一天 23:59");
+  assert.equal(dueDaily(editionAt("daily", "2020-02-10", -25_140)), "2020-02-09", "00:01 与 23:59 是同一期");
+  assert.equal(dueDaily(editionAt("daily", "2020-02-10", -60)), "2020-02-09", "06:59 仍在同一期");
+  assert.equal(dueDaily(editionAt("daily", "2020-02-10", 60)), "2020-02-10", "07:01 才切期");
   assert.equal(dueWeekly(editionAt("weekly", "2026-09-28")), "2026-W39");
   assert.equal(dueWeekly(editionAt("weekly", "2026-10-05", -60)), "2026-W39", "Monday before its edition time: the next week is not due yet");
   assert.equal(dueWeekly(editionAt("weekly", "2026-10-05", 60)), "2026-W40");

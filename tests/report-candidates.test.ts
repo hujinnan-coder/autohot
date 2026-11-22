@@ -92,6 +92,27 @@ test("reports assign delayed and boundary releases to the period readers first s
   assert.equal(items("2020-01-03").has(groupedLate), true);
 });
 
+test("midnight stays inside one issue: the window boundary is the edition time", async () => {
+  const date = "2020-02-10", prev = "2020-02-09", next = "2020-02-11";
+  const at = (day: string, seconds: number) => editionAt("daily", day, seconds);
+  // The issue spans [02-09 07:00, 02-10 07:00) Beijing time. Midnight is seven hours before the cutoff.
+  const late = await selected("23:59", at(date, -25_260), at(date, -25_260));
+  const midnight = await selected("00:01", at(date, -25_140), at(date, -25_140));
+  const edge = await selected("06:59", at(date, -60), at(date, -60));
+  const afterEdge = await selected("07:01", at(date, 60), at(date, 60));
+
+  const inIssue = async (start: string, end: string) =>
+    new Set((await candidates(at(start, 0), at(end, 0))).map((c) => c.itemId));
+  const thisIssue = await inIssue(prev, date);
+  const nextIssue = await inIssue(date, next);
+  for (const id of [late, midnight, edge]) {
+    assert.equal(thisIssue.has(id), true, "arrived before 07:00, belongs to this issue");
+    assert.equal(nextIssue.has(id), false);
+  }
+  assert.equal(nextIssue.has(afterEdge), true, "07:01 is the next issue's");
+  assert.equal(thisIssue.has(afterEdge), false);
+});
+
 /** Observe an actual PostgreSQL lock wait before advancing the clock or releasing the transaction. */
 async function waitForBlocked(blocker: number, operation: Promise<unknown>) {
   const deadline = performance.now() + 5_000;

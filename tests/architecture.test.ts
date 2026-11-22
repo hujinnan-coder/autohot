@@ -110,6 +110,12 @@ test("the public scope and the composite rule are spelled once, in publication/s
   assert.deepEqual(found, [], "use the predicates of publication/scope.ts");
 });
 
+test("grouping stays serial: no database constraint stops two workers from founding the same event", () => {
+  const src = readFileSync(path.join(ROOT, BACKEND, "jobs/events.ts"), "utf8");
+  assert.match(src, /QUEUES\.group,\s*\{\s*localConcurrency:\s*1\b/,
+    "归组必须保持 localConcurrency: 1。facts 和 stories 无唯一约束,两个进程会重复建事件");
+});
+
 // Nothing kept that nothing uses. Stored state and settings outlive the code that used them, and an
 // unread field still costs a query; each check names what to delete. They compare names, so a column
 // whose name its table's code also uses for something else slips through. Tests, fixtures and local

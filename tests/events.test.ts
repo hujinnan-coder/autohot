@@ -322,6 +322,39 @@ test("a report joins the fact the model names, and a revision keeps that members
   assert.deepEqual({ fact_id: Number(publication!.fact_id), story_id: Number(publication!.story_id) }, { fact_id: factId, story_id: storyId });
 });
 
+test("a second report of the same fact joins the existing event and leaves the first one attached", async () => {
+  // Sequential membership and idempotency only. The test does not exercise locks or cross-article
+  // concurrency. Facts and stories have no unique constraint to stop two workers founding one event.
+  hold = gate();
+  hold.open();
+  const factsBefore = (await sql`SELECT count(*)::int AS n FROM facts WHERE story_id = ${storyId}`)[0]!.n;
+  const storiesBefore = (await sql`SELECT count(*)::int AS n FROM stories`)[0]!.n;
+
+  const a = await report("seat-a");
+  assert.equal((await groupArticle(a)).verdict, "same-fact");
+  const b = await report("seat-b");
+  assert.equal((await groupArticle(b)).verdict, "same-fact");
+
+  assert.equal((await sql`SELECT count(*)::int AS n FROM facts WHERE story_id = ${storyId}`)[0]!.n, factsBefore);
+  assert.equal((await sql`SELECT count(*)::int AS n FROM stories`)[0]!.n, storiesBefore);
+  const memberships = async (id: string) =>
+    (await sql<{ fact_id: number }[]>`SELECT fact_id FROM fact_articles WHERE article_id = ${id}`).map((m) => Number(m.fact_id));
+  assert.deepEqual(await memberships(b), [factId]);
+  assert.deepEqual(await memberships(a), [factId]);
+  // publishArticle re-elects the representative for the whole fact, so a later report can take the
+  // seat. It also realigns sort_at with the timeline. report() seeds selected as false, so checking
+  // it would prove nothing.
+  const [pub] = await sql<{ fact_id: number | null; story_id: number | null }[]>`SELECT fact_id, story_id FROM publications WHERE article_id = ${a}`;
+  assert.deepEqual({ fact_id: Number(pub!.fact_id), story_id: Number(pub!.story_id) }, { fact_id: factId, story_id: storyId });
+
+  const hits = provider.hits();
+  const again = await groupArticle(a);
+  assert.equal(again.verdict, "kept");
+  assert.equal(again.factId, factId);
+  assert.equal(provider.hits(), hits);
+  assert.deepEqual(await memberships(a), [factId], "a repeat pass does not attach it twice");
+});
+
 test("an explicit regroup drops the automatic membership and decides again", async () => {
   hold = gate();
   hold.open();
