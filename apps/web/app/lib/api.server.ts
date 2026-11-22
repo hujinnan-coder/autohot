@@ -20,7 +20,19 @@ class ApiError extends Error {
   }
 }
 
+// One page normally makes one or two loopback calls. Retry after five seconds, within the api's
+// 15-second health check interval.
+const BREAKER_AFTER = 3;
+const BREAKER_MS = 5_000;
+let consecutiveFailures = 0;
+let openUntil = 0;
+
+const transportFailure = (error: unknown) =>
+  !(error instanceof ApiError) && error instanceof Error
+  && (error.name === "TimeoutError" || error.name === "AbortError" || error instanceof TypeError);
+
 export async function apiGet<T>(path: string, init?: { signal?: AbortSignal; headers?: Record<string, string>; responseHeaders?: Headers }): Promise<T> {
+  if (Date.now() < openUntil) throw new Error("api unreachable (circuit open)");
   try {
     const res = await fetch(`${API_BASE_URL}${path}`, {
       headers: { accept: "application/json", "x-aihot-ssr": "1", ...init?.headers },
@@ -40,9 +52,22 @@ export async function apiGet<T>(path: string, init?: { signal?: AbortSignal; hea
         target.set(name, `@${Math.min(Number(prior.slice(1)), Number(value.slice(1)))}`);
       } else target.set(name, value);
     });
-    return (await res.json()) as T;
+    const value = (await res.json()) as T;
+    consecutiveFailures = 0;
+    return value;
   } catch (error) {
-    if (!init?.signal?.aborted && (!(error instanceof ApiError) || error.status >= 500)) {
+    if (error instanceof ApiError) consecutiveFailures = 0;
+    if (init?.signal?.aborted) throw error;
+    if (transportFailure(error)) {
+      if (Date.now() < openUntil) throw error;
+      if (++consecutiveFailures >= BREAKER_AFTER) {
+        openUntil = Date.now() + BREAKER_MS;
+        consecutiveFailures = 0;
+        logError(error, { msg: "ssr api circuit open" });
+        throw error;
+      }
+    }
+    if (!(error instanceof ApiError) || error.status >= 500) {
       logError(error, { msg: "ssr api request failed", method: "GET", path,
         ...(error instanceof ApiError ? { status: error.status, upstreamRequestId: error.requestId } : {}),
       });

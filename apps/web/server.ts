@@ -186,6 +186,19 @@ server.listen(PORT, HOST, () => {
   console.log(JSON.stringify({ level: "info", msg: "web started", port, pid: process.pid }));
 });
 
-const shutdown = () => server.close(() => process.exit(0));
+// Leave room inside the web container's 20-second stop grace for the process to exit.
+const SHUTDOWN_GRACE_MS = 8_000;
+const shutdown = () => {
+  const forced = setTimeout(() => {
+    server.closeAllConnections();
+    process.exit(0);
+  }, SHUTDOWN_GRACE_MS);
+  forced.unref();
+  server.close(() => {
+    clearTimeout(forced);
+    process.exit(0);
+  });
+  server.closeIdleConnections();
+};
 process.on("SIGTERM", shutdown);
 process.on("SIGINT", shutdown);

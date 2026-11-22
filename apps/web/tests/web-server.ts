@@ -57,6 +57,9 @@ export interface WebServer {
   port: number;
   /** What the server wrote to stderr so far: its error lines. */
   logs: () => string;
+  kill: (signal?: NodeJS.Signals) => void;
+  /** The web process's exit code, or null if a signal killed it. */
+  exited: Promise<number | null>;
   /** Stops the web server and the api. */
   stop: () => Promise<void>;
 }
@@ -70,13 +73,18 @@ export async function startWebServer(api: Server, env: NodeJS.ProcessEnv = {}): 
     env: { ...process.env, WEB_PORT: "0", SITE_URL: "http://127.0.0.1:0", TRUST_PROXY: "false", API_BASE_URL: `http://127.0.0.1:${(api.address() as AddressInfo).port}`, ...env },
     stdio: ["ignore", "pipe", "pipe"],
   });
+  const exited = new Promise<number | null>((resolve) => web.once("exit", resolve));
   const stop = async () => {
-    if (web.exitCode === null) {
+    let forced = false;
+    if (web.exitCode === null && web.signalCode === null) {
       web.kill("SIGTERM");
-      await once(web, "exit");
+      const timeout = setTimeout(() => { forced = web.kill("SIGKILL"); }, 10_000);
+      await exited;
+      clearTimeout(timeout);
     }
     api.closeAllConnections();
     await new Promise<void>((resolve) => api.close(() => resolve()));
+    if (forced) throw new Error("web did not stop within 10 seconds");
   };
   let port: number;
   try {
@@ -94,7 +102,7 @@ export async function startWebServer(api: Server, env: NodeJS.ProcessEnv = {}): 
     await stop();
     throw error;
   }
-  return { origin: `http://127.0.0.1:${port}`, port, logs: () => logs, stop };
+  return { origin: `http://127.0.0.1:${port}`, port, logs: () => logs, kill: (signal) => { web.kill(signal); }, exited, stop };
 }
 
 /**

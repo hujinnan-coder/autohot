@@ -1,7 +1,11 @@
 // Run after `npm run build -w @aihot/web`. Real production server/router, synthetic HTTP API only.
 import assert from "node:assert/strict";
+import { once } from "node:events";
 import { readdirSync, readFileSync } from "node:fs";
+import { Agent, get, type IncomingMessage } from "node:http";
+import type { AddressInfo } from "node:net";
 import { after, test } from "node:test";
+import { setTimeout as delay } from "node:timers/promises";
 import { ADMIN } from "@aihot/site";
 import { SIGN_IN_HOME } from "@aihot/contracts/admin";
 import { isPrivatePage } from "@aihot/contracts/http-policy";
@@ -321,4 +325,72 @@ test("a web server assigned port zero serves its own canonical address", async (
     assert.equal(response.status, 200);
     assert.ok((await response.text()).includes(`rel="canonical" href="${ephemeral.origin}/about"`));
   } finally { await ephemeral.stop(); }
+});
+
+test("SSR keeps reaching an API that answers 503 and opens the circuit on transport failures", async () => {
+  const path = "/items/circuit";
+  let hits = 0;
+  let unavailable = true;
+  const upstream = fakeApi((url, res) => {
+    if (url.pathname === `/api/site${path}`) hits++;
+    if (unavailable) {
+      res.statusCode = 503;
+      return { code: "unavailable" };
+    }
+    if (url.pathname === `/api/site${path}`) return itemDetail({ id: "circuit", title: "测试条目" });
+  });
+  const server = await startWebServer(upstream);
+  const port = (upstream.address() as AddressInfo).port;
+  const read = async (status: number) => {
+    const res = await fetch(server.origin + path, { signal: AbortSignal.timeout(1_000) });
+    assert.equal(res.status, status);
+    if (status === 503) assert.equal(res.headers.get("Cache-Control"), "private, no-store");
+    await res.text();
+  };
+  try {
+    for (let i = 1; i <= 4; i++) {
+      await read(503);
+      assert.equal(hits, i, "an HTTP 503 must not trip the circuit");
+    }
+
+    await new Promise<void>((resolve, reject) => upstream.close((error) => error ? reject(error) : resolve()));
+    for (let i = 0; i < 4; i++) await read(503);
+
+    // A refused connection is fast too. Restart behind the open circuit and check that it is bypassed.
+    unavailable = false;
+    upstream.listen(port, "127.0.0.1");
+    await once(upstream, "listening");
+    await read(503);
+    assert.equal(hits, 4, "SSR must not contact the API while the circuit is open");
+    assert.equal(server.logs().match(/"msg":"ssr api circuit open"/g)?.length, 1);
+
+    await delay(5_000);
+    await read(200);
+    assert.equal(hits, 5);
+  } finally {
+    await server.stop();
+  }
+});
+
+test("SIGTERM exits promptly with an idle keep-alive connection", async () => {
+  const server = await startWebServer(fakeApi());
+  const agent = new Agent({ keepAlive: true });
+  try {
+    const request = get(server.origin + "/about", { agent, signal: AbortSignal.timeout(2_000) });
+    const [res] = (await once(request, "response")) as [IncomingMessage];
+    assert.equal(res.statusCode, 200);
+    const idle = once(agent, "free", { signal: AbortSignal.timeout(2_000) });
+    res.resume();
+    await idle;
+
+    server.kill("SIGTERM");
+    const code = await Promise.race([
+      server.exited,
+      delay(2_000, undefined, { ref: false }).then(() => assert.fail("web ignored SIGTERM")),
+    ]);
+    assert.equal(code, 0);
+  } finally {
+    agent.destroy();
+    await server.stop();
+  }
 });

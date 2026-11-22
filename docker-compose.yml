@@ -91,6 +91,7 @@ services:
   web:
     <<: *app
     command: ["node", "apps/web/server.ts"]
+    stop_grace_period: 20s
     # SSR reads the API over HTTP; backend credentials and stored files stay in api/worker.
     environment:
       NODE_ENV: production
