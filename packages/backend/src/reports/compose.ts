@@ -10,6 +10,7 @@ import { promptText, promptVersion } from "../editorial/prompts.ts";
 import { modelFor } from "../editorial/models.ts";
 import { ENTITIES, entityNames, isRelease } from "../editorial/vocabulary.ts";
 import { addDays, beijingAt, beijingDate, beijingTime, isoWeekLabel, isoWeekRange, monthRange } from "@aihot/contracts/time";
+import { config } from "../config.ts";
 import { sql } from "../db.ts";
 import { logError } from "../lib/log-error.ts";
 import { chatJson } from "../providers/llm.ts";
@@ -36,11 +37,14 @@ export function dailyMetrics(main: EditionEntry[]) {
 }
 
 type ReportKind = "daily" | "weekly" | "monthly";
+const RETRY_REASON = "missing overview";
+const RETRY_MAX = 2;
+const RETRY_WINDOW = { weekly: 8, monthly: 12 };
 
-/** How many events an issue already published carries; nothing when it does not exist yet. */
+/** The current revision and event count of a published issue, if it exists. */
 async function savedReport(kind: ReportKind, key: string) {
-  const [row] = await sql<{ entries: number }[]>`
-    SELECT coalesce(CASE WHEN kind = 'daily' THEN (content->'metrics'->>'totalEvents')::int ELSE jsonb_array_length(content->'storyOrder') END, 0) AS entries
+  const [row] = await sql<{ entries: number; revision: number }[]>`
+    SELECT revision, coalesce(CASE WHEN kind = 'daily' THEN (content->'metrics'->>'totalEvents')::int ELSE jsonb_array_length(content->'storyOrder') END, 0) AS entries
     FROM reports WHERE kind = ${kind} AND key = ${key}`;
   return row;
 }
@@ -227,6 +231,8 @@ async function composePeriod(kind: "weekly" | "monthly", key: string, startDate:
   try {
     const res = await chatJson({
       model, purpose: `report_${kind}`, subject: `report:${kind}:${key}`, promptVersion: REPORT_VERSION,
+      // A new revision needs a fresh answer even with the same brief. An interrupted save reuses that answer.
+      attemptTag: reason === RETRY_REASON && previous ? `overview-retry-${previous.revision}` : undefined,
       ...periodPrompt(kind, startDate, endDateInclusive, groups), schema: PeriodSchema, temperature: 0.3, maxTokens: 2500,
     });
     written = res.data;
@@ -312,7 +318,7 @@ const nextMonth = (label: string) => {
 export async function composeDueReports(now = new Date(), limit = 8): Promise<{ generated: string[]; failed: string[] }> {
   const generated: string[] = [];
   const failed: string[] = [];
-  const kinds: Array<{ kind: ReportKind; due: string; next: (k: string) => string; end: (k: string) => string; compose: (k: string) => Promise<unknown> }> = [
+  const kinds: Array<{ kind: ReportKind; due: string; next: (k: string) => string; end: (k: string) => string; compose: (k: string, reason?: string) => Promise<unknown> }> = [
     { kind: "daily", due: dueDaily(now), next: (k) => addDays(k, 1), end: (k) => k, compose: composeDaily },
     { kind: "weekly", due: dueWeekly(now), next: nextWeek, end: (k) => isoWeekRange(k)!.end, compose: composeWeekly },
     { kind: "monthly", due: dueMonthly(now), next: nextMonth, end: (k) => monthRange(k)!.end, compose: composeMonthly },
@@ -334,6 +340,37 @@ export async function composeDueReports(now = new Date(), limit = 8): Promise<{ 
         if (shutdownSignal.signal.aborted) break kinds;
         failed.push(`${k.kind}:${key}`);
         console.error(JSON.stringify({ level: "error", msg: "report failed", report: `${k.kind}:${key}`, error: logError(error) }));
+      }
+    }
+  }
+  // Missing issues take priority. The revision log bounds overview rewrites without new state.
+  if (config.modelCallsEnabled) {
+    retries: for (const k of kinds) {
+      if (k.kind === "daily") continue;
+      if (shutdownSignal.signal.aborted || generated.length >= limit) break;
+      const { kind, due } = k;
+      const window = RETRY_WINDOW[kind];
+      const from = kind === "weekly"
+        ? isoWeekLabel(addDays(k.end(due), -7 * (window - 1)))
+        : new Date(Date.UTC(Number(due.slice(0, 4)), Number(due.slice(5)) - window, 1)).toISOString().slice(0, 7);
+      const rows = await sql<{ key: string }[]>`
+        SELECT r.key FROM reports r
+        WHERE r.kind = ${kind} AND r.content->'generator'->>'written' = 'false' AND r.key <= ${due}
+          AND r.key >= ${from}
+        ORDER BY r.key DESC LIMIT ${window}`;
+      for (const { key } of rows) {
+        if (shutdownSignal.signal.aborted || generated.length >= limit) break retries;
+        const [{ retries }] = await sql<{ retries: number }[]>`
+          SELECT count(*)::int AS retries FROM report_revisions v JOIN reports r ON r.id = v.report_id
+          WHERE r.kind = ${kind} AND r.key = ${key} AND v.reason = ${RETRY_REASON}`;
+        if (retries >= RETRY_MAX) continue;
+        try {
+          if (await k.compose(key, RETRY_REASON) !== null) generated.push(`${kind}:${key}~retry`);
+        } catch (error) {
+          if (shutdownSignal.signal.aborted) break retries;
+          failed.push(`${kind}:${key}~retry`);
+          console.error(JSON.stringify({ level: "error", msg: "report failed", report: `${kind}:${key}~retry`, error: logError(error) }));
+        }
       }
     }
   }

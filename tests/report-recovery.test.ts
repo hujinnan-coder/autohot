@@ -4,13 +4,14 @@ import { editionAt, stub, tag } from "./setup.ts";
 import assert from "node:assert/strict";
 import { after, before, beforeEach, test } from "node:test";
 import { closeDb, sql } from "@aihot/backend/db";
-import { addDays } from "@aihot/contracts/time";
+import { addDays, isoWeekRange } from "@aihot/contracts/time";
 import { stopBoss } from "@aihot/backend/jobs/queue";
 import { composeDaily, composeDueReports, composeWeekly, composeMonthly } from "@aihot/backend/reports/compose";
 
 const T = tag();
 const SOURCE = `report-recovery-${T}`;
-const answer = async (user: string) => ({ title: user.slice(0, 100), leadParagraph: "导语", highlights: [1], headline: "本期进展", overview: "总述", themes: [{ heading: "主题", summary: "摘要", refs: [1] }] });
+let overview = "总述";
+const answer = async (user: string) => ({ title: user.slice(0, 100), leadParagraph: "导语", highlights: [1], headline: "本期进展", overview, themes: [{ heading: "主题", summary: "摘要", refs: [1] }] });
 const provider = await stub(async (_hit, request) => ({
   choices: [{ message: { content: JSON.stringify(await answer(JSON.parse(request.body).messages.at(-1).content)) } }],
 }));
@@ -20,6 +21,7 @@ before(async () => {
   await sql`INSERT INTO sources (id, name, kind, tier) VALUES (${SOURCE}, 'Report recovery', 'rss', 'T1')`;
 });
 beforeEach(async () => {
+  overview = "总述";
   await sql`DELETE FROM reports`;
   await sql`DELETE FROM articles WHERE source_id = ${SOURCE}`;
 });
@@ -49,6 +51,73 @@ async function dailies(start: string, end: string, withItems: string[] = []) {
     await daily(date, withItems.includes(date) ? await item(date) : undefined);
   }
 }
+
+async function publishWeekly(key: string, initialOverview: string) {
+  const { start, end } = isoWeekRange(key)!;
+  const monday = addDays(end, 1);
+  await dailies(start, monday, [start]);
+  overview = initialOverview;
+  await composeWeekly(key);
+  return editionAt("weekly", monday, 60);
+}
+
+const weeklyRevisions = (key: string) => sql<{ reason: string }[]>`
+  SELECT v.reason FROM report_revisions v JOIN reports r ON r.id = v.report_id
+  WHERE r.kind = 'weekly' AND r.key = ${key} ORDER BY v.revision`;
+
+test("a degraded weekly is rewritten with an overview and keeps the replaced edition", async () => {
+  const key = "2024-W28";
+  const now = await publishWeekly(key, "");
+  const before = await report("weekly", key);
+  assert.equal(before.content.generator.written, false);
+  overview = "本期值得关注。";
+  assert.deepEqual((await composeDueReports(now)).generated, [`weekly:${key}~retry`]);
+  const after = await report("weekly", key);
+  assert.equal(after.content.overview, overview);
+  assert.equal(after.content.generator.written, true);
+  assert.equal(after.revision, before.revision + 1);
+  assert.deepEqual((await weeklyRevisions(key)).map(r => r.reason), ["missing overview"]);
+  assert.deepEqual((await composeDueReports(now)).generated, []);
+});
+
+test("a weekly still without an overview stops making model calls after two rewrites", async () => {
+  const key = "2024-W29";
+  const now = await publishWeekly(key, "");
+  const initialCalls = provider.hits();
+  for (let run = 0; run < 4; run++) {
+    await composeDueReports(now);
+    assert.equal(provider.hits() - initialCalls, Math.min(run + 1, 2));
+  }
+  assert.equal((await report("weekly", key)).content.generator.written, false);
+  assert.deepEqual((await weeklyRevisions(key)).map(r => r.reason), ["missing overview", "missing overview"]);
+});
+
+test("scheduled runs leave a weekly with an overview unchanged", async () => {
+  const key = "2024-W33";
+  const now = await publishWeekly(key, "总述");
+  const before = await report("weekly", key);
+  assert.equal(before.content.generator.written, true);
+  const calls = provider.hits();
+  for (let run = 0; run < 3; run++) await composeDueReports(now);
+  assert.deepEqual(await report("weekly", key), before);
+  assert.equal((await weeklyRevisions(key)).length, 0);
+  assert.equal(provider.hits(), calls);
+});
+
+test("an overview rewrite records a live paid attempt", async () => {
+  const key = "2024-W34";
+  const now = await publishWeekly(key, "");
+  const attempts = () => sql<{ id: string }[]>`
+    SELECT a.id FROM receipt_attempts a JOIN receipts r ON r.id = a.receipt_id
+    WHERE r.subject = ${`report:weekly:${key}`} AND a.origin = 'live' ORDER BY a.id`;
+  const before = await attempts();
+  assert.equal(before.length, 1);
+  overview = "总述";
+  await composeDueReports(now);
+  const after = await attempts();
+  assert.equal(after.length, before.length + 1);
+  assert.notEqual(after[1]!.id, before[0]!.id);
+});
 
 test("automatic retries preserve all three published issue kinds; explicit corrections keep a revision", async () => {
   const id = await item("2024-02-02");

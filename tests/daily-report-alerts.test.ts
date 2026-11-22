@@ -13,12 +13,17 @@ async function report(date: string) {
   await sql`INSERT INTO reports(kind,key,window_start,window_end,content,generated_at) VALUES('daily',${date},${new Date(at(date))},${new Date(at(date))},'{}',${new Date(at(date))})`;
 }
 let feishu: Awaited<ReturnType<typeof stub>>;
+const notices: string[] = [];
 before(async () => {
-  feishu = await stub(() => ({ code: 0 }));
+  feishu = await stub((_hit, req) => {
+    notices.push(req.body);
+    return { code: 0 };
+  });
   Object.assign(process.env, { FEISHU_INTERNAL_ENABLED: "true", FEISHU_ALERT_WEBHOOK_URL: feishu.url, WEBHOOK_HUB_URL: "" });
   await getBoss();
 });
 beforeEach(async () => {
+  notices.length = 0;
   Object.assign(process.env, { COLLECT_ENABLED: "true", MODEL_CALLS_ENABLED: "true" });
   await sql`DELETE FROM reports`;
   await sql`DELETE FROM job_runs WHERE job='reports.compose'`;
@@ -79,4 +84,48 @@ test("an edition still missing past the scan window is closed once instead of re
   assert.ok(!result.open.includes(key("2026-10-01")));
   result = await checkAlerts(at("2026-10-08", "12:00"));
   assert.ok(!result.sent.some(k => k.startsWith(key("2026-10-01"))));
+});
+
+const WEEK_KEY = "report.weekly:2026-W41";
+const MONDAY = "2026-10-12";
+async function weekly() {
+  await sql`INSERT INTO reports(kind,key,window_start,window_end,content,generated_at)
+    VALUES('weekly','2026-W41',now(),now(),'{}',now())`;
+}
+
+test("weekly and monthly gaps page the owner only after their two-hour grace periods", async () => {
+  await report("2026-10-10");
+  assert.ok(!(await collectFindings(at(MONDAY, "11:59"))).some(f => f.key === WEEK_KEY));
+  const findings = await collectFindings(at(MONDAY, "12:00"));
+  const weeklyGaps = findings.filter(f => f.key.startsWith("report.weekly:"));
+  assert.deepEqual(weeklyGaps.map(f => [f.key, f.level]), [[WEEK_KEY, "now"]]);
+  const monthlyKey = "report.monthly:2026-10";
+  assert.ok(!(await collectFindings(at("2026-11-01", "12:29"))).some(f => f.key === monthlyKey));
+  assert.equal((await collectFindings(at("2026-11-01", "12:30"))).find(f => f.key === monthlyKey)?.level, "now");
+});
+
+test("a published weekly has no missing-issue finding", async () => {
+  await report("2026-10-10");
+  await weekly();
+  assert.ok(!(await collectFindings(at(MONDAY, "12:00"))).some(f => f.key === WEEK_KEY));
+});
+
+test("a missing weekly recovers when its issue is published", async () => {
+  await report("2026-10-10");
+  assert.ok((await checkAlerts(at(MONDAY, "12:00"))).sent.includes(WEEK_KEY));
+  await weekly();
+  const result = await checkAlerts(at(MONDAY, "12:10"));
+  assert.ok(result.sent.includes(`${WEEK_KEY}:recovered`));
+  assert.ok(!result.open.includes(WEEK_KEY));
+});
+
+test("a weekly still missing beyond the scan window stops reminders without claiming recovery", async () => {
+  await report("2026-10-10");
+  assert.ok((await checkAlerts(at(MONDAY, "12:00"))).sent.includes(WEEK_KEY));
+  notices.length = 0;
+  const result = await checkAlerts(at("2026-11-16", "12:00"));
+  assert.ok(result.sent.includes(`${WEEK_KEY}:expired`));
+  assert.ok(!result.sent.includes(`${WEEK_KEY}:recovered`));
+  assert.ok(!result.open.includes(WEEK_KEY));
+  assert.ok(notices.some(body => body.includes("2026-W41 的周报没能补出，停止提醒")));
 });
