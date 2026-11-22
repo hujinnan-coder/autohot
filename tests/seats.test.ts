@@ -42,14 +42,14 @@ after(async () => {
 // clock hold even when the VM's clock steps back (on the CI VMs by as much as 0.4 s).
 const start = Date.now() - 60_000;
 let n = 0;
-async function report(source: string, fact: number, options: { at?: Date; publishedAt?: Date; score?: number; selected?: boolean } = {}) {
+async function report(source: string, fact: number, options: { at?: Date; publishedAt?: Date; score?: number; selected?: boolean; tag?: string } = {}) {
   n += 1;
   const at = options.at ?? new Date(start + n * 1000);
   const { articleId } = await upsertMaterial({
     sourceId: source, url: `https://example.com/seats-${T}-${n}`, title: `Seat ${n} ${T}`, bodyText: "body", bodyHtml: "<p>body</p>", bodyStatus: "ok", via: "fetch", publishedAt: options.publishedAt ?? at, discoveredAt: at,
   });
   await sql`INSERT INTO analyses (article_id, input_revision, origin, relevance, category, title_zh, summary_zh, reason_zh, score, selected, tags)
-            VALUES (${articleId}, 1, 'rule', 'pass', 'industry', ${`标题${n}-${T}`}, ${`摘要${n}-${T}`}, ${`理由${n}`}, ${options.score ?? 80}, ${options.selected ?? true}, ${[`t-${T}`]})`;
+            VALUES (${articleId}, 1, 'rule', 'pass', 'industry', ${`标题${n}-${T}`}, ${`摘要${n}-${T}`}, ${`理由${n}`}, ${options.score ?? 80}, ${options.selected ?? true}, ${[options.tag ?? `t-${T}`]})`;
   await sql`INSERT INTO fact_articles (fact_id, article_id, role) VALUES (${fact}, ${articleId}, 'report')`;
   await sql`UPDATE articles SET grouping_status = 'complete', grouped_at = now() WHERE id = ${articleId}`;
   await publishArticle(articleId, { releasedAt: at });
@@ -140,7 +140,7 @@ test("a report discovered after Beijing midnight keeps the selected representati
   const checkTimeline = async () => {
     const timeline = await loadTimeline(query);
     assert.deepEqual(timeline.cards.map((card) => [card.item.id, card.anchorAt]), [[official, officialAt.toISOString()]]);
-    assert.deepEqual(timeline.dayCounts, { "2026-01-01": 1 });
+    assert.deepEqual(timeline.dayCounts, { "2026-01-02": 1 });
   };
   await checkTimeline();
 
@@ -156,13 +156,14 @@ test("a representative stays at its own time when an earlier foldable report bel
   const [fact] = await sql<{ id: number }[]>`INSERT INTO facts (public_id, title)
     VALUES (${`representative-time-${T}`}, 'Launch') RETURNING id`;
   const now = new Date();
-  const early = await report(MEDIA, fact!.id, { at: new Date(+now - 3 * 60 * 60_000) });
+  const own = `rep-time-${T}`;
+  const early = await report(MEDIA, fact!.id, { at: new Date(+now - 3 * 60 * 60_000), tag: own });
   const [otherFact] = await sql<{ id: number }[]>`INSERT INTO facts (public_id, title)
     VALUES (${`middle-time-${T}`}, 'Other news') RETURNING id`;
-  const middle = await report(MEDIA, otherFact!.id, { at: new Date(+now - 60 * 60_000) });
-  const representative = await report(OFFICIAL, fact!.id, { at: new Date(+now - 30 * 60_000) });
+  const middle = await report(MEDIA, otherFact!.id, { at: new Date(+now - 60 * 60_000), tag: own });
+  const representative = await report(OFFICIAL, fact!.id, { at: new Date(+now - 30 * 60_000), tag: own });
 
-  const timeline = await loadTimeline({ channel: "all", category: null, tag: `t-${T}`, now: new Date() });
+  const timeline = await loadTimeline({ channel: "all", category: null, tag: own, now: new Date() });
   assert.deepEqual(timeline.cards.map((card) => card.item.id), [representative, middle]);
   assert.equal(timeline.cards[0]!.anchorAt, new Date(+now - 30 * 60_000).toISOString());
   assert.ok(!timeline.cards.some((card) => card.item.id === early));
