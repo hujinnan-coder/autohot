@@ -1,4 +1,4 @@
-import Fastify, { LogController, type FastifyInstance, type FastifyReply, type FastifyRequest } from "fastify";
+import Fastify, { LogController, type FastifyInstance, type FastifyReply, type FastifyRequest, type RouteOptions } from "fastify";
 import { randomUUID } from "node:crypto";
 import type { IncomingMessage } from "node:http";
 import { OAUTH_PROBE_PATHS, resolveRedirect } from "@aihot/contracts/http-policy";
@@ -29,7 +29,7 @@ class RequestLogs extends LogController {
   }
 }
 
-export async function buildApp(): Promise<FastifyInstance> {
+export async function buildApp(options?: { onRoute?: (route: RouteOptions) => void }): Promise<FastifyInstance> {
   const logs = new RequestLogs();
   const app = Fastify({
     // Access logs never record query strings (tokens).
@@ -43,6 +43,7 @@ export async function buildApp(): Promise<FastifyInstance> {
     bodyLimit: 10 * 1024 * 1024,
     routerOptions: { ignoreTrailingSlash: false, maxParamLength: 300 },
   });
+  if (options?.onRoute) app.addHook("onRoute", options.onRoute);
 
   app.setChildLoggerFactory((logger, bindings, options, request) => {
     const child = logger.child({ ...bindings, method: request.method, path: (request.url ?? "/").split("?")[0] }, options);
