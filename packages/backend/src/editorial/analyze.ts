@@ -130,11 +130,10 @@ const FactSchema = z
       quote: z.string().trim().min(1).max(400),
     }).nullable().catch(null)).catch([]),
   })
-  .nullable()
-  .catch(null);
+  .nullable();
 
 export const StructureSchema = z.object({
-  scope: z.enum(["single", "composite", "unknown"]).catch("unknown"),
+  scope: z.enum(["single", "composite", "unknown"]),
   category: z.enum(CATEGORY_KEYS).nullable().catch(null),
   tags: z.array(z.string()).max(12).catch([]),
   subjects: z.array(z.string()).max(6).catch([]),

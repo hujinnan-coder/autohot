@@ -12,7 +12,9 @@ import { closeDb, sql } from "@aihot/backend/db";
 import { upsertMaterial } from "@aihot/backend/content/materials";
 import { analyzeArticle, buildMaterial, loadAnalyzeInput, normalizeAnalysis, normalizeStructure, runAnalysis, selectionThreshold, StructureSchema, type AnalyzeInputArticle, UNDERSTAND_FLOOR } from "@aihot/backend/editorial/analyze";
 import { createSource, updateSource } from "@aihot/backend/admin/sources";
+import { groupArticle } from "@aihot/backend/events/group";
 import { processArticle, queueProcessing } from "@aihot/backend/jobs/content";
+import { ModelOutputError } from "@aihot/backend/providers/receipts";
 import { isPoolEligible } from "@aihot/backend/publication/rules";
 import { getBoss, QUEUES, stopBoss } from "@aihot/backend/jobs/queue";
 import { compactAnswerFirstSummary, enforceIdentity, MAX_BODY_CHARS, parseTranslateOutput } from "@aihot/backend/editorial/writing";
@@ -27,7 +29,13 @@ const CLASSED_SOURCE = `test-analyze-classed-${T}`;
 
 interface Req { step: AnalysisStep; marker: string; user: string }
 const requests: Req[] = [];
-const MARKERS = ["CLEAR", "RESCUE", "LOW", "OFFTOPIC", "BARE", "VAGUE", "THIN", "SENSITIVE", "推文", "WORDY", "REFUSAL", "RENUMBER", "UNMENDED", "ECOSYS", "BAD_STRUCT"];
+const invalidStructures: Record<string, object> = {
+  MISSING_SCOPE: { fact: null },
+  INVALID_SCOPE: { scope: "partial", fact: null },
+  MISSING_FACT: { scope: "unknown" },
+  INVALID_FACT: { scope: "unknown", fact: "a title" },
+};
+const MARKERS = ["CLEAR", "RESCUE", "LOW", "OFFTOPIC", "BARE", "VAGUE", "THIN", "SENSITIVE", "推文", "WORDY", "REFUSAL", "RENUMBER", "UNMENDED", "ECOSYS", "BAD_STRUCT", "INSUFFICIENT", ...Object.keys(invalidStructures)];
 // The scores sit a few points around the pack's T1 threshold and understand floor, so each case means
 // the same after a site recalibrates them: selected when the two add up to 2 × T1, written like a
 // selected item when they add up to more than 2 × FLOOR, translated otherwise.
@@ -77,6 +85,9 @@ const provider = await stub(async (_hit, req) => {
   }
   if (step === "structure") {
     if (marker === "BAD_STRUCT") return answer("invalid output");
+    const invalid = invalidStructures[marker];
+    if (invalid) return answer(invalid);
+    if (marker === "INSUFFICIENT") return answer({ scope: "unknown", fact: null });
     return answer({ category: "new-car", tags: ["新车上市", "动力电池"], subjects: ["tesla", "unknown-co"], scope: "single", fact: { title: `事实 ${marker}`, subject: "某公司", action: "发布", object: "模型", occurredAt: null, evidence: "a lab released a model", conditions: [] } });
   }
   return answer(`title_zh: 翻译标题 ${marker}\nsummary_zh: 翻译摘要 ${marker}。第二句补充影响。`);
@@ -162,7 +173,7 @@ test("the first copy stands when the provider refuses the mend, the mend changes
   }
 });
 
-test("structure retains grounded conditions, rejects invented or unseen quotes, and does not infer missing scope", async () => {
+test("structure retains grounded conditions and rejects invented or unseen quotes", async () => {
   const input = (await loadAnalyzeInput(await article("CONDITIONS", {
     bodyText: "Preview is free for Pro users until October 10.\n" + "x".repeat(11000) + "\nOnly available in the US. " + "x".repeat(MAX_BODY_CHARS) + "This late detail was not sent.",
   })))!;
@@ -173,11 +184,10 @@ test("structure retains grounded conditions, rejects invented or unseen quotes, 
     { text: "无限免费", quote: "Unlimited free access for everyone." },
     { text: "不在模型输入里的句子", quote: "This late detail was not sent." },
   ] };
-  const base = { category: "new-car", tags: [], subjects: [], fact: frame };
+  const base = { category: "new-car", tags: [], subjects: [], scope: "single", fact: frame };
   const out = normalizeStructure(StructureSchema.parse(base), input);
   assert.ok(buildMaterial(input).includes("Only available in the US."), "a condition after the old 7000-character cutoff reaches the model");
   assert.ok(buildMaterial(input).includes("后文未提供"));
-  assert.equal(out.scope, "unknown", "an older result with a fact is not proof of single scope");
   assert.deepEqual(out.fact?.conditions, frame.conditions.slice(0, 2));
   assert.equal(out.fact?.evidence, frame.evidence);
   const partial = normalizeStructure(StructureSchema.parse({ ...base, fact: { ...frame, conditions: [
@@ -191,9 +201,27 @@ test("structure retains grounded conditions, rejects invented or unseen quotes, 
   assert.equal(invented.fact?.evidence, null, "source metadata is not original evidence");
   assert.deepEqual(invented.fact?.conditions, [], "a translation does not count as an original quote");
   assert.equal(normalizeStructure(StructureSchema.parse({ ...base, scope: "composite" }), input).fact, null, "composite output cannot also claim one fact");
-  const titleOnly = normalizeStructure(StructureSchema.parse({ ...base, scope: "single" }), { ...input, bodyText: null, excerpt: null });
+  const titleOnly = normalizeStructure(StructureSchema.parse(base), { ...input, bodyText: null, excerpt: null });
   assert.equal(titleOnly.scope, "unknown", "a confident model cannot supply the missing original material");
   assert.equal(titleOnly.fact, null);
+});
+
+test("structure JSON with missing or invalid scope or fact is rejected", async () => {
+  for (const marker of Object.keys(invalidStructures)) {
+    const id = await article(marker);
+    await assert.rejects(analyzeArticle(id), ModelOutputError, marker);
+    const [receipt] = await sql`SELECT status FROM receipts WHERE purpose = 'structure_article' AND subject LIKE ${`article:${id}@%`}`;
+    assert.equal(receipt?.status, "failed", marker);
+    assert.equal((await sql`SELECT 1 FROM analyses WHERE article_id = ${id}`).length, 0, marker);
+  }
+});
+
+test("structure can explicitly report insufficient material for grouping", async () => {
+  const id = await article("INSUFFICIENT", { publishedAt: new Date() });
+  await analyzeArticle(id);
+  const { scope, fact } = (await row(id)).output;
+  assert.deepEqual({ scope, fact }, { scope: "unknown", fact: null });
+  assert.deepEqual(await groupArticle(id), { verdict: "standalone" });
 });
 
 test("a near-selected item is written like a selected one; below the floor it is translated", async () => {
@@ -334,7 +362,7 @@ const shutdownProvider = await stub(async (_hit, request) => {
   if (step === "understand" && active.writingAnswer) { active.writingAsked!.open(); await active.writingAnswer.promise; }
   const content = step === "prefilter" ? { label: "PASS", reason: "AI model release" }
     : step === "score" ? { attentionScore: SELECTING_SCORE }
-      : step === "structure" ? { category: "new-car", tags: ["新车上市"], subjects: [], fact: { title: "新新车上市" } }
+      : step === "structure" ? { category: "new-car", tags: ["新车上市"], subjects: [], scope: "unknown", fact: { title: "新新车上市" } }
         : { itemType: "new_car", authorRole: "principal", tags: ["新车上市"], editorialJudgment: "模型有明确的能力提升", titleZh: `新新车上市 ${T}`, summaryZh: "新车上市并提供了评测和价格。" };
   return { id: `stub-${active.calls.length}`, choices: [{ message: { content: JSON.stringify(content) } }], usage: { prompt_tokens: 10, completion_tokens: 10, total_tokens: 20 } };
 });

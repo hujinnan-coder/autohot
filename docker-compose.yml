@@ -45,6 +45,7 @@ services:
     restart: "no"
     command: ["sh", "-c", "node scripts/migrate.ts && node scripts/seed.ts"]
 
+  # The memory limits for api, worker and web are starting points. Adjust them to actual usage.
   api:
     <<: *backend
     command: ["node", "apps/api/src/main.ts"]
@@ -55,16 +56,37 @@ services:
     depends_on:
       setup:
         condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3001/api/health', { redirect: 'manual' }).then(r => process.exit(r.ok ? 0 : 1), () => process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    logging: &app-logging
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    deploy:
+      resources:
+        limits:
+          memory: 768m
 
   worker:
     <<: *backend
     command: ["node", "apps/worker/src/main.ts"]
+    # The worker's heartbeat is recorded in settings.heartbeat.worker (operations/heartbeat.ts).
     # Let the worker drain backups and paid calls (STOP_TIMEOUT_MS, 470 s), then close its database.
     # Docker sends SIGTERM to the worker first; after this window it kills the remaining processes.
     stop_grace_period: 515s
     depends_on:
       setup:
         condition: service_completed_successfully
+    logging: *app-logging
+    deploy:
+      resources:
+        limits:
+          memory: 1g
 
   web:
     <<: *app
@@ -82,7 +104,18 @@ services:
       - "${PORT:-3000}:3000"
     depends_on:
       api:
-        condition: service_started
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/', { redirect: 'manual' }).then(r => process.exit(r.status >= 200 && r.status < 400 ? 0 : 1), () => process.exit(1))"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    logging: *app-logging
+    deploy:
+      resources:
+        limits:
+          memory: 512m
 
   caddy:
     image: caddy:2-alpine

@@ -7,9 +7,15 @@ import { fakeApi, startWebServer, type WebServer } from "./web-server.ts";
 
 let web: WebServer;
 const upstreamPaths: string[] = [];
-const api = fakeApi((url, _res, req) => {
+const mediaCsp = "default-src 'none'; style-src 'unsafe-inline'; sandbox";
+const api = fakeApi((url, res, req) => {
   upstreamPaths.push(req.url ?? "");
   if (url.pathname === "/api/site/timeline") return { cards: [], nextCursor: null, dayCounts: {}, hot: [], filters: { category: null, channel: null, tag: null } };
+  if (url.pathname === "/api/img-proxy") {
+    res.setHeader("Content-Type", "image/svg+xml");
+    res.setHeader("Content-Security-Policy", mediaCsp);
+    return res.end('<svg xmlns="http://www.w3.org/2000/svg"/>');
+  }
 });
 
 before(async () => { web = await startWebServer(api); });
@@ -49,4 +55,22 @@ test("origin-form slashes keep the router's homepage and unknown-route semantics
   }
   assert.equal(web.logs(), "");
   assert.ok(upstreamPaths.every((path) => path.startsWith("/api/site/")));
+});
+
+test("a page served directly carries Caddy's page security headers", async () => {
+  const res = await raw("/", "GET");
+  assert.equal(res.status, 200, web.logs());
+  assert.equal(res.headers["x-frame-options"], "SAMEORIGIN");
+  assert.equal(res.headers["x-content-type-options"], "nosniff");
+  assert.equal(res.headers["referrer-policy"], "strict-origin-when-cross-origin");
+  assert.equal(res.headers["permissions-policy"], "camera=(), microphone=(), geolocation=()");
+  assert.equal(res.headers["content-security-policy"], undefined);
+  assert.equal(res.headers["strict-transport-security"], undefined);
+});
+
+test("the web proxy preserves the media response's CSP", async () => {
+  const res = await raw("/api/img-proxy", "GET");
+  assert.equal(res.status, 200, web.logs());
+  assert.equal(res.headers["content-type"], "image/svg+xml");
+  assert.equal(res.headers["content-security-policy"], mediaCsp);
 });

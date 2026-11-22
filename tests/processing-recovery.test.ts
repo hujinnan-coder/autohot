@@ -33,7 +33,7 @@ const provider = await stub(async (_hit, request) => {
   }
   const content = step === "prefilter" ? { label: original ? "BLOCK" : "PASS", reason: "local fixture" }
     : step === "score" ? { attentionScore: SELECTING_SCORE }
-    : step === "structure" ? { category: "new-car", tags: [], subjects: [], fact: null }
+    : step === "structure" ? { category: "new-car", tags: [], subjects: [], scope: "unknown", fact: null }
     : { itemType: "new_car", authorRole: "principal", tags: ["新车上市"], editorialJudgment: "模型能力提升", titleZh: `新判断 ${T}`, summaryZh: "新车上市并提供评测和价格。" };
   return { choices: [{ message: { content: JSON.stringify(content) } }] };
 });

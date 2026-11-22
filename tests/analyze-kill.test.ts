@@ -27,7 +27,7 @@ const provider = await stub(async (_hit, request) => {
   }
   const content = step === "prefilter" ? { label: "PASS", reason: "AI model release" }
     : step === "score" ? { attentionScore: SELECTING_SCORE }
-      : step === "structure" ? { category: "new-car", tags: ["新车上市"], subjects: [], fact: { title: "新新车上市" } }
+      : step === "structure" ? { category: "new-car", tags: ["新车上市"], subjects: [], scope: "unknown", fact: { title: "新新车上市" } }
         : { itemType: "new_car", authorRole: "principal", tags: ["新车上市"], editorialJudgment: "模型有明确的能力提升", titleZh: `新新车上市 ${T}`, summaryZh: "新车上市并提供了评测和价格。" };
   return { id: `stub-${calls.length}`, choices: [{ message: { content: JSON.stringify(content) } }], usage: { prompt_tokens: 10, completion_tokens: 10, total_tokens: 20 } };
 });
