@@ -75,8 +75,17 @@ async function serveStatic(pathname: string, res: import("node:http").ServerResp
   return true;
 }
 
+const SECURITY_HEADERS = {
+  "X-Frame-Options": "SAMEORIGIN",
+  "X-Content-Type-Options": "nosniff",
+  "Referrer-Policy": "strict-origin-when-cross-origin",
+  "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
+};
+
 // One bad request must never take the process down: answer it and keep serving.
 const server = createServer((req, res) => {
+  // Match Caddy for every response when the web server is reached directly.
+  for (const [name, value] of Object.entries(SECURITY_HEADERS)) if (!res.hasHeader(name)) res.setHeader(name, value);
   handle(req, res).catch((error: unknown) => {
     const bad = error instanceof BadRequest || error instanceof URIError;
     if (!bad) logError(error, { msg: "web request failed", method: req.method, path: (req.url ?? "").split("?")[0]!.slice(0, 200) });
@@ -107,13 +116,6 @@ function pageResponse(req: import("node:http").IncomingMessage, res: import("nod
   res.writeHead = ((status: number, messageOrHeaders?: string | import("node:http").OutgoingHttpHeaders, headers?: import("node:http").OutgoingHttpHeaders) => {
     const outgoing = typeof messageOrHeaders === "string" ? headers : messageOrHeaders;
     for (const [name, value] of Object.entries(outgoing ?? {})) if (value !== undefined) res.setHeader(name, value);
-    // Match Caddy's page security headers when the web server is reached directly.
-    for (const [name, value] of Object.entries({
-      "X-Frame-Options": "SAMEORIGIN",
-      "X-Content-Type-Options": "nosniff",
-      "Referrer-Policy": "strict-origin-when-cross-origin",
-      "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
-    })) if (!res.hasHeader(name)) res.setHeader(name, value);
     // Download managers can treat prefetched .data with the unknown text/x-script type as a file.
     // Turbo-stream is text decoded from the response body; its client does not depend on the MIME.
     if (url.pathname.endsWith(".data") && res.getHeader("Content-Type") === "text/x-script") {

@@ -1,6 +1,7 @@
 // Failure cases: an origin-form // path is read as a URL authority and throws a 500; an unknown
 // double-slash path becomes a different host's root; HEAD or single-fetch data follows another rule.
 import assert from "node:assert/strict";
+import { readdirSync } from "node:fs";
 import { request } from "node:http";
 import { after, before, test } from "node:test";
 import { fakeApi, startWebServer, type WebServer } from "./web-server.ts";
@@ -19,7 +20,7 @@ const api = fakeApi((url, res, req) => {
 });
 
 before(async () => { web = await startWebServer(api); });
-after(() => web.stop());
+after(() => web?.stop());
 
 function raw(path: string, method: "GET" | "HEAD") {
   return new Promise<{ status: number; headers: import("node:http").IncomingHttpHeaders; body: string }>((resolve, reject) => {
@@ -57,15 +58,19 @@ test("origin-form slashes keep the router's homepage and unknown-route semantics
   assert.ok(upstreamPaths.every((path) => path.startsWith("/api/site/")));
 });
 
-test("a page served directly carries Caddy's page security headers", async () => {
-  const res = await raw("/", "GET");
-  assert.equal(res.status, 200, web.logs());
-  assert.equal(res.headers["x-frame-options"], "SAMEORIGIN");
-  assert.equal(res.headers["x-content-type-options"], "nosniff");
-  assert.equal(res.headers["referrer-policy"], "strict-origin-when-cross-origin");
-  assert.equal(res.headers["permissions-policy"], "camera=(), microphone=(), geolocation=()");
-  assert.equal(res.headers["content-security-policy"], undefined);
-  assert.equal(res.headers["strict-transport-security"], undefined);
+test("pages, static files, redirects, errors and API responses all carry Caddy's security headers", async () => {
+  const css = readdirSync(new URL("../build/client/assets/", import.meta.url)).find((file) => file.endsWith(".css"));
+  assert.ok(css, "the built site has a stylesheet");
+  // Origin-form // now serves the homepage. A malformed asset path still reaches the error handler.
+  for (const [path, status] of [["/", 200], [`/assets/${css}`, 200], ["/about/", 301], ["/assets/%.css", 400], ["/api/health", 200]] as const) {
+    const res = await raw(path, "GET");
+    assert.equal(res.status, status, `${path}: ${web.logs()}`);
+    assert.equal(res.headers["x-frame-options"], "SAMEORIGIN", path);
+    assert.equal(res.headers["x-content-type-options"], "nosniff", path);
+    assert.equal(res.headers["referrer-policy"], "strict-origin-when-cross-origin", path);
+    assert.equal(res.headers["permissions-policy"], "camera=(), microphone=(), geolocation=()", path);
+    assert.equal(res.headers["strict-transport-security"], undefined, path);
+  }
 });
 
 test("the web proxy preserves the media response's CSP", async () => {
