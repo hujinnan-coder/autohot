@@ -9,6 +9,7 @@ import { setTimeout as delay } from "node:timers/promises";
 import { ADMIN } from "@aihot/site";
 import { SIGN_IN_HOME } from "@aihot/contracts/admin";
 import { isPrivatePage } from "@aihot/contracts/http-policy";
+import type { ReportDetail } from "@aihot/contracts/site";
 import { CATEGORY_KEYS } from "@aihot/contracts/taxonomy";
 import { UNSAFE_decodeViaTurboStream } from "react-router";
 import { fakeApi, itemDetail, startWebServer, type WebServer } from "./web-server.ts";
@@ -17,6 +18,7 @@ import { fakeApi, itemDetail, startWebServer, type WebServer } from "./web-serve
 const NO_UPSTREAM: Record<string, string> = {
   "agent.tsx": "/api/health returns no-store; forwarding it would reduce the page's 300 seconds to zero",
 };
+const MINUTE_ROUTES = ["report-detail.tsx", "report-latest.tsx", "daily-archive.tsx", "story.tsx", "hot.tsx"];
 
 // Start just after the first comma. Ignore commas inside literals, objects, arrays and nested calls.
 function hasUpstream(args: string): boolean {
@@ -37,6 +39,7 @@ test("route cache architecture forwards upstream headers for long-lived API page
   const routes = new URL("../app/routes/", import.meta.url);
   const files = readdirSync(routes).filter((file) => file.endsWith(".tsx"));
   for (const file of Object.keys(NO_UPSTREAM)) assert.ok(files.includes(file), `${file}: remove the obsolete NO_UPSTREAM entry`);
+  for (const file of MINUTE_ROUTES) assert.ok(files.includes(file), `${file}: update the one-minute cache guard`);
   for (const file of files) {
     const source = readFileSync(new URL(file, routes), "utf8");
     const calls = [...source.matchAll(/\bcachedPage\s*\(\s*(\d+)\s*,/g)];
@@ -56,6 +59,13 @@ test("route cache architecture forwards upstream headers for long-lived API page
       }
       assert.match(source, /\bresponseHeaders\s*:/, `${file}: collect upstream responseHeaders`);
     }
+    if (MINUTE_ROUTES.includes(file)) {
+      assert.match(source, /\bresponseHeaders\s*:\s*upstream\b/, `${file}: collect the upstream deadline`);
+      assert.ok(calls.length > 0 && longLived.length === 0, `${file}: cachedPage must use at most 60 seconds`);
+      for (const call of calls) {
+        assert.ok(hasUpstream(source.slice(call.index + call[0].length)), `${file}: cachedPage needs a third argument`);
+      }
+    }
   }
 });
 
@@ -64,6 +74,9 @@ let origin: string;
 let deadline: number;
 let itemDeadline: number;
 let itemFreshness = 60;
+let reportDeadline: number;
+let reportFreshness = 60;
+const reportKey = "2026-10-04";
 /** Root metadata answers only after the selected deadline has passed: a slow sibling loader. */
 let metaAfterDeadline = false;
 const apiCookies: Array<string | undefined> = [];
@@ -82,6 +95,19 @@ const api = fakeApi(async (url, res, req) => {
     return { filters, cards: [], nextCursor: null, dayCounts: [], hot: null };
   }
   if (url.pathname === "/api/site/hot") return { entries: [] };
+  if (url.pathname === `/api/site/reports/daily/${reportKey}`) {
+    res.setHeader("X-Accel-Expires", `@${Math.floor(Date.now() / 1000) + 60}`);
+    return {
+      kind: "daily", key: reportKey, issueNumber: 1, title: "测试日报", generatedAt: "2026-10-04T00:00:00Z",
+      lead: { title: "测试日报", leadParagraph: "本期测试导读。" }, leadItemId: null, overview: null, highlights: [], sections: [], flashes: [], cover: null,
+      metrics: {}, readingMinutes: 1, prev: null, next: null, mentions: [],
+    } satisfies ReportDetail;
+  }
+  if (url.pathname === `/api/site/reports/daily/navigation/${reportKey}`) {
+    reportDeadline = Math.floor(Date.now() / 1000) + reportFreshness;
+    res.setHeader("X-Accel-Expires", `@${reportDeadline}`);
+    return { items: [] };
+  }
   if (url.pathname === "/api/site/echo-client") return { forwarded: req.headers["x-forwarded-for"], real: req.headers["x-real-ip"] };
   if (url.pathname === "/api/site/download") {
     res.setHeader("Content-Type", "text/markdown; charset=utf-8");
@@ -257,6 +283,19 @@ httpTest("item and original pages share the upstream deadline, at most a minute"
       assert.ok(browser > 0 && browser <= seconds && shared === browser, path);
       await res.text();
     }
+  }
+});
+
+httpTest("report detail honors its upstream deadline, including one shorter than a minute", async () => {
+  for (const seconds of [60, 20]) {
+    reportFreshness = seconds;
+    const res = await fetch(`${origin}/daily/${reportKey}`);
+    assert.equal(res.status, 200);
+    const expiry = res.headers.get("X-Accel-Expires") ?? "";
+    assert.match(expiry, /^@\d+$/);
+    assert.ok(Number(expiry.slice(1)) <= reportDeadline);
+    if (seconds < 60) assert.equal(expiry, `@${reportDeadline}`);
+    assert.match(await res.text(), /本期测试导读/);
   }
 });
 

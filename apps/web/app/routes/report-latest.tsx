@@ -20,7 +20,7 @@ export async function loader({ request }: Route.LoaderArgs) {
   const kind = kindFromPath(new URL(request.url).pathname);
   const upstream = new Headers();
   const { index, report } = await loadOr404<ReportLatestPage>(`/api/site/reports/${kind}/latest-page`, { responseHeaders: upstream, signal: request.signal });
-  return cachedPage(600, { kind, report, index, today: beijingDate(Date.now()) }, upstream);
+  return cachedPage(60, { kind, report, index, today: beijingDate(Date.now()) }, upstream);
 }
 
 export function meta({ loaderData }: Route.MetaArgs) {

@@ -30,7 +30,7 @@ export async function loader({ request, params }: Route.LoaderArgs) {
     loadOr404<ReportDetail>(`/api/site/reports/${kind}/${key}`, { responseHeaders: upstream, signal: request.signal }),
     apiGet<ReportNavigationResponse>(`/api/site/reports/${kind}/navigation/${key}`, { responseHeaders: upstream, signal: request.signal }),
   ]);
-  return cachedPage(3600, { report, index, today: beijingDate(Date.now()) }, upstream);
+  return cachedPage(60, { report, index, today: beijingDate(Date.now()) }, upstream);
 }
 
 export function meta({ loaderData }: Route.MetaArgs) {

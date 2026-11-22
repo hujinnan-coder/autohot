@@ -20,7 +20,7 @@ export const { clientLoader, shouldRevalidate } = pageReuse<typeof loader>();
 export async function loader({ request }: { request: Request }) {
   const upstream = new Headers();
   const { items: index } = await apiGet<ReportIndexResponse>("/api/site/reports/daily", { responseHeaders: upstream, signal: request.signal });
-  return cachedPage(600, { index, today: beijingDate(Date.now()) }, upstream);
+  return cachedPage(60, { index, today: beijingDate(Date.now()) }, upstream);
 }
 
 export function meta({ loaderData }: { loaderData?: { index: ReportIndexEntry[] } }) {

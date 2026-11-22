@@ -155,6 +155,7 @@ export function registerSite(app: FastifyInstance) {
 
   app.get("/api/site/hot", siteHandler(async (req, reply) => {
     const data = await loadHot();
+    reply.header("X-Accel-Expires", `@${Math.floor(Date.now() / 1000) + 60}`);
     return sendJsonWithEtag(req, reply, data, { etagPrefix: "hot", cacheControl: "public, max-age=30, s-maxage=30" });
   }));
 
@@ -164,9 +165,10 @@ export function registerSite(app: FastifyInstance) {
     if (found.kind === "merged") {
       return reply.code(308).header("Location", `/api/site/stories/${found.target}`).header("Cache-Control", "public, max-age=300").send({ mergedInto: found.target });
     }
-    if (found.kind === "not_found") return sendProblem(req, reply, { status: 404, code: "not_found", detail: "story not found", cacheControl: "public, max-age=60" });
+    if (found.kind === "not_found") return sendProblem(req, reply, { status: 404, code: "not_found", detail: "story not found" });
     const data = await loadStoryDetail(found.storyId);
-    if (!data) return sendProblem(req, reply, { status: 404, code: "not_found", detail: "story not public", cacheControl: "public, max-age=60" });
+    if (!data) return sendProblem(req, reply, { status: 404, code: "not_found", detail: "story not public" });
+    reply.header("X-Accel-Expires", `@${Math.floor(Date.now() / 1000) + 60}`);
     return sendJsonWithEtag(req, reply, data, { etagPrefix: "story", cacheControl: "public, max-age=60, s-maxage=60" });
   }));
 
@@ -174,6 +176,7 @@ export function registerSite(app: FastifyInstance) {
     const kind = (req.params as { kind: string }).kind;
     if (!["daily", "weekly", "monthly"].includes(kind)) return sendProblem(req, reply, { status: 404, code: "not_found", detail: "unknown report kind" });
     const body: ReportIndexResponse = { kind: kind as ReportKind, items: await listReports(kind as ReportKind) };
+    reply.header("X-Accel-Expires", `@${Math.floor(Date.now() / 1000) + 60}`);
     return sendJsonWithEtag(req, reply, body, { etagPrefix: "reports", cacheControl: "public, max-age=60, s-maxage=60" });
   }));
 
@@ -184,6 +187,7 @@ export function registerSite(app: FastifyInstance) {
     const index = await listReports(kind as ReportKind);
     const report = index[0] ? await loadReport(kind as ReportKind, index[0].key) : null;
     const body: ReportLatestPage = { index: reportNavigation(kind as ReportKind, index, report?.key ?? ""), report };
+    reply.header("X-Accel-Expires", `@${Math.floor(Date.now() / 1000) + 60}`);
     return sendJsonWithEtag(req, reply, body, { etagPrefix: "report-latest", cacheControl: "public, max-age=60, s-maxage=60" });
   }));
 
@@ -191,6 +195,7 @@ export function registerSite(app: FastifyInstance) {
     const { kind, key } = req.params as { kind: string; key: string };
     if (!["daily", "weekly", "monthly"].includes(kind) || !/^\d{4}-(\d{2}(-\d{2})?|W\d{2})$/.test(key)) return sendProblem(req, reply, { status: 404, code: "not_found", detail: "report not found" });
     const body: ReportNavigationResponse = { items: await loadReportNavigation(kind as ReportKind, key) };
+    reply.header("X-Accel-Expires", `@${Math.floor(Date.now() / 1000) + 60}`);
     return sendJsonWithEtag(req, reply, body, { etagPrefix: "report-navigation", cacheControl: "public, max-age=60, s-maxage=60" });
   }));
 
@@ -198,6 +203,7 @@ export function registerSite(app: FastifyInstance) {
     const { month } = req.params as { month: string };
     if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(month)) return sendProblem(req, reply, { status: 404, code: "not_found", detail: "month not found" });
     const body: ReportNavigationResponse = { items: await loadReportMonth("daily", month) };
+    reply.header("X-Accel-Expires", `@${Math.floor(Date.now() / 1000) + 60}`);
     return sendJsonWithEtag(req, reply, body, { etagPrefix: "report-month", cacheControl: "public, max-age=60, s-maxage=60" });
   }));
 
@@ -207,8 +213,9 @@ export function registerSite(app: FastifyInstance) {
       return sendProblem(req, reply, { status: 404, code: "not_found", detail: "report not found" });
     }
     const data = await loadReport(kind as ReportKind, key);
-    if (!data) return sendProblem(req, reply, { status: 404, code: "not_found", detail: "report not found", cacheControl: "public, max-age=60" });
-    return sendJsonWithEtag(req, reply, data, { etagPrefix: "report", cacheControl: "public, max-age=120, s-maxage=120" });
+    if (!data) return sendProblem(req, reply, { status: 404, code: "not_found", detail: "report not found" });
+    reply.header("X-Accel-Expires", `@${Math.floor(Date.now() / 1000) + 60}`);
+    return sendJsonWithEtag(req, reply, data, { etagPrefix: "report", cacheControl: "public, max-age=60, s-maxage=60" });
   }));
 
   // Markdown export: attachment, 404 when there is nothing to export (same predicate as the button).
