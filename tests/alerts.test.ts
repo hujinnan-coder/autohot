@@ -2,7 +2,7 @@
 // allows (hourly for reader impact), closed with one recovery message.
 import { stub, tag } from "./setup.ts";
 import assert from "node:assert/strict";
-import { after, before, test } from "node:test";
+import { after, before, test, type TestContext } from "node:test";
 import { closeDb, sql } from "@aihot/backend/db";
 import { upsertMaterial } from "@aihot/backend/content/materials";
 import { getBoss, stopBoss } from "@aihot/backend/jobs/queue";
@@ -418,12 +418,66 @@ test("failed deliveries remain open after a day and through resend until confirm
 test("a refused provider stays open without a newer successful call", async () => {
   const now=Date.now();
   const [r]=await sql<{id:number}[]>`INSERT INTO receipts(logical_key,service,purpose,status) VALUES('lifecycle-refusal','deepseek','summarize_article','failed') RETURNING id`;
-  for(let n=1;n<=3;n++) await sql`INSERT INTO receipt_attempts(receipt_id,attempt,service,status,error) VALUES(${r!.id},${n},'deepseek','failed','deepseek HTTP 402 insufficient balance')`;
-  assert.ok((await checkAlerts(now)).open.includes("provider.refused.deepseek"));
-  await sql`UPDATE receipt_attempts SET started_at=now()-interval '2 hours' WHERE receipt_id=${r!.id}`;
-  assert.ok((await checkAlerts(now+2*3600_000)).open.includes("provider.refused.deepseek"), "silence cannot establish restored access");
-  await sql`INSERT INTO receipt_attempts(receipt_id,attempt,service,status) VALUES(${r!.id},4,'deepseek','received')`;
-  assert.ok((await checkAlerts(now+2*3600_000+60_000)).sent.includes("provider.refused.deepseek:recovered"));
+  try {
+    for(let n=1;n<=3;n++) await sql`INSERT INTO receipt_attempts(receipt_id,attempt,service,status,error) VALUES(${r!.id},${n},'deepseek','failed','deepseek HTTP 402 insufficient balance')`;
+    assert.ok((await checkAlerts(now)).open.includes("provider.refused.deepseek"));
+    await sql`UPDATE receipt_attempts SET started_at=now()-interval '2 hours' WHERE receipt_id=${r!.id}`;
+    assert.ok((await checkAlerts(now+2*3600_000)).open.includes("provider.refused.deepseek"), "silence cannot establish restored access");
+    await sql`INSERT INTO receipt_attempts(receipt_id,attempt,service,status) VALUES(${r!.id},4,'deepseek','received')`;
+    assert.ok((await checkAlerts(now+2*3600_000+60_000)).sent.includes("provider.refused.deepseek:recovered"));
+  } finally { await sql`DELETE FROM receipts WHERE id = ${r!.id}`; }
+});
+
+const MISSING_PRICES = "cost.prices.missing";
+const PRICE_TEST_SERVICE = "test-cost-prices";
+
+async function priceAttempt(t: TestContext, cost: number | null) {
+  const [r] = await sql<{ id: number }[]>`INSERT INTO receipts (logical_key, service, purpose, status)
+    VALUES (${`cost-prices-${tag()}`}, ${PRICE_TEST_SERVICE}, 'test', 'completed') RETURNING id`;
+  t.after(async () => {
+    await sql`DELETE FROM receipts WHERE id = ${r!.id}`;
+    await sql`UPDATE settings SET value = value - ${MISSING_PRICES}::text WHERE key = 'alerts.state'`;
+  });
+  await sql`INSERT INTO receipt_attempts (receipt_id, attempt, service, origin, status, cost, currency, cost_basis)
+    VALUES (${r!.id}, 1, ${PRICE_TEST_SERVICE}, 'live', ${cost === null ? "pending" : "received"},
+      ${cost}, ${cost === null ? null : "CNY"}, ${cost === null ? null : "actual"})`;
+}
+
+test("an uncosted live attempt reaches the 09:00 digest when no prices have been entered", async (t) => {
+  await priceAttempt(t, null);
+  const result = await checkAlerts();
+  // A "later" follow-up never goes out as an immediate alert, whatever earlier tests left in the tables.
+  assert.ok(!result.open.includes(MISSING_PRICES));
+  assert.ok(!result.sent.includes(MISSING_PRICES));
+
+  const before = messages.length;
+  await sendDigest();
+  const digest = messages.slice(before).join("\n");
+  assert.match(digest, /过去 24 小时 \d+ 次付费调用没有费用记录/);
+  assert.match(digest, /录入峰值单价/);
+});
+
+test("entering a price clears the missing-price follow-up the same day", async (t) => {
+  await priceAttempt(t, null);
+  await sendDigest();
+  await sql`INSERT INTO service_prices (service, model, currency, input_per_mtok) VALUES (${PRICE_TEST_SERVICE}, '', 'CNY', 0.1)`;
+  t.after(async () => { await sql`DELETE FROM service_prices WHERE service = ${PRICE_TEST_SERVICE}`; });
+
+  const before = messages.length;
+  await sendDigest();
+  assert.ok(!messages.slice(before).join("\n").includes("成本页没有单价"));
+});
+
+test("recorded attempt costs do not raise the missing-price follow-up", async (t) => {
+  await priceAttempt(t, 0.1);
+  // The count is global over the last day: drop what other cases left uncosted so absence is decisive.
+  await sql`DELETE FROM receipt_attempts WHERE cost IS NULL`;
+  const result = await checkAlerts();
+  assert.ok(!result.open.includes(MISSING_PRICES));
+  assert.ok(!result.sent.includes(MISSING_PRICES));
+  const before = messages.length;
+  await sendDigest();
+  assert.ok(!messages.slice(before).join("\n").includes("成本页没有单价"));
 });
 
 async function costAlertsAt(day: string, time = "00:10") {

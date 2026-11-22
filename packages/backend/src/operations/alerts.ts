@@ -434,6 +434,7 @@ async function jinaMonthlyCost(now: number): Promise<Finding[]> {
 }
 
 const COST_BALANCE_PREFIX = "cost.balance.";
+const PRICE_KEY = "cost.prices.missing";
 type CostBudget = Partial<Pick<AdminCosts["budget"], "alertBalance" | "monthlyCNY" | "monthlyUSD">>;
 
 function addDailyCNY(totals: Map<string, number>, day: string, spend: { amount: number; currency: string }[]) {
@@ -497,6 +498,20 @@ async function costSpendFindings(now: number, today: string, spikeKey: string | 
     action: "去后台成本页核对消耗，决定是否调整用量或预算",
   });
   return findings;
+}
+
+async function costPriceFindings(): Promise<Finding[]> {
+  const [r] = await sql<{ prices: number; uncosted: number }[]>`
+    SELECT (SELECT count(*)::int FROM service_prices) AS prices,
+           (SELECT count(*)::int FROM receipt_attempts
+             WHERE cost IS NULL AND origin = 'live' AND started_at > now() - interval '1 day') AS uncosted`;
+  if (!r || r.prices > 0 || r.uncosted === 0) return [];
+  return [{
+    key: PRICE_KEY,
+    level: "later",
+    title: "成本页没有单价，花费无法估算",
+    detail: `过去 24 小时 ${r.uncosted} 次付费调用没有费用记录。去后台 → 成本，按供应商价目页录入峰值单价`,
+  }];
 }
 
 type PrivateNotice = ReturnType<typeof formatAlert> & { id: string; recovery: boolean };
@@ -597,6 +612,7 @@ async function checkCostAlerts(now: number, state: AlertState, sent: string[]) {
     if (!sentToday(budgetKey) && !findings.some(({ key }) => key === budgetKey)) delete state[budgetKey];
     for (const finding of findings) await tell(finding);
   }
+  // Missing prices is a "later" follow-up: like the others it waits for the 09:00 digest (sendDigest), not an alert.
 }
 
 const DAILY_PREFIX = "report.daily:";
@@ -907,7 +923,7 @@ export async function restoreFollowUp(key: string, reason: string, actor: string
 /** 09:00: the open follow-ups, one list; nothing when there are none. Closures whose problem is gone lapse here.
  *  Agent-only handoffs stay on the ops list and are not part of the owner's message. */
 export async function sendDigest(now = Date.now()) {
-  const found = (await collectFindings(now)).filter((f) => f.level === "later");
+  const found = [...(await collectFindings(now)).filter((f) => f.level === "later"), ...await costPriceFindings()];
   const dismissed = await dismissedFollowUps(found, now);
   const lapsed = Object.keys(await savedDismissals()).filter((key) => !dismissed[key]);
   if (lapsed.length) await sql`UPDATE settings SET value = value - ${sql.array(lapsed)}::text[], updated_at = now() WHERE key = 'alerts.dismissed'`;
