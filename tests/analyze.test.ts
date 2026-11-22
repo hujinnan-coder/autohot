@@ -6,11 +6,13 @@ import { gate, pointModels, Reply, stub, tag } from "./setup.ts";
 import { analysisStep, SELECTING_SCORE, type AnalysisStep } from "./analysis-steps.ts";
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
+import { existsSync, readFileSync } from "node:fs";
+import path from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
 import { after, before, test } from "node:test";
 import { closeDb, sql } from "@aihot/backend/db";
 import { upsertMaterial } from "@aihot/backend/content/materials";
-import { analyzeArticle, buildMaterial, loadAnalyzeInput, normalizeAnalysis, normalizeStructure, runAnalysis, selectionThreshold, StructureSchema, type AnalyzeInputArticle, UNDERSTAND_FLOOR } from "@aihot/backend/editorial/analyze";
+import { analyzeArticle, buildMaterial, loadAnalyzeInput, normalizeAnalysis, normalizeStructure, runAnalysis, scoresSelect, selectionThreshold, StructureSchema, type AnalysisRun, type AnalyzeInputArticle, UNDERSTAND_FLOOR } from "@aihot/backend/editorial/analyze";
 import { createSource, updateSource } from "@aihot/backend/admin/sources";
 import { groupArticle } from "@aihot/backend/events/group";
 import { processArticle, queueProcessing } from "@aihot/backend/jobs/content";
@@ -21,7 +23,9 @@ import { compactAnswerFirstSummary, enforceIdentity, MAX_BODY_CHARS, parseTransl
 import { READER_WORDING } from "@aihot/industry/wording";
 import { SELECTION } from "@aihot/industry/selection";
 import { ITEM_TYPES } from "@aihot/industry/taxonomy";
+import { parseSelectionGoldJsonl } from "../scripts/eval-selection-core.ts";
 
+const REPO_ROOT = path.resolve(import.meta.dirname, "..");
 const T = tag();
 const SOURCE = `test-analyze-${T}`;
 const X_SOURCE = `test-analyze-x-${T}`;
@@ -299,6 +303,34 @@ test("guards: a company the input does not name is not written in; long summarie
   assert.ok(runOn.startsWith(head) && "，；".includes(runOn[head.length]!), head);
   assert.deepEqual(parseTranslateOutput("title_zh: 标题\nsummary_zh: 第一句。\n第二句。"), { titleZh: "标题", summaryZh: "第一句。\n第二句。", bodyZh: "" });
   assert.equal(parseTranslateOutput("title_zh: 标题\nbody_zh: 我们懂你。\n\n来源：X：PixVerse (@PixVerse)").bodyZh, "我们懂你。", "a repeated prompt line is dropped");
+});
+
+test("the pack's thresholds stay in the order the scoring and writing steps assume", () => {
+  const t = SELECTION.thresholds;
+  const classes = Object.values(SELECTION.classes).map((c) => c.threshold);
+  assert.ok(SELECTION.browseFloor < SELECTION.understandFloor, "browseFloor must sit below understandFloor");
+  assert.ok(SELECTION.understandFloor < t.T1, "understandFloor must sit below every selecting threshold");
+  for (const [tier, v] of Object.entries(t)) assert.ok(v < t.T2 || tier === "T2", `${tier} must not exceed the media threshold`);
+  for (const v of classes) assert.ok(v >= t.T1 && v < t.T2, "a class floor raises the official tiers, never the media one");
+});
+
+test("scoresSelect needs two scores at the threshold, and both of them", () => {
+  const scores = (values: number[], threshold: number | null) =>
+    ({ model: "stub", threshold, values, receiptIds: [], reused: false }) as NonNullable<AnalysisRun["scores"]>;
+  assert.equal(scoresSelect(scores([58, 58], 58)), true);
+  assert.equal(scoresSelect(scores([57, 57], 58)), false);
+  assert.equal(scoresSelect(scores([58], 58)), false);
+  assert.equal(scoresSelect(scores([90, 90], null)), false);
+  assert.equal(scoresSelect({ ...scores([90, 90], 58), refused: true }), false);
+  assert.equal(scoresSelect(null), false);
+});
+
+test("the gold set parses, when one exists", (t) => {
+  const file = path.resolve(REPO_ROOT, ".data/gold.jsonl");
+  if (!existsSync(file)) return t.skip("缺少 .data/gold.jsonl，护栏未生效");
+  const rows = parseSelectionGoldJsonl(readFileSync(file, "utf8"));
+  assert.ok(rows.length > 0);
+  assert.equal(new Set(rows.map((r) => r.caseId)).size, rows.length);
 });
 
 test("a source class raises its tier's threshold to the class floor and never lowers one", () => {
