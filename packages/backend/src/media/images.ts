@@ -106,10 +106,18 @@ async function fetchOriginal(url: string): Promise<GuardedResponse> {
   const allowed = upstreamAllowed();
   if (!allowed.ok) throw new ImageBudgetExceeded(allowed.reason);
   const video = isXVideoUrl(url);
+  // Weibo's image CDN (wx*/tvax*/tva*.sinaimg.cn) serves plain tool user-agents from domestic IPs
+  // and 403s both browser and crawler UAs on datacenter exits, signed URLs included: fetch it
+  // directly with a bare UA, the egress route is where those requests die.
+  const sinaimg = /\.sinaimg\.cn$/.test(new URL(url).hostname);
   const res = await guardedFetch(url, {
     timeoutMs: 20_000, maxBytes: 15 * 1024 * 1024,
-    headers: { accept: video ? "video/mp4" : "image/avif,image/webp,image/*,*/*;q=0.8" },
+    headers: {
+      accept: video ? "video/mp4" : "image/avif,image/webp,image/*,*/*;q=0.8",
+      ...(sinaimg ? { "user-agent": "curl/8" } : {}),
+    },
     ...(video ? { redirectPolicy: "same-origin" as const } : {}),
+    ...(sinaimg ? { route: "direct" as const } : {}),
   });
   recordUpstream(res.body.length);
   if (res.status !== 200) throw new UpstreamStatus(res.status);
