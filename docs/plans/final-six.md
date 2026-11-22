@@ -293,7 +293,7 @@ GROUP BY 1 ORDER BY 1;
 SELECT r.purpose, count(*) AS calls,
        percentile_cont(0.95) WITHIN GROUP (ORDER BY a.latency_ms) AS p95_ms
 FROM receipt_attempts a JOIN receipts r ON r.id = a.receipt_id
-WHERE r.purpose IN ('group_article','group_review','group_signal','group_card','group_card_review')
+WHERE r.purpose IN ('group_article','group_review','group_signal','group_card','group_card_review','group_story','group_story_review')
   AND a.started_at > now() - interval '14 days'
 GROUP BY 1;
 
@@ -315,7 +315,7 @@ GROUP BY 1 ORDER BY 1;
 
 归组总耗时 − 模型延迟 ≈ 召回 + 归组写库；再用 ⑤ 的池规模对照 ① 的 P95，就能算出"池到多大时 P95 越过 10 秒"。
 
-两处容易漏的细节：② 的 `purpose` 必须列全（实测 `packages/backend/src` 里全部取值是 `group_article`/`group_review`/`group_signal`/`group_card`/`group_card_review`，漏一个就把模型时间算少）；`scripts/eval-tools.ts:115-128` 的 `usageFor` 已经在算 `avg(latency_ms)`，缺的只是 P50/P95 与按 `purpose` 分组，**别重写一份**。
+两处容易漏的细节：② 的 `purpose` 必须列全（实测共 **7 个**：`group_article`/`group_review`/`group_signal`/`group_card`/`group_card_review`，加上 `consolidate.ts:59` 动态拼出的 `group_story`/`group_story_review`（`editorial/models.ts:31-32` 的 `purposes` 清单也是 7 个）；只搜 `purpose: "..."` 字面量会漏掉后两个，把模型时间算少）；`scripts/eval-tools.ts:115-128` 的 `usageFor` 已经在算 `avg(latency_ms)`，缺的只是 P50/P95 与按 `purpose` 分组，**别重写一份**。
 
 **B. 本地回放（只读，一次性脚本 `scripts/bench-recall.ts`，不进 CI、不进运行时）**
 
