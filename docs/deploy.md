@@ -48,6 +48,8 @@ PORT=127.0.0.1:3000        # 3000 端口只给本机的 Caddy 用，不直接对
 TRUST_PROXY=true           # 访客地址从 Caddy 转来的请求头里读
 ```
 
+Compose 的 `TRUST_PROXY` 默认值是 `true`。`.env` 里显式写的 `TRUST_PROXY=false` 会覆盖它，已经通过 Caddy 或 Nginx 部署的站点需要手动把自己的 `.env` 改为 `TRUST_PROXY=true`，否则所有访客共用一个登录限流键。启用后，Web 的 3000 端口只允许 Caddy 或 Nginx 访问。直连 Web 时在 `.env` 中设为 `TRUST_PROXY=false`。
+
 再用带 HTTPS 的方式启动，Caddy 会自动申请和续期证书：
 
 ```bash

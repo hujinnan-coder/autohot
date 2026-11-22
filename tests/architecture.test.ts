@@ -72,6 +72,12 @@ test("public routes read content only through the public read layer", () => {
   assert.deepEqual(found, [], "a public route imports backend internals; add or reuse a function in publication/");
 });
 
+test("the following feed does not use the per-topic page loader", () => {
+  // This checks the route's source. It does not count SQL statements in the batch reader.
+  const source = readFileSync(path.join(ROOT, "modules/following/server.ts"), "utf8");
+  assert.doesNotMatch(source, /\bloadTopicPage\b/);
+});
+
 // Tables whose rules must not be rewritten elsewhere: the public projection and its sync ledger, paid
 // receipts, content pushes, grouping, and the audit trail. Other code reads them freely.
 const OWNERS: Record<string, string> = {
@@ -159,6 +165,11 @@ const SUBSTITUTED = /\$\{([A-Z][A-Z0-9_]+)|\{\$([A-Z][A-Z0-9_]+)\}/g;
 const COMPOSE = "docker-compose.yml";
 const DEPLOYMENT = [COMPOSE, "deploy/Caddyfile"].filter((file) => existsSync(path.join(ROOT, file)));
 const tracked = (pattern: string) => execFileSync("git", ["ls-files", "--", pattern], { cwd: ROOT, encoding: "utf8" }).split("\n").filter(Boolean);
+
+test("the Compose proxy default agrees with the deployment guide", () => {
+  assert.match(readFileSync(path.join(ROOT, COMPOSE), "utf8"), /^\s*TRUST_PROXY:\s*\$\{TRUST_PROXY:-true\}\s*$/m);
+  assert.match(readFileSync(path.join(ROOT, "docs/deploy.md"), "utf8"), /\bTRUST_PROXY=true\b/);
+});
 
 test("every environment variable the code reads is listed in a template, and every listed one is read", () => {
   const listed = new Set(tracked("*.env.example").flatMap((file) => assigned(file, /^#?\s*([A-Z][A-Z0-9_]+)=/gm)));

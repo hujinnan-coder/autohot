@@ -16,7 +16,7 @@ import {
 } from "@aihot/backend/admin/auth";
 import { adminPagePrincipal, previewPrincipal } from "@aihot/backend/admin/preview";
 import type { Previewer } from "@aihot/backend/modules";
-import { sendProblem } from "../http/respond.ts";
+import { clientIp, sendProblem } from "../http/respond.ts";
 
 /**
  * A cookie is Secure when the request itself arrived over HTTPS: the browser judges it against the
@@ -166,7 +166,7 @@ export function registerAdminAuth(app: FastifyInstance) {
       const b = (req.body ?? {}) as Record<string, string>;
       const returnTo = String(b.return ?? SIGN_IN_HOME);
       reply.header("Cache-Control", "no-store");
-      const key = `ip:${req.ip}`;
+      const key = `ip:${clientIp(req)}`;
       if (peek(key, Date.now()).length >= IP_LIMIT) return reply.redirect(loginPage(returnTo, "too-many"), 303);
       try {
         const { token, returnTo: target } = await passwordLogin(String(b.password ?? ""), returnTo, req.headers["user-agent"]);

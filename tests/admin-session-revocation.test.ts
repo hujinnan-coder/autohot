@@ -168,10 +168,10 @@ test("the session cookie is Secure only when the request itself is HTTPS, whatev
   assert.match(await sessionCookie("/api/auth/logout", { "x-forwarded-proto": "https" }), /;\s*Secure\b/);
 });
 
-async function passwordAttempt(password: string, ip = "192.0.2.1") {
+async function passwordAttempt(password: string, ip = "192.0.2.1", ipHeader: "x-forwarded-for" | "x-real-ip" = "x-forwarded-for") {
   const res = await app.inject({
     method: "POST", url: "/api/auth/password",
-    headers: { "content-type": "application/x-www-form-urlencoded", "x-forwarded-for": ip },
+    headers: { "content-type": "application/x-www-form-urlencoded", [ipHeader]: ip },
     payload: new URLSearchParams({ password, return: "/admin" }).toString(),
   });
   assert.equal(res.statusCode, 303);
@@ -206,4 +206,15 @@ test("a successful password login clears earlier failures from that IP", { skip:
 test("failures from a hundred separate IPs do not lock out the admin", { skip: !ADMIN }, async () => {
   for (let i = 1; i <= 100; i++) assert.equal(await passwordAttempt("wrong", `198.51.100.${i}`), "wrong");
   assert.equal(await passwordAttempt(PASSWORD_A, "198.51.100.1"), null);
+});
+
+test("the password limit is isolated by the web proxy's single X-Real-IP", { skip: !ADMIN }, async () => {
+  const first = "192.0.2.1";
+  const second = "192.0.2.2";
+  for (const ip of [first, second]) {
+    for (let i = 0; i < 6; i++) assert.equal(await passwordAttempt("wrong", ip, "x-real-ip"), "wrong");
+  }
+  for (let i = 0; i < 4; i++) assert.equal(await passwordAttempt("wrong", first, "x-real-ip"), "wrong");
+  assert.equal(await passwordAttempt(PASSWORD_A, first, "x-real-ip"), "too-many");
+  assert.equal(await passwordAttempt(PASSWORD_A, second, "x-real-ip"), null);
 });
