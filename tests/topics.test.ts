@@ -17,13 +17,17 @@ import { after, before, test } from "node:test";
 import { closeDb, sql } from "@aihot/backend/db";
 import { upsertMaterial } from "@aihot/backend/content/materials";
 import { stopBoss } from "@aihot/backend/jobs/queue";
+import { installModules } from "@aihot/backend/modules";
 import { publishArticle } from "@aihot/backend/publication/publish";
-import { TOPICS, loadTopicPage, listTopicSummaries, topicsOfStory } from "@aihot/backend/publication/topics";
+import { TOPICS, TOPIC_PAGE_SIZE, loadTopicPage, listTopicSummaries, topicsOfStory } from "@aihot/backend/publication/topics";
+import type { FollowingFeed } from "@aihot/following/feed";
+import { SERVER_MODULES } from "@aihot/site/modules/server";
 import { buildApp } from "../apps/api/src/app.ts";
 
 const T = tag();
 const OFFICIAL = `test-topics-official-${T}`;
 const MEDIA = `test-topics-media-${T}`;
+installModules(SERVER_MODULES);
 const app = await buildApp();
 
 before(async () => {
@@ -173,4 +177,80 @@ test("every topic has a page; unknown topics and pages past the end have none", 
   const body = JSON.parse(index.body) as { groups: Array<{ key: string }>; topics: Array<{ slug: string }> };
   assert.deepEqual(body.groups.map((g) => g.key), ["company", "field", "genre"]);
   assert.deepEqual(body.topics.map((t) => t.slug).sort(), TOPICS.map((t) => t.slug).sort(), "the index lists every topic");
+});
+
+const orderedFollowingIds: string[] = [];
+let sharedFollowingId: string;
+const pagedFollowingIds: string[] = [];
+before(async () => {
+  // The HTTP routes share a cached topic index. Publish these before any test loads it.
+  for (const [i, brand] of ["bmw", "volvo", "bmw", "volvo"].entries()) {
+    orderedFollowingIds.push(await report({ at: hoursAgo(2 + i), title: `${brand} 发布新车型 ${i} ${T}`, subjects: [brand] }));
+  }
+  sharedFollowingId = await report({ at: hoursAgo(2), title: `吉利和极氪发布联合公告 ${T}`, subjects: ["geely", "zeekr"] });
+  for (let i = 0; i <= TOPIC_PAGE_SIZE; i++) {
+    pagedFollowingIds.push(await report({ at: hoursAgo(2 + i), title: `比亚迪发布新车型 ${i} ${T}`, subjects: ["byd"] }));
+  }
+});
+
+const followingFeed = (slugs: string[], pages = 1) => app.inject({
+  url: `/api/site/following/feed?slugs=${encodeURIComponent(slugs.join(","))}&pages=${pages}`,
+});
+
+test("following combines two topics and orders their items by descending timeline time", async () => {
+  const res = await followingFeed(["bmw", "volvo"]);
+  assert.equal(res.statusCode, 200);
+  assert.equal(res.headers["cache-control"], "public, max-age=30, s-maxage=30");
+  assert.equal(res.headers.etag, undefined);
+  const body = res.json<FollowingFeed>();
+  assert.deepEqual(ids(body.items), orderedFollowingIds);
+  assert.equal(body.served, 2);
+});
+
+test("following returns one copy of a report from two topics", async () => {
+  for (const slug of ["geely", "zeekr"]) assert.deepEqual(ids((await page(slug)).items), [sharedFollowingId]);
+  const res = await followingFeed(["geely", "zeekr"]);
+  assert.equal(res.statusCode, 200);
+  const body = res.json<FollowingFeed>();
+  assert.equal(body.served, 2);
+  assert.deepEqual(ids(body.items), [sharedFollowingId]);
+});
+
+test("following paginates each topic and keeps topics with fewer pages", async () => {
+  const first = await followingFeed(["byd", "bmw"]);
+  assert.equal(first.statusCode, 200);
+  assert.equal(first.json<FollowingFeed>().hasMore, true);
+  assert.ok(!ids(first.json<FollowingFeed>().items).includes(pagedFollowingIds.at(-1)!));
+
+  const second = await followingFeed(["byd", "bmw"], 2);
+  assert.equal(second.statusCode, 200);
+  const body = second.json<FollowingFeed>();
+  assert.equal(body.hasMore, false);
+  assert.equal(body.served, 2);
+  assert.deepEqual(ids(body.items).sort(), [...pagedFollowingIds, ...orderedFollowingIds.filter((_, i) => i % 2 === 0)].sort());
+});
+
+test("following accepts 30 topics and rejects 31", async () => {
+  const slugs = TOPICS.slice(0, 31).map(topic => topic.slug);
+  assert.equal(slugs.length, 31);
+  assert.equal((await followingFeed(slugs)).statusCode, 400);
+  const res = await followingFeed(slugs.slice(0, 30));
+  assert.equal(res.statusCode, 200);
+  const body = res.json<FollowingFeed>();
+  assert.equal(body.served, 30);
+  assert.ok(body.items.length <= 30 * TOPIC_PAGE_SIZE);
+});
+
+test("following ignores unknown slugs and repeated topics", async () => {
+  const res = await followingFeed(["geely", "not-a-topic", "geely"]);
+  assert.equal(res.statusCode, 200);
+  const body = res.json<FollowingFeed>();
+  assert.equal(body.served, 1);
+  assert.deepEqual(ids(body.items), [sharedFollowingId]);
+});
+
+test("following with no slug returns an empty feed", async () => {
+  const res = await app.inject("/api/site/following/feed");
+  assert.equal(res.statusCode, 200);
+  assert.deepEqual(res.json<FollowingFeed>(), { items: [], hasMore: false, served: 0 });
 });

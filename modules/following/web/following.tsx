@@ -1,8 +1,8 @@
-// 我的关注：关注的品牌各读一次它的品牌页（和品牌页同一套归属规则），合并成一条按时间排的动态流。
+// 我的关注：一次读取关注品牌的合并动态，沿用品牌页的归属规则。
 // 第一版不登录，关注的品牌存在这个浏览器里（store.ts）；有了账号以后再同步。
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router";
-import type { FeedItemSummary, TopicPage, TopicsResponse, TopicSummary } from "@aihot/contracts/site";
+import type { TopicsResponse, TopicSummary } from "@aihot/contracts/site";
 import { SITE } from "@aihot/site";
 import { IconClose, IconHeart } from "@aihot/web/components/icons";
 import { PhoneBar } from "@aihot/web/components/shell/PhoneBar";
@@ -10,6 +10,7 @@ import type { Screen } from "@aihot/web/components/shell/screens";
 import { EmptyState } from "@aihot/web/components/ui/Page";
 import { DayList } from "@aihot/web/features/feed/DayList";
 import { pageMeta } from "@aihot/web/lib/seo";
+import type { FollowingFeed } from "../feed.ts";
 import { FOLLOW_LIMIT, toggleFollow, useFollowing } from "./store.ts";
 
 export const handle: Screen = { tab: "me", name: "我的关注" };
@@ -21,6 +22,8 @@ export function meta() {
 const chip = "inline-flex min-h-8 items-center gap-1 rounded-full px-3 py-1 text-[12.5px] ring-1 transition-colors";
 /** 搜索为空时先给读者看的备选个数。 */
 const SUGGEST = 24;
+/** 聚合接口每个主题最多读取 10 页。 */
+const MAX_FEED_PAGES = 10;
 
 export default function FollowingPage() {
   const following = useFollowing();
@@ -127,62 +130,38 @@ export default function FollowingPage() {
 }
 
 function Feed({ slugs, ready }: { slugs: string[]; ready: boolean }) {
-  // `${slug}:${page}` → 那一页；读失败记为 "fail"，不再重复请求。
-  const cache = useRef(new Map<string, TopicPage | "fail">());
-  const [version, setVersion] = useState(0);
-  const [pages, setPages] = useState(1);
-  const [busy, setBusy] = useState(false);
+  const cache = useRef<{ key: string; pages: number; items: FollowingFeed["items"]; hasMore: boolean } | null>(null);
+  const [request, setRequest] = useState({ pages: 1 });
+  const [{ busy, requestFailed }, setStatus] = useState({ busy: false, requestFailed: false });
   const key = slugs.join(",");
+  const { pages } = request;
 
   useEffect(() => {
     if (!ready) return;
-    const ctrl = new AbortController();
-    const jobs: Promise<unknown>[] = [];
-    for (const slug of slugs) {
-      for (let p = 1; p <= pages; p++) {
-        const at = `${slug}:${p}`;
-        if (cache.current.has(at)) continue;
-        // 第 2 页起要等第 1 页回来，才知道有没有这一页。
-        const first = cache.current.get(`${slug}:1`);
-        if (p > 1 && (!first || first === "fail" || first.pageCount < p)) continue;
-        jobs.push(
-          fetch(`/api/site/topics/${encodeURIComponent(slug)}${p > 1 ? `?page=${p}` : ""}`, { signal: ctrl.signal })
-            .then((r) => (r.ok ? (r.json() as Promise<TopicPage>) : Promise.reject(new Error(String(r.status)))))
-            .then((d) => void cache.current.set(at, d))
-            .catch(() => {
-              if (!ctrl.signal.aborted) cache.current.set(at, "fail");
-            }),
-        );
-      }
-    }
-    if (!jobs.length) {
-      setBusy(false);
+    const { pages } = request;
+    if (!key) cache.current = null;
+    if (!key || (cache.current?.key === key && cache.current.pages === pages)) {
+      setStatus({ busy: false, requestFailed: false });
       return;
     }
-    setBusy(true);
-    Promise.all(jobs).then(() => {
-      if (!ctrl.signal.aborted) setVersion((v) => v + 1);
-    });
+    const ctrl = new AbortController();
+    setStatus({ busy: true, requestFailed: false });
+    fetch(`/api/site/following/feed?slugs=${encodeURIComponent(key)}&pages=${pages}`, { signal: ctrl.signal })
+      .then((r) => (r.ok ? (r.json() as Promise<FollowingFeed>) : Promise.reject(new Error(String(r.status)))))
+      .then(({ items, hasMore }) => {
+        if (ctrl.signal.aborted) return;
+        cache.current = { key, pages, items, hasMore };
+        setStatus({ busy: false, requestFailed: false });
+      })
+      .catch(() => {
+        if (!ctrl.signal.aborted) setStatus({ busy: false, requestFailed: true });
+      });
     return () => ctrl.abort();
-  }, [key, pages, version, ready]);
+  }, [key, request, ready]);
 
-  const { items, hasMore, failed } = useMemo(() => {
-    const seen = new Map<string, FeedItemSummary>();
-    let more = false;
-    let bad = 0;
-    for (const slug of slugs) {
-      const first = cache.current.get(`${slug}:1`);
-      if (first === "fail") bad++;
-      if (first && first !== "fail" && first.pageCount > pages) more = true;
-      for (let p = 1; p <= pages; p++) {
-        const page = cache.current.get(`${slug}:${p}`);
-        if (page && page !== "fail") for (const it of page.items) if (!seen.has(it.id)) seen.set(it.id, it);
-      }
-    }
-    const list = [...seen.values()].sort((a, b) => (a.timelineAt < b.timelineAt ? 1 : a.timelineAt > b.timelineAt ? -1 : 0));
-    return { items: list, hasMore: more, failed: bad };
-    // version 变了说明 cache 里有新页。
-  }, [key, pages, version]);
+  const items = cache.current?.items ?? [];
+  const failed = requestFailed ? slugs.length : 0;
+  const hasMore = cache.current?.hasMore && (pages < MAX_FEED_PAGES || requestFailed || busy);
 
   if (slugs.length === 0) {
     return (
@@ -209,7 +188,7 @@ function Feed({ slugs, ready }: { slugs: string[]; ready: boolean }) {
       {failed > 0 && <p className="mt-3 text-center text-[12.5px] text-ink-4">有 {failed} 个品牌的动态暂时没读到。</p>}
       {hasMore && (
         <div className="mt-5 flex justify-center">
-          <button type="button" disabled={busy} onClick={() => setPages((p) => p + 1)} className="rounded-full px-5 py-2 text-[13px] font-medium text-ink-2 ring-1 ring-line hover:bg-bg-sunk disabled:opacity-50">
+          <button type="button" disabled={busy} onClick={() => setRequest({ pages: requestFailed ? pages : pages + 1 })} className="rounded-full px-5 py-2 text-[13px] font-medium text-ink-2 ring-1 ring-line hover:bg-bg-sunk disabled:opacity-50">
             {busy ? "加载中…" : "加载更多"}
           </button>
         </div>

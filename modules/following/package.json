@@ -4,9 +4,13 @@
   "type": "module",
   "exports": {
     "./module": "./module.ts",
-    "./web": "./web.tsx"
+    "./web": "./web.tsx",
+    "./feed": "./feed.ts",
+    "./server": "./server.ts"
   },
   "dependencies": {
+    "@aihot/api": "*",
+    "@aihot/backend": "*",
     "@aihot/contracts": "*"
   }
 }
