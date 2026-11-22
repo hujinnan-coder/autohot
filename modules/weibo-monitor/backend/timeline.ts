@@ -19,6 +19,8 @@ interface User {
   screen_name?: string;
   verified_reason?: string;
   avatar_hd?: string;
+  /** Signed image URL; the only form the CDN serves to a datacenter, valid for hours. */
+  profile_image_url?: string;
 }
 
 interface Card {
@@ -52,7 +54,9 @@ export function parseTimeline(markdown: string) {
   const items = response.data.cards.flatMap(card => {
     if (card?.card_type !== 9 || !card.mblog) return [];
     const post = card.mblog;
-    const url = post.user?.avatar_hd;
+    // 带签名的 profile_image_url 是图床唯一放行的形态（avatar_hd 对数据中心直链 403）；签名约 9 小时
+    // 有效，每次扫描都会用它刷新两个源，且 produceImage 成功后图进磁盘缓存，过期也不裂图。
+    const url = post.user?.profile_image_url ?? post.user?.avatar_hd;
     if (avatar === null && typeof url === "string" && /^https?:\/\//i.test(url) && URL.canParse(url)) avatar = url;
     if (typeof post.id !== "string" || !/^\d+$/.test(post.id) || typeof post.text !== "string") return [];
     const text = stripTags(post.text);

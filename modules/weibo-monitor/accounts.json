@@ -2,102 +2,102 @@
  {
   "uid": "1749127163",
   "name": "雷军",
-  "tier": "top"
+  "tier": "fast"
  },
  {
   "uid": "1882934071",
   "name": "托马斯电火车",
-  "tier": "top"
+  "tier": "fast"
  },
  {
   "uid": "2245894771",
   "name": "蔚来余东明",
-  "tier": "top"
+  "tier": "mid"
  },
  {
   "uid": "7883130603",
   "name": "比亚迪王朝路天",
-  "tier": "top"
+  "tier": "fast"
  },
  {
   "uid": "1804134502",
   "name": "腾势汽车李慧",
-  "tier": "top"
+  "tier": "mid"
  },
  {
   "uid": "7909008288",
   "name": "赛力斯康波",
-  "tier": "top"
+  "tier": "mid"
  },
  {
   "uid": "7841262120",
   "name": "长城炮保哥",
-  "tier": "top"
+  "tier": "rest"
  },
  {
   "uid": "2047735024",
   "name": "比亚迪何志奇",
-  "tier": "top"
+  "tier": "rest"
  },
  {
   "uid": "7902080403",
   "name": "方程豹熊甜波",
-  "tier": "top"
+  "tier": "fast"
  },
  {
   "uid": "7796842527",
   "name": "零跑Tiger",
-  "tier": "top"
+  "tier": "rest"
  },
  {
   "uid": "1915347140",
   "name": "比亚迪海洋张卓",
-  "tier": "top"
+  "tier": "rest"
  },
  {
   "uid": "7961361901",
   "name": "吉超超有材",
-  "tier": "top"
+  "tier": "rest"
  },
  {
   "uid": "1085536624",
   "name": "XP-WilLiaM郑荣卿",
-  "tier": "top"
+  "tier": "rest"
  },
  {
   "uid": "7915954986",
   "name": "Maggie_阿维塔",
-  "tier": "top"
+  "tier": "rest"
  },
  {
   "uid": "7902110866",
   "name": "仰望汽车胡晓庆",
-  "tier": "top"
+  "tier": "rest"
  },
  {
   "uid": "1679013335",
   "name": "李斌",
-  "tier": "top"
+  "tier": "rest"
  },
  {
   "uid": "1971874241",
   "name": "姜海荣-Harrison",
-  "tier": "top"
+  "tier": "mid"
  },
  {
   "uid": "7990049885",
   "name": "增程强哥",
-  "tier": "top"
+  "tier": "mid"
  },
  {
   "uid": "5629836576",
   "name": "哈弗欧拉吕文斌",
-  "tier": "top"
+  "tier": "mid"
  },
  {
   "uid": "1774963862",
   "name": "深蓝汽车邓承浩",
-  "tier": "top"
+  "tier": "rest"
  },
  {
   "uid": "7748789887",
@@ -122,12 +122,12 @@
  {
   "uid": "7921069583",
   "name": "昊铂埃安BU张雄",
-  "tier": "rest"
+  "tier": "mid"
  },
  {
   "uid": "6366801446",
   "name": "曹力_零跑科技",
-  "tier": "rest"
+  "tier": "fast"
  },
  {
   "uid": "1705212365",
@@ -142,12 +142,12 @@
  {
   "uid": "7992085799",
   "name": "神龙汽车余岳峰",
-  "tier": "rest"
+  "tier": "mid"
  },
  {
   "uid": "1915631251",
   "name": "赵长江Pro",
-  "tier": "rest"
+  "tier": "mid"
  },
  {
   "uid": "7740678459",
@@ -207,17 +207,17 @@
  {
   "uid": "3158576864",
   "name": "老Tango",
-  "tier": "rest"
+  "tier": "mid"
  },
  {
   "uid": "1904328862",
   "name": "比亚迪李云飞",
-  "tier": "rest"
+  "tier": "mid"
  },
  {
   "uid": "1130738561",
   "name": "我想我是海阿杜",
-  "tier": "rest"
+  "tier": "mid"
  },
  {
   "uid": "2151574834",
@@ -247,7 +247,7 @@
  {
   "uid": "1661028834",
   "name": "Auto米黎明",
-  "tier": "rest"
+  "tier": "mid"
  },
  {
   "uid": "1040331325",
@@ -307,7 +307,7 @@
  {
   "uid": "1100856704",
   "name": "余承东",
-  "tier": "rest"
+  "tier": "mid"
  },
  {
   "uid": "7935653316",
@@ -337,12 +337,12 @@
  {
   "uid": "1092220835",
   "name": "布莱恩罗昊_Brian",
-  "tier": "rest"
+  "tier": "mid"
  },
  {
   "uid": "7994285559",
   "name": "岚图汽车邵明峰",
-  "tier": "rest"
+  "tier": "mid"
  },
  {
   "uid": "1401579593",
@@ -362,7 +362,7 @@
  {
   "uid": "3243882235",
   "name": "penglay_磊",
-  "tier": "rest"
+  "tier": "mid"
  },
  {
   "uid": "1862459915",
@@ -377,7 +377,7 @@
  {
   "uid": "7802450527",
   "name": "零跑超哥",
-  "tier": "rest"
+  "tier": "mid"
  },
  {
   "uid": "7907175097",

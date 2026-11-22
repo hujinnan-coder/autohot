@@ -1,6 +1,6 @@
 import accountList from "../accounts.json" with { type: "json" };
 
-type Tier = "top" | "rest";
+type Tier = "fast" | "mid" | "rest";
 
 interface Account {
   uid: string;
@@ -8,7 +8,7 @@ interface Account {
   tier: Tier;
 }
 
-const INTERVAL_MINUTES: Record<Tier, number> = { top: 120, rest: 720 };
+const INTERVAL_MINUTES: Record<Tier, number> = { fast: 120, mid: 240, rest: 720 };
 export const TICK_MINUTES = 10;
 
 export const accounts = new Map((accountList as Account[]).map(account => [`weibopage-${account.uid}`, account]));
@@ -24,11 +24,11 @@ export function nextDueAt(tier: Tier, tick: Date): Date {
 
 /** Give each tier an even spread of first reads over its interval. */
 export function initialDueAccounts(now: Date): Array<{ sourceId: string; nextDueAt: Date }> {
-  return (["top", "rest"] as const).flatMap(tier => {
+  return Object.entries(INTERVAL_MINUTES).flatMap(([tier, interval]) => {
     const group = [...accounts].filter(([, account]) => account.tier === tier);
     return group.map(([sourceId], index) => ({
       sourceId,
-      nextDueAt: new Date(now.getTime() + Math.floor(INTERVAL_MINUTES[tier] * index / group.length) * 60_000),
+      nextDueAt: new Date(now.getTime() + Math.floor(interval * index / group.length) * 60_000),
     }));
   });
 }

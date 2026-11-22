@@ -91,21 +91,26 @@ test("truncates the title at 140 characters and prefixes the full repost text", 
   assert.equal(short.title, "车".repeat(140));
 });
 
-test("top and rest scans recur after 120 and 720 minutes from the tick", () => {
+test("fast, mid, and rest scans recur after 120, 240, and 720 minutes from the tick", () => {
   const tick = tickTime(new Date("2026-11-20T23:51:30Z"));
   assert.equal(tick.toISOString(), "2026-11-20T23:50:00.000Z");
-  assert.equal(nextDueAt("top", tick).toISOString(), "2026-11-21T01:50:00.000Z");
+  assert.equal(nextDueAt("fast", tick).toISOString(), "2026-11-21T01:50:00.000Z");
+  assert.equal(nextDueAt("mid", tick).toISOString(), "2026-11-21T03:50:00.000Z");
   assert.equal(nextDueAt("rest", tick).toISOString(), "2026-11-21T11:50:00.000Z");
 });
 
-test("initial due times spread all 86 accounts across their tier intervals", () => {
+test("initial due times spread all 82 accounts across their tier intervals", () => {
   const now = new Date("2026-11-20T00:00:00Z");
   const due = initialDueAccounts(now);
-  assert.equal(due.length, 86);
-  assert.equal([...accounts.values()].filter(account => account.tier === "top").length, 20);
-  assert.equal([...accounts.values()].filter(account => account.tier === "rest").length, 66);
-  for (const [tier, last] of [["top", "2026-11-20T01:54:00.000Z"], ["rest", "2026-11-20T11:49:00.000Z"]] as const) {
+  assert.equal(due.length, 82);
+  assert.equal(new Set(due.map(({ sourceId }) => sourceId)).size, accounts.size);
+  for (const [tier, count, last] of [
+    ["fast", 5, "2026-11-20T01:36:00.000Z"],
+    ["mid", 18, "2026-11-20T03:46:00.000Z"],
+    ["rest", 59, "2026-11-20T11:47:00.000Z"],
+  ] as const) {
     const times = due.filter(({ sourceId }) => accounts.get(sourceId)!.tier === tier).map(({ nextDueAt }) => nextDueAt.getTime());
+    assert.equal(times.length, count);
     assert.equal(Math.min(...times), now.getTime());
     assert.equal(Math.max(...times), Date.parse(last));
   }
