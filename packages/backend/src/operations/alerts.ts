@@ -330,8 +330,13 @@ async function waitingQueues(now: number): Promise<Finding[]> {
   const queues = await sql<{ name: string; n: number; oldest: Date }[]>`
     SELECT name, count(*)::int AS n, min(start_after) AS oldest FROM pgboss.job
     WHERE state IN ('created', 'retry') AND start_after <= now() AND name NOT LIKE 'cron.%' GROUP BY 1`;
-  return queues.filter((q) => now - q.oldest.getTime() > 2 * 3600_000).map((q): Finding => (
-    { key: `queue.${q.name}`, level: "later", title: `后台任务排队超过 2 小时：${q.name}`, detail: `${q.n} 个等待，最早的等了 ${duration(now - q.oldest.getTime())}` }));
+  return queues.filter((q) => now - q.oldest.getTime() > 2 * 3600_000).map((q): Finding => ({
+    key: `queue.${q.name}`, level: "later", title: `后台任务排队超过 2 小时：${q.name}`,
+    detail: `${q.n} 个等待，最早的等了 ${duration(now - q.oldest.getTime())}`
+      + (q.name === "content.extract-body" && !collecting()
+          ? "；采集已关闭（COLLECT_ENABLED 不是 true），这些正文任务不会被消费，打开采集后自动继续"
+          : ""),
+  }));
 }
 
 /** The site's modules' follow-ups. */
