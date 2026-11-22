@@ -41,6 +41,7 @@ export async function dailyRetention(now = new Date()) {
   // Scheduled-task history: 30 days (failures 90) is enough for the runs view.
   const runs = await sql`DELETE FROM job_runs WHERE started_at < ${new Date(now.getTime() - 30 * 86400_000)} AND (status IS DISTINCT FROM 'failed' OR started_at < ${new Date(now.getTime() - 90 * 86400_000)})`;
   const monthMs = 30 * 86400_000;
+  const heatHours = await sql`DELETE FROM story_heat_hourly WHERE hour < ${new Date(now.getTime() - monthMs)}`;
   // Events the hub took (notify/agent.ts): their readers look back a day (handoff counts) or a week (Token
   // 羊毛's effectiveness). Undelivered ones stay for their retries. An agent-only problem still open after
   // the month is handed over once more, which is wanted.
@@ -58,6 +59,7 @@ export async function dailyRetention(now = new Date()) {
     expiredFeedbackBans,
     expiredFeedbackState,
     deletedJobRuns: runs.count,
+    deletedHeatHours: heatHours.count,
     deletedAgentEvents: agentEvents.count,
     deletedScreenshots,
     prunedCache,

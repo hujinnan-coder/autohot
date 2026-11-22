@@ -8,6 +8,7 @@ import { randomUUID } from "node:crypto";
 import { after, test } from "node:test";
 import { closeDb, sql } from "@aihot/backend/db";
 import { heatRows, snapshotHeat, type HotEntry } from "@aihot/backend/events/hot";
+import { dailyRetention } from "@aihot/backend/operations/retention";
 import { loadHotStrip, rankingExtras } from "@aihot/backend/publication/hot";
 import { loadHot, loadStoryDetail, v1HotTopics } from "@aihot/backend/publication/stories";
 import { buildApp } from "../apps/api/src/app.ts";
@@ -147,6 +148,34 @@ test("hourly snapshots are idempotent and repair an incomplete hour after collec
   const rows = await sql`SELECT hour, complete, participants FROM story_heat_hourly WHERE story_id = ${s} ORDER BY hour`;
   assert.equal(rows.length, 2);
   assert.ok(rows.every(r => r.complete && r.participants === 1));
+});
+
+test("hourly snapshot repair leaves an incomplete hour on a merged story as it was", async () => {
+  const merged = await story();
+  const survivor = await story();
+  const at = new Date(+AT + 72 * H);
+  const hour = new Date(+at - H);
+  await sql`UPDATE stories SET merged_into = ${survivor} WHERE id = ${merged}`;
+  await sql`INSERT INTO story_heat_hourly (story_id, hour, heat, participants, cohort, complete)
+    VALUES (${merged}, ${hour}, 9.5, 3, 2, false)`;
+  const history = () => sql`SELECT hour, heat, participants, cohort, complete FROM story_heat_hourly WHERE story_id = ${merged}`;
+  const before = await history();
+
+  assert.equal((await snapshotHeat(at)).repaired, 0);
+  assert.deepEqual(await history(), before);
+});
+
+test("daily retention deletes hourly story heat older than 30 days", async () => {
+  const s = await story();
+  const now = new Date("2020-01-01T12:00:00Z");
+  const old = new Date(+now - 31 * 24 * H);
+  const recent = new Date(+now - 29 * 24 * H);
+  await sql`INSERT INTO story_heat_hourly (story_id, hour, heat, participants)
+    VALUES (${s}, ${old}, 8, 1), (${s}, ${recent}, 9, 1)`;
+
+  assert.equal((await dailyRetention(now)).deletedHeatHours, 1);
+  const rows = await sql`SELECT hour FROM story_heat_hourly WHERE story_id = ${s}`;
+  assert.deepEqual(rows.map((r) => r.hour), [recent]);
 });
 
 test("an hour taken again updates the cohort after a source changes role", async () => {

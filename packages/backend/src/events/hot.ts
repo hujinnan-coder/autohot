@@ -294,7 +294,9 @@ export async function snapshotHeat(at = new Date()): Promise<{ stories: number; 
   let repaired = 0;
   const stale = await sql<{ hour: Date; stories: number[] }[]>`
     SELECT hour, array_agg(story_id) AS stories FROM story_heat_hourly
-    WHERE NOT complete AND hour < ${hour} AND hour > ${new Date(hour.getTime() - HEAT_WINDOW_HOURS * 3600000)} GROUP BY hour ORDER BY hour`;
+    WHERE NOT complete AND hour < ${hour} AND hour > ${new Date(hour.getTime() - HEAT_WINDOW_HOURS * 3600000)}
+      AND story_id IN (SELECT id FROM stories WHERE merged_into IS NULL)
+    GROUP BY hour ORDER BY hour`;
   for (const s of stale) {
     const rows = await heatRows(s.hour, behindSources(clocks, s.hour.getTime(), false), s.stories.map(Number));
     repaired += await saveHeat(rows.filter((r) => Number(r.behind_participants) === 0), s.hour);
