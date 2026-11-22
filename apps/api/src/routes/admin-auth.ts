@@ -26,22 +26,42 @@ import { sendProblem } from "../http/respond.ts";
  */
 const secure = (req: FastifyRequest) => req.protocol === "https";
 
-/**
- * Password attempts: at most 10 per client address and 50 in all per 15 minutes. The overall cap holds
- * even when a client forges its address; with a 12+ character password that is far too slow to guess.
- */
+// Count failed passwords over 15 minutes. The global count flags distributed failures without locking out the admin.
+const WINDOW_MS = 15 * 60_000;
+const IP_LIMIT = 10;
+const GLOBAL_LIMIT = 50;
+const MAX_KEYS = 5000;
 const attempts = new Map<string, number[]>();
-function over(key: string, limit: number, now: number): boolean {
-  const recent = (attempts.get(key) ?? []).filter((t) => now - t < 15 * 60_000);
-  recent.push(now);
-  attempts.set(key, recent);
-  return recent.length > limit;
+let globalLoggedAt = -Infinity;
+
+function peek(key: string, now: number): number[] {
+  return (attempts.get(key) ?? []).filter((at) => now - at < WINDOW_MS);
 }
-function tooManyAttempts(ip: string): boolean {
+
+function recordFailure(key: string, log: FastifyRequest["log"]) {
   const now = Date.now();
-  if (attempts.size > 5000) attempts.clear();
-  const perClient = over(`ip:${ip}`, 10, now);
-  return over("all", 50, now) || perClient;
+  const recent = peek(key, now);
+  attempts.delete(key);
+  attempts.set(key, [...recent, now].slice(-IP_LIMIT));
+  const global = peek("all", now);
+  attempts.set("all", [...global, now].slice(-GLOBAL_LIMIT));
+  if (global.length >= GLOBAL_LIMIT && now - globalLoggedAt >= WINDOW_MS) {
+    globalLoggedAt = now;
+    log.warn({ limit: GLOBAL_LIMIT, windowMs: WINDOW_MS }, "security.login_throttled");
+  }
+  if (attempts.size <= MAX_KEYS) return;
+  for (const [id, failures] of attempts) {
+    if (now - failures.at(-1)! >= WINDOW_MS) attempts.delete(id);
+  }
+  for (const id of attempts.keys()) {
+    if (attempts.size <= MAX_KEYS) break;
+    if (id !== "all") attempts.delete(id);
+  }
+}
+
+export function resetLoginAttemptsForTest() {
+  attempts.clear();
+  globalLoggedAt = -Infinity;
 }
 
 const loginPage = (returnTo: string, error?: string) => `/admin/login?${new URLSearchParams({ return: safeReturn(returnTo), ...(error ? { error } : {}) })}`;
@@ -146,14 +166,18 @@ export function registerAdminAuth(app: FastifyInstance) {
       const b = (req.body ?? {}) as Record<string, string>;
       const returnTo = String(b.return ?? SIGN_IN_HOME);
       reply.header("Cache-Control", "no-store");
-      if (tooManyAttempts(String(req.ip))) return reply.redirect(loginPage(returnTo, "too-many"), 303);
+      const key = `ip:${req.ip}`;
+      if (peek(key, Date.now()).length >= IP_LIMIT) return reply.redirect(loginPage(returnTo, "too-many"), 303);
       try {
         const { token, returnTo: target } = await passwordLogin(String(b.password ?? ""), returnTo, req.headers["user-agent"]);
+        attempts.delete(key);
         reply.header("Set-Cookie", cookie(SESSION_COOKIE, token, SESSION_DAYS * 86400, secure(req)));
         return reply.redirect(target, 303);
       } catch (error) {
+        const unset = error instanceof LoginRejected && /ADMIN_PASSWORD/.test(error.message);
         if (!(error instanceof LoginRejected)) req.log.error({ err: error }, "admin login failed");
-        return reply.redirect(loginPage(returnTo, error instanceof LoginRejected && /ADMIN_PASSWORD/.test(error.message) ? "unset" : "wrong"), 303);
+        else if (!unset) recordFailure(key, req.log);
+        return reply.redirect(loginPage(returnTo, unset ? "unset" : "wrong"), 303);
       }
     });
     // Signing out is a plain form too: outside this scope its empty urlencoded body would be a 415.

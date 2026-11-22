@@ -505,6 +505,7 @@ interface AlertEntry {
   title: string;
   since: string;
   sentAt?: string;
+  undeliveredAt?: string;
   agentOnly?: true;
   privateOwner?: true;
   privateNotice?: PrivateNotice;
@@ -512,6 +513,10 @@ interface AlertEntry {
   costClosed?: true;
 }
 type AlertState = Record<string, AlertEntry>;
+
+function undelivered(entry: AlertEntry, now: number): AlertEntry {
+  return { ...entry, undeliveredAt: entry.undeliveredAt ?? new Date(now).toISOString() };
+}
 
 async function saveAlertEntry(key: string, entry: AlertEntry) {
   await sql`INSERT INTO settings (key, value, updated_by) VALUES ('alerts.state', ${sql.json({ [key]: entry } as never)}, 'alerts')
@@ -531,12 +536,16 @@ async function checkCostAlerts(now: number, state: AlertState, sent: string[]) {
     if (sentToday(finding.key)) return;
     const open = state[finding.key];
     const since = open ? new Date(open.since) : new Date(now);
-    const msg = formatAlert(finding, since, now, !!open);
-    await sendAlert(msg.title, msg.lines);
-    const entry = { title: finding.title, since: since.toISOString(), sentAt: new Date(now).toISOString() };
-    await saveAlertEntry(finding.key, entry);
-    state[finding.key] = entry;
-    sent.push(finding.key);
+    const msg = formatAlert(finding, since, now, !!open?.sentAt);
+    const entry = { title: finding.title, since: since.toISOString() };
+    if (await sendAlert(msg.title, msg.lines) === "sent") {
+      const delivered = { ...entry, sentAt: new Date(now).toISOString() };
+      await saveAlertEntry(finding.key, delivered);
+      state[finding.key] = delivered;
+      sent.push(finding.key);
+    } else {
+      state[finding.key] = undelivered({ ...open, ...entry }, now);
+    }
   }
   function close(key: string) {
     if (sentToday(key)) state[key] = { ...state[key]!, costClosed: true };
@@ -564,9 +573,17 @@ async function checkCostAlerts(now: number, state: AlertState, sent: string[]) {
         // Only a snapshot that meets the threshold can confirm recovery.
         const open = state[key];
         if (!open || open.costClosed) continue;
+        if (!open.sentAt) {
+          close(key);
+          continue;
+        }
         const msg = formatRecovery(open.title, new Date(open.since), now);
-        await sendAlert(msg.title, [...msg.lines, `当前余额 ${balance} ${currency}`]);
-        await saveAlertEntry(key, { ...open, costClosed: true });
+        if (await sendAlert(msg.title, [...msg.lines, `当前余额 ${balance} ${currency}`]) !== "sent") {
+          state[key] = undelivered(open, now);
+          continue;
+        }
+        state[key] = { ...open, undeliveredAt: undefined, costClosed: true };
+        await saveAlertEntry(key, state[key]!);
         close(key);
         sent.push(`${key}:recovered`);
       }
@@ -670,12 +687,19 @@ async function settleDailies(open: AlertState, found: Set<string>, now: number):
   const published = new Set((await sql<{ key: string }[]>`SELECT key FROM reports WHERE kind = 'daily' AND key IN ${sql(dates)}`).map((r) => r.key));
   for (const date of dates.filter((date) => !published.has(date))) {
     const key = `${DAILY_PREFIX}${date}`;
+    const entry = open[key]!;
     if (date >= dailyScanFrom(now)) {
       missing.add(key);
       continue;
     }
-    await sendAlert(`${date} 的日报没能补出，停止提醒`, [`读者看不到 ${date} 的日报；缺期从 ${beijingStamp(new Date(open[key]!.since))} 起，已超出七天的检查范围`]);
-    sent.push(`${key}:expired`);
+    if (entry.sentAt) {
+      if (await sendAlert(`${date} 的日报没能补出，停止提醒`, [`读者看不到 ${date} 的日报；缺期从 ${beijingStamp(new Date(entry.since))} 起，已超出七天的检查范围`]) !== "sent") {
+        open[key] = undelivered(entry, now);
+        missing.add(key);
+        continue;
+      }
+      sent.push(`${key}:expired`);
+    }
     delete open[key];
   }
   return { missing, sent };
@@ -692,16 +716,22 @@ export async function checkAlerts(now = Date.now()) {
   const holds = await savedHolds();
   const sent: string[] = [];
   async function tellPrivate(key: string, entry: AlertEntry, message: ReturnType<typeof formatAlert>, recovery = false) {
-    const notice = entry.privateNotice ?? { ...message, id: `alert-private-${randomUUID()}`, recovery };
-    if (!entry.privateNotice) {
+    const previous = entry.privateNotice;
+    const notice = previous ?? { ...message, id: `alert-private-${randomUUID()}`, recovery };
+    if (!previous) {
       // The hub may accept a notice before its response is lost. Keep its exact key and text across runs.
       entry = { ...entry, privateNotice: notice };
       await saveAlertEntry(key, entry);
       state[key] = entry;
     }
-    if (await sendAlert(notice.title, notice.lines, notice.id) === "pending") return;
+    const result = await sendAlert(notice.title, notice.lines, notice.id);
+    if (result !== "sent") {
+      // A disabled channel never tried a new notice. Retry only if it still applies next round.
+      state[key] = undelivered({ ...entry, privateNotice: result === "pending" ? notice : previous }, now);
+      return;
+    }
     if (notice.recovery) delete state[key];
-    else state[key] = { ...entry, sentAt: new Date(now).toISOString(), privateNotice: undefined };
+    else state[key] = { ...entry, sentAt: new Date(now).toISOString(), undeliveredAt: undefined, privateNotice: undefined };
     sent.push(notice.recovery ? `${key}:recovered` : key);
   }
   for (const [key, entry] of Object.entries(state)) {
@@ -720,7 +750,7 @@ export async function checkAlerts(now = Date.now()) {
       state[f.key] = { title: f.title, since, agentOnly: true };
       continue;
     }
-    if (handing && !f.owner && !open?.sentAt) {
+    if (handing && !f.owner && !open?.sentAt && (!open?.undeliveredAt || open.handedAt)) {
       const handedAt = open?.handedAt ?? new Date(now).toISOString();
       const hold = holds[f.key];
       const held = !!hold && hold.since === open?.since && now < Date.parse(hold.until);
@@ -729,15 +759,16 @@ export async function checkAlerts(now = Date.now()) {
         const earlier = open || returns[f.key] ? 0 : await handoffs(f.key, new Date(now - DAY_MS));
         if (earlier >= RETURNS - 1) {
           const msg = formatReturn(f, earlier + 1);
-          await sendAlert(msg.title, msg.lines);
-          returns[f.key] = new Date(now).toISOString();
-          sent.push(`${f.key}:repeated`);
+          if (await sendAlert(msg.title, msg.lines) === "sent") {
+            returns[f.key] = new Date(now).toISOString();
+            sent.push(`${f.key}:repeated`);
+          }
         }
         state[f.key] = { title: f.title, since: open?.since ?? (f.since ?? new Date(now)).toISOString(), handedAt };
         continue;
       }
     }
-    if (open?.sentAt && now - Date.parse(open.sentAt) <= REPEAT_MS[f.level]) continue;
+    if (open?.sentAt && !open.undeliveredAt && now - Date.parse(open.sentAt) <= REPEAT_MS[f.level]) continue;
     const since = open ? new Date(open.since) : (f.since ?? new Date(now));
     // Claim AI was notified only after the hub actually accepts this incident's wake; persist the occurrence
     // timestamp first so a failed owner send or crash after waking cannot mint a second incident ID on retry.
@@ -762,9 +793,12 @@ export async function checkAlerts(now = Date.now()) {
       await tellPrivate(f.key, { ...entry, privateOwner: true }, msg);
       continue;
     }
-    await sendAlert(msg.title, msg.lines);
-    state[f.key] = { ...entry, sentAt: new Date(now).toISOString() };
-    sent.push(f.key);
+    if (await sendAlert(msg.title, msg.lines) === "sent") {
+      state[f.key] = { ...entry, sentAt: new Date(now).toISOString(), undeliveredAt: undefined };
+      sent.push(f.key);
+    } else {
+      state[f.key] = undelivered(entry, now);
+    }
   }
   const found = new Set(all.map((f) => f.key));
   const dailies = await settleDailies(state, found, now);
@@ -784,8 +818,13 @@ export async function checkAlerts(now = Date.now()) {
     const [dropped] = key === "deliveries.failed" ? await sql`SELECT count(*)::int AS n FROM deliveries d
       WHERE d.status IN ('failed','skipped') AND d.updated_at>${new Date(Date.parse(open.since)-86400_000)}
         AND EXISTS(SELECT 1 FROM audit_log a WHERE a.action='delivery.drop' AND a.subject='delivery:' || d.id AND a.created_at>=d.updated_at)` : [];
-    if (dropped?.n) await sendAlert(`已结束跟进：${open.title}`, [`${dropped.n} 条旧通知已决定不再补发，未确认送达`]);
-    else await sendAlert(msg.title, msg.lines);
+    const result = dropped?.n
+      ? await sendAlert(`已结束跟进：${open.title}`, [`${dropped.n} 条旧通知已决定不再补发，未确认送达`])
+      : await sendAlert(msg.title, msg.lines);
+    if (result !== "sent") {
+      state[key] = undelivered(open, now);
+      continue;
+    }
     sent.push(`${key}:${dropped?.n ? "closed" : "recovered"}`);
     delete state[key];
   }

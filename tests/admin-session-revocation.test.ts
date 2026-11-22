@@ -9,7 +9,7 @@ import { config } from "@aihot/backend/config";
 import { closeDb, sql } from "@aihot/backend/db";
 import { sha256 } from "@aihot/backend/lib/ids";
 import { endSession, passwordLogin, SESSION_COOKIE, sessionPrincipal } from "@aihot/backend/admin/auth";
-import { adminHandler, registerAdminAuth } from "../apps/api/src/routes/admin-auth.ts";
+import { adminHandler, registerAdminAuth, resetLoginAttemptsForTest } from "../apps/api/src/routes/admin-auth.ts";
 
 const T = tag();
 const PASSWORD_A = `test-password-a-${T}`;
@@ -55,6 +55,7 @@ before(async () => {
   base = await app.listen({ host: "127.0.0.1", port: 0 });
 });
 beforeEach(() => {
+  resetLoginAttemptsForTest();
   config.adminPassword = PASSWORD_A;
   config.devAdmin = null;
   config.environmentName = "development";
@@ -165,4 +166,44 @@ test("the session cookie is Secure only when the request itself is HTTPS, whatev
   assert.match(await sessionCookie("/api/auth/password", { "x-forwarded-proto": "https" }), /;\s*Secure\b/);
   assert.doesNotMatch(await sessionCookie("/api/auth/logout", {}), /;\s*Secure\b/);
   assert.match(await sessionCookie("/api/auth/logout", { "x-forwarded-proto": "https" }), /;\s*Secure\b/);
+});
+
+async function passwordAttempt(password: string, ip = "192.0.2.1") {
+  const res = await app.inject({
+    method: "POST", url: "/api/auth/password",
+    headers: { "content-type": "application/x-www-form-urlencoded", "x-forwarded-for": ip },
+    payload: new URLSearchParams({ password, return: "/admin" }).toString(),
+  });
+  assert.equal(res.statusCode, 303);
+  const error = new URL(String(res.headers.location), "https://example.test").searchParams.get("error");
+  if (!error) assert.match(String(res.headers["set-cookie"]), new RegExp(`^${SESSION_COOKIE}=`));
+  return error;
+}
+
+test("twenty successful password logins do not hit the per-IP limit", { skip: !ADMIN }, async () => {
+  for (let i = 0; i < 20; i++) assert.equal(await passwordAttempt(PASSWORD_A), null);
+});
+
+test("the eleventh attempt from an IP is rejected, and rejections do not extend the window", { skip: !ADMIN }, async (t) => {
+  t.mock.timers.enable({ apis: ["Date"], now: Date.now() });
+  for (let i = 0; i < 10; i++) assert.equal(await passwordAttempt("wrong"), "wrong");
+  assert.equal(await passwordAttempt(PASSWORD_A), "too-many");
+  for (let i = 0; i < 10; i++) {
+    t.mock.timers.tick(60_000);
+    assert.equal(await passwordAttempt("wrong"), "too-many");
+  }
+  t.mock.timers.tick(5 * 60_000);
+  assert.equal(await passwordAttempt(PASSWORD_A), null);
+});
+
+test("a successful password login clears earlier failures from that IP", { skip: !ADMIN }, async () => {
+  for (let i = 0; i < 9; i++) assert.equal(await passwordAttempt("wrong"), "wrong");
+  assert.equal(await passwordAttempt(PASSWORD_A), null);
+  for (let i = 0; i < 10; i++) assert.equal(await passwordAttempt("wrong"), "wrong");
+  assert.equal(await passwordAttempt(PASSWORD_A), "too-many");
+});
+
+test("failures from a hundred separate IPs do not lock out the admin", { skip: !ADMIN }, async () => {
+  for (let i = 1; i <= 100; i++) assert.equal(await passwordAttempt("wrong", `198.51.100.${i}`), "wrong");
+  assert.equal(await passwordAttempt(PASSWORD_A, "198.51.100.1"), null);
 });

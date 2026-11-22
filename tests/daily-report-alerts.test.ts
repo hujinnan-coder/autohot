@@ -1,4 +1,4 @@
-import "./setup.ts";
+import { stub } from "./setup.ts";
 import assert from "node:assert/strict";
 import { after, before, beforeEach, test } from "node:test";
 import { beijingAt } from "@aihot/contracts/time";
@@ -12,14 +12,19 @@ const daily = (keys: string[]) => keys.filter(k => k.startsWith("report.daily"))
 async function report(date: string) {
   await sql`INSERT INTO reports(kind,key,window_start,window_end,content,generated_at) VALUES('daily',${date},${new Date(at(date))},${new Date(at(date))},'{}',${new Date(at(date))})`;
 }
-before(async () => { await getBoss(); });
+let feishu: Awaited<ReturnType<typeof stub>>;
+before(async () => {
+  feishu = await stub(() => ({ code: 0 }));
+  Object.assign(process.env, { FEISHU_INTERNAL_ENABLED: "true", FEISHU_ALERT_WEBHOOK_URL: feishu.url, WEBHOOK_HUB_URL: "" });
+  await getBoss();
+});
 beforeEach(async () => {
-  Object.assign(process.env, { COLLECT_ENABLED: "true", MODEL_CALLS_ENABLED: "true", FEISHU_INTERNAL_ENABLED: "false" });
+  Object.assign(process.env, { COLLECT_ENABLED: "true", MODEL_CALLS_ENABLED: "true" });
   await sql`DELETE FROM reports`;
   await sql`DELETE FROM job_runs WHERE job='reports.compose'`;
   await sql`DELETE FROM settings WHERE key IN ('alerts.state','heartbeat.worker')`;
 });
-after(async () => { await stopBoss(); await closeDb(); });
+after(async () => { await feishu?.close(); await stopBoss(); await closeDb(); });
 
 test("midnight preserves a missing edition; each date recovers only when its report exists", async () => {
   let result = await checkAlerts(at("2026-10-06", "23:30"));

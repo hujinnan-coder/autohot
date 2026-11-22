@@ -22,6 +22,8 @@
 
 ## 门槛：`industry/selection.ts`
 
+以下为框架示例值，本站实际数字以 `industry/selection.ts` 为准。本站门槛须满足 `understandFloor < T1 < 类别门槛 < T2`。
+
 ```ts
 export const SELECTION = {
   thresholds: { T1: 60, T1_5: 65, T2: 76 },   // 两次评分的平均至少要到这个数

@@ -1,6 +1,6 @@
 // Ops alerts reach the site's operators: a problem is announced once, repeated no more than its level
 // allows (hourly for reader impact), closed with one recovery message.
-import { tag } from "./setup.ts";
+import { stub, tag } from "./setup.ts";
 import assert from "node:assert/strict";
 import { after, before, test } from "node:test";
 import { closeDb, sql } from "@aihot/backend/db";
@@ -18,12 +18,18 @@ import { addDays, beijingAt } from "@aihot/contracts/time";
 
 process.env.COLLECT_ENABLED = "false";
 process.env.MODEL_CALLS_ENABLED = "false";
-process.env.FEISHU_INTERNAL_ENABLED = "false";
 
 const T = tag();
 const SOURCE = `test-alerts-${T}`;
 const stuckIds: string[] = [];
+const messages: string[] = [];
+let feishu: Awaited<ReturnType<typeof stub>>;
 before(async () => {
+  feishu = await stub((_hit, req) => {
+    messages.push(JSON.parse(req.body).content.text);
+    return { code: 0 };
+  });
+  Object.assign(process.env, { FEISHU_INTERNAL_ENABLED: "true", FEISHU_ALERT_WEBHOOK_URL: feishu.url, WEBHOOK_HUB_URL: "" });
   await getBoss(); // collectFindings reads the job tables
   await sql`INSERT INTO sources (id, name, kind, next_fetch_at) VALUES (${SOURCE}, 'Test alerts', 'rss', '2100-01-01')`;
   // Ten new articles that have waited three hours: new content is stuck, readers see nothing new.
@@ -38,6 +44,7 @@ before(async () => {
   await sql`UPDATE articles SET discovered_at = now() - interval '40 hours' WHERE id = ${straggler}`;
 });
 after(async () => {
+  await feishu?.close();
   await stopBoss();
   await closeDb();
 });
@@ -359,22 +366,12 @@ test("selected identity delays show reader impact, recovery state and the affect
 });
 
 test("the ops digest does not describe unknown paid work as harmless or already retried", async () => {
-  const lines: string[] = [];
-  const log = console.log;
-  const enabled = process.env.FEISHU_INTERNAL_ENABLED;
-  process.env.FEISHU_INTERNAL_ENABLED = "false";
-  try {
-    await sql`INSERT INTO receipts(logical_key,service,purpose,status) VALUES('digest-unknown-impact','deepseek','event_identity','unknown')`;
-    console.log = (value: unknown) => { lines.push(String(value)); };
-    await sendDigest();
-    const message = lines.join("\n");
-    assert.match(message, /结果.*未知|结果.*确认/);
-    assert.doesNotMatch(message, /以下事项不影响读者|自动重试过一次/);
-  } finally {
-    console.log = log;
-    if (enabled === undefined) delete process.env.FEISHU_INTERNAL_ENABLED;
-    else process.env.FEISHU_INTERNAL_ENABLED = enabled;
-  }
+  const before = messages.length;
+  await sql`INSERT INTO receipts(logical_key,service,purpose,status) VALUES('digest-unknown-impact','deepseek','event_identity','unknown')`;
+  await sendDigest();
+  const message = messages.slice(before).join("\n");
+  assert.match(message, /结果.*未知|结果.*确认/);
+  assert.doesNotMatch(message, /以下事项不影响读者|自动重试过一次/);
 });
 
 // The request and alert layers must agree: TPM quota errors are temporary, spending

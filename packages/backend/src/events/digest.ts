@@ -31,7 +31,19 @@ export const byReportTime = (a: { at: Date }, b: { at: Date }) => a.at.getTime()
  */
 export function buildStoryDigestInput(story: { title: string; digest: string | null }, reports: Omit<DigestReport, "story_id">[], opts: { corrected: boolean; knownArticleIds?: string[] }) {
   const known = new Set(opts.knownArticleIds ?? []);
-  const lines = reports.slice(-40).map((r) => `${opts.corrected || known.has(r.id) ? "" : "【新】"}报道 ${r.id}｜事实 ${r.fact_id}｜${beijingDate(r.at)} ${beijingTime(r.at)}｜${r.source_name}${r.first_party ? "（一手）" : ""}｜${r.title}｜${r.summary ?? ""}\n事实条件与来源证据：${JSON.stringify(digestFactEvidence(r))}`);
+  const recent = reports.slice(-40);
+  const recentIds = new Set(recent.map((r) => r.id));
+  let input = recent;
+  if (opts.corrected) {
+    const byFact = new Map(reports.map((r) => [r.fact_id, r.id]));
+    const selected = new Set([...recentIds, ...byFact.values()]);
+    for (const r of reports) if (r.first_party) selected.add(r.id);
+    input = reports.filter((r) => selected.delete(r.id));
+  }
+  const lines = input.map((r) => {
+    const label = opts.corrected ? `${recentIds.has(r.id) ? "" : "【早期】"}${r.first_party ? "【一手】" : ""}` : known.has(r.id) ? "" : "【新】";
+    return `${label}报道 ${r.id}｜事实 ${r.fact_id}｜${beijingDate(r.at)} ${beijingTime(r.at)}｜${r.source_name}${!opts.corrected && r.first_party ? "（一手）" : ""}｜${r.title}｜${r.summary ?? ""}\n事实条件与来源证据：${JSON.stringify(digestFactEvidence(r))}`;
+  });
   return opts.corrected
     ? `事件当前标题：${story.title}\n\n报道内容或事实证据经过更正。请只依据下面这些报道的当前内容重写综述，不要沿用以前版本的说法。\n报道（按时间）：\n${lines.join("\n")}`
     : `事件当前标题：${story.title}\n${story.digest ? `上一版综述：${story.digest}\n` : ""}\n报道（按时间，标【新】的是上一版之后的新报道）：\n${lines.join("\n")}`;

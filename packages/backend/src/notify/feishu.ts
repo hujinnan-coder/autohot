@@ -16,6 +16,7 @@ const API = "https://open.feishu.cn/open-apis";
 export const feishuInternalEnabled = () => process.env.FEISHU_INTERNAL_ENABLED === "true";
 
 let tokenCache: { token: string; expires: number } | null = null;
+let alertsDisabledLogged = false;
 
 async function tenantToken(): Promise<string> {
   if (tokenCache && tokenCache.expires > Date.now() + 60_000) return tokenCache.token;
@@ -154,12 +155,16 @@ export function formatRecovery(title: string, since: Date, now: number): { title
  * that notice through the hub. Other alerts use the existing group channel if the hub is unavailable.
  */
 export async function sendAlert(title: string, lines: string[], privateMessageId?: string): Promise<"sent" | "disabled" | "pending"> {
-  // Production needs no label; any other environment that has sending on says which one it is.
-  const text = `${config.environmentName === "production" ? "" : `【${config.environmentName}】`}${title}\n${lines.join("\n")}`;
   if (!feishuInternalEnabled()) {
-    console.log(JSON.stringify({ level: "warn", msg: "alert (not sent: FEISHU_INTERNAL_ENABLED is off)", title, lines }));
+    if (!alertsDisabledLogged) {
+      console.log(JSON.stringify({ level: "warn", msg: "alert (not sent: FEISHU_INTERNAL_ENABLED is off)" }));
+      alertsDisabledLogged = true;
+    }
     return "disabled";
   }
+  alertsDisabledLogged = false;
+  // Production needs no label; any other environment that has sending on says which one it is.
+  const text = `${config.environmentName === "production" ? "" : `【${config.environmentName}】`}${title}\n${lines.join("\n")}`;
   const rest = await toldThroughHub(webhookPieces(text), privateMessageId);
   if (!rest.length) return "sent";
   if (privateMessageId) return "pending";

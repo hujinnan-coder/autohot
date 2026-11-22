@@ -178,7 +178,66 @@ test('the summary that a problem keeps coming back goes out at most once a day, 
 
 test('without the agent, the owner hears every incident as before',async()=>{
  delete process.env.WEBHOOK_HUB_URL;found=[stuck];
- assert.deepEqual((await checkAlerts()).sent,['content.process']);
+ process.env.FEISHU_ALERT_WEBHOOK_URL=`http://127.0.0.1:${(server.address() as any).port}/webhook`;
+ try {
+  assert.deepEqual((await checkAlerts()).sent,['content.process']);
+ } finally {
+  delete process.env.FEISHU_ALERT_WEBHOOK_URL;
+ }
+});
+
+test("disabled alerts and recoveries are retried after the channel is enabled", async () => {
+ const now=Date.now();
+ const privateAlert:Finding={key:'test.private',level:'now',title:'仅发给站长',owner:'private'};
+ const keys=[siteDown.key,privateAlert.key].sort();
+ const state=async()=>{
+  const [row]=await sql<{value:Record<string,{sentAt?:string;undeliveredAt?:string}>}[]>`SELECT value FROM settings WHERE key='alerts.state'`;
+  return row!.value;
+ };
+ found=[siteDown,privateAlert];process.env.FEISHU_INTERNAL_ENABLED='false';
+ assert.deepEqual((await checkAlerts(now)).sent,[]);
+ assert.equal(told.length,0);
+ const disabled=await state();
+ for(const key of keys){
+  assert.equal(disabled[key]?.sentAt,undefined);
+  assert.equal(disabled[key]?.undeliveredAt,new Date(now).toISOString());
+ }
+ process.env.FEISHU_INTERNAL_ENABLED='true';
+ assert.deepEqual((await checkAlerts(now+60_000)).sent.sort(),keys);
+ assert.equal(told.length,2);
+ const delivered=await state();
+ for(const key of keys){
+  assert.equal(delivered[key]?.sentAt,new Date(now+60_000).toISOString());
+  assert.equal(delivered[key]?.undeliveredAt,undefined);
+ }
+
+ found=[];process.env.FEISHU_INTERNAL_ENABLED='false';
+ assert.deepEqual((await checkAlerts(now+120_000)).sent,[]);
+ const waiting=await state();
+ for(const key of keys){
+  assert.equal(waiting[key]?.sentAt,delivered[key]?.sentAt);
+  assert.equal(waiting[key]?.undeliveredAt,new Date(now+120_000).toISOString());
+ }
+ process.env.FEISHU_INTERNAL_ENABLED='true';
+ assert.deepEqual((await checkAlerts(now+180_000)).sent.sort(),keys.map(key=>`${key}:recovered`));
+ assert.equal(told.length,4);
+ const recovered=await state();
+ for(const key of keys)assert.equal(recovered[key],undefined);
+});
+
+test('a pending private notice keeps its delivery key until it is sent',async()=>{
+ const now=Date.now();
+ const incident:Finding={key:'test.private',level:'now',title:'仅发给站长',owner:'private'};
+ found=[incident];tellStatus=503;
+ assert.deepEqual((await checkAlerts(now)).sent,[]);
+ const [row]=await sql<{sent:string|null;waiting:string}[]>`SELECT value->${incident.key}::text->>'sentAt' AS sent,
+  value->${incident.key}::text->>'undeliveredAt' AS waiting FROM settings WHERE key='alerts.state'`;
+ assert.equal(row?.sent,null);
+ assert.equal(row?.waiting,new Date(now).toISOString());
+ tellStatus=200;
+ assert.deepEqual((await checkAlerts(now+60_000)).sent,[incident.key]);
+ assert.equal(told.length,2);
+ assert.deepEqual(told[1]!.body,told[0]!.body);
 });
 
 // 10-25 a quiet Saturday morning: the agent found collection healthy at 07:34, and the owner still got 🔴 at 08:30.

@@ -38,8 +38,9 @@ export { pageHeaders as headers } from "../lib/api.server";
 const PosterSheet = lazy(() => import("../features/item/PosterSheet"));
 
 export async function loader({ params, request }: Route.LoaderArgs) {
-  const item = await loadOr404<SiteItemDetail>(`/api/site/items/${encodeURIComponent(params.id)}`, { signal: request.signal });
-  return cachedPage(600, { item, followups: await loadFollowups(item, request.signal) });
+  const upstream = new Headers();
+  const item = await loadOr404<SiteItemDetail>(`/api/site/items/${encodeURIComponent(params.id)}`, { responseHeaders: upstream, signal: request.signal });
+  return cachedPage(60, { item, followups: await loadFollowups(item, request.signal) }, upstream);
 }
 
 type Loaded = { item: SiteItemDetail; followups: StoryFollowupsResponse | null };

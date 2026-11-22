@@ -8,7 +8,7 @@
 // source is nothing anyone can fix (slow, or too new to judge) and is left to the weekly report.
 // Detail pages fail the way runs do: a timeout in a few hundred reads is nobody's to fix, a page that
 // keeps failing is, so the follow-up waits for repeated failures that are a real share of the reads.
-import { tag } from "./setup.ts";
+import { stub, tag } from "./setup.ts";
 import assert from "node:assert/strict";
 import { after, before, test } from "node:test";
 import { closeDb, sql } from "@aihot/backend/db";
@@ -27,9 +27,17 @@ const now = Date.now();
 const old = new Date(now - 8 * 86400_000);
 process.env.COLLECT_ENABLED = "true";
 process.env.MODEL_CALLS_ENABLED = "false";
-process.env.FEISHU_INTERNAL_ENABLED = "false";
-before(async () => { await getBoss(); });
-after(async () => { await stopBoss(); await closeDb(); });
+const messages: string[] = [];
+let feishu: Awaited<ReturnType<typeof stub>>;
+before(async () => {
+  feishu = await stub((_hit, req) => {
+    messages.push(JSON.parse(req.body).content.text);
+    return { code: 0 };
+  });
+  Object.assign(process.env, { FEISHU_INTERNAL_ENABLED: "true", FEISHU_ALERT_WEBHOOK_URL: feishu.url, WEBHOOK_HUB_URL: "" });
+  await getBoss();
+});
+after(async () => { await feishu?.close(); await stopBoss(); await closeDb(); });
 async function source(id: string, mode = "editorial", created = old) {
   id = `${T}-${id}`;
   await sql`INSERT INTO sources(id,name,kind,participation_mode,health,created_at,last_ok_at,next_fetch_at)
@@ -74,14 +82,12 @@ async function firstImport(sourceId: string, publishedDaysAgo: number[], discove
 const quietGroup = async (mode = "editorial") => (await sourceHealth(now)).find(g => g.mode === mode)!;
 /** The daily follow-ups that name this source. */
 const followUps = async (sourceId: string) => (await collectFindings(now)).filter(f => f.level === "later" && f.key.endsWith(`.${sourceId}`));
-/** The weekly report's lines, as sent. */
-async function weekly() {
-  const lines: string[] = [];
-  const log = console.log;
-  console.log = (value: unknown) => { if (String(value).includes("信源周报")) lines.push(...JSON.parse(String(value)).lines); };
-  try { await sourceHealthWeekly(now); } finally { console.log = log; }
-  return lines.join("\n");
+async function deliveredText(send: () => Promise<unknown>) {
+  const before = messages.length;
+  await send();
+  return messages.slice(before).join("").split("\n").slice(1).join("\n");
 }
+const weekly = () => deliveredText(() => sourceHealthWeekly(now));
 
 test("hot-signal activity does not hide editorial collection stopping", async () => {
   const editorial = await source("editorial", "editorial", new Date(now));
@@ -319,15 +325,7 @@ test("collection failures stay reported on their own, also when the source is pa
 test("a source follow-up closed as not to be fixed leaves the digest until it is restored or goes away", async () => {
   const blocked = await source("blocked", "editorial", new Date(now));
   const KEY = `sources.failing.${blocked}`;
-  const enabled = process.env.FEISHU_INTERNAL_ENABLED;
-  process.env.FEISHU_INTERNAL_ENABLED = "false";
-  const log = console.log;
-  const digest = async () => {
-    const lines: string[] = [];
-    console.log = (value: unknown) => { if (String(value).includes("系统日报")) lines.push(...JSON.parse(String(value)).lines); };
-    try { await sendDigest(now); } finally { console.log = log; }
-    return lines.join("\n");
-  };
+  const digest = () => deliveredText(() => sendDigest(now));
   const audits = () => sql<{ action: string; reason: string }[]>`SELECT action, reason FROM audit_log WHERE subject = ${`followup:${KEY}`} ORDER BY id`;
   try {
     await sql`UPDATE sources SET health = 'failing', fail_count = 9, last_error = 'HTTP 403' WHERE id = ${blocked}`;
@@ -356,10 +354,7 @@ test("a source follow-up closed as not to be fixed leaves the digest until it is
     await sql`UPDATE sources SET health = 'failing', fail_count = 5, last_error = 'HTTP 403' WHERE id = ${blocked}`;
     assert.ok((await digest()).includes(blocked));
   } finally {
-    console.log = log;
     await sql`UPDATE sources SET health = 'ok', fail_count = 0 WHERE id = ${blocked}`;
-    if (enabled === undefined) delete process.env.FEISHU_INTERNAL_ENABLED;
-    else process.env.FEISHU_INTERNAL_ENABLED = enabled;
   }
 });
 

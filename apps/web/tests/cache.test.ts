@@ -6,11 +6,13 @@ import { SIGN_IN_HOME } from "@aihot/contracts/admin";
 import { isPrivatePage } from "@aihot/contracts/http-policy";
 import { CATEGORY_KEYS } from "@aihot/contracts/taxonomy";
 import { UNSAFE_decodeViaTurboStream } from "react-router";
-import { fakeApi, startWebServer, type WebServer } from "./web-server.ts";
+import { fakeApi, itemDetail, startWebServer, type WebServer } from "./web-server.ts";
 
 let web: WebServer;
 let origin: string;
 let deadline: number;
+let itemDeadline: number;
+let itemFreshness = 60;
 /** Root metadata answers only after the selected deadline has passed: a slow sibling loader. */
 let metaAfterDeadline = false;
 const apiCookies: Array<string | undefined> = [];
@@ -35,7 +37,12 @@ const api = fakeApi(async (url, res, req) => {
     res.setHeader("Content-Disposition", 'attachment; filename="article.md"');
     return res.end("# Article");
   }
-  if (url.pathname === "/api/site/items/long-lived") return { id: "long-lived", title: "t" };
+  if (url.pathname === "/api/site/items/freshness" || url.pathname === "/api/site/items/freshness/original") {
+    itemDeadline = Math.floor(Date.now() / 1000) + itemFreshness;
+    res.setHeader("X-Accel-Expires", `@${itemDeadline}`);
+    res.setHeader("Cache-Control", "public, max-age=60, s-maxage=60");
+    return itemDetail({ id: "freshness", title: "测试条目" });
+  }
   if (url.pathname === "/api/site/contact") return { wechatQr: "/qr.png", feishuQr: "/qr.png" };
   if (url.pathname === "/api/site/stories/merged") {
     res.statusCode = 308;
@@ -181,13 +188,20 @@ test("browser freshness shares the selected deadline, including slow sibling loa
   }
 });
 
-test("a shared cache may keep an item page longer than browsers", async () => {
-  const res = await fetch(`${origin}/items/long-lived.data`);
-  assert.equal(res.status, 200);
-  const cc = res.headers.get("Cache-Control")!;
-  assert.equal(Number(cc.match(/(?:^|,)\s*max-age=(\d+)/)![1]), 300);
-  assert.ok(Number(cc.match(/(?:^|,)\s*s-maxage=(\d+)/)![1]) > 300);
-  await res.text();
+test("item and original pages share the upstream deadline, at most a minute", async () => {
+  for (const seconds of [60, 20]) {
+    itemFreshness = seconds;
+    for (const path of ["/items/freshness.data", "/items/freshness/original.data"]) {
+      const res = await fetch(origin + path);
+      assert.equal(res.status, 200, path);
+      assert.equal(res.headers.get("X-Accel-Expires"), `@${itemDeadline}`, path);
+      const cc = res.headers.get("Cache-Control")!;
+      const browser = Number(cc.match(/(?:^|,)\s*max-age=(\d+)/)![1]);
+      const shared = Number(cc.match(/(?:^|,)\s*s-maxage=(\d+)/)![1]);
+      assert.ok(browser > 0 && browser <= seconds && shared === browser, path);
+      await res.text();
+    }
+  }
 });
 
 // A tab opened before a page lost its loader still asks for that page's result, and its router rejects

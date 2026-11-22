@@ -13,7 +13,7 @@ import { after, test } from "node:test";
 import { promisify } from "node:util";
 import { REPO_ROOT } from "@aihot/backend/config";
 import { closeDb, sql } from "@aihot/backend/db";
-import { composeStoryDigest } from "@aihot/backend/events/digest";
+import { buildStoryDigestInput, composeStoryDigest } from "@aihot/backend/events/digest";
 import { parseDigestEvalJsonl } from "../scripts/eval-story-digests-core.ts";
 
 const exec = promisify(execFile);
@@ -23,6 +23,30 @@ const at = (hours: number) => new Date(+now - hours * 3600_000);
 
 after(async () => {
   await closeDb();
+});
+
+test("a digest rewrite keeps early first-party reports and a representative of each fact", () => {
+  const reports = Array.from({ length: 60 }, (_, i) => ({
+    id: `report-${i + 1}`, title: `报道 ${i + 1}`, summary: null, source_name: "测试信源",
+    at: at(60 - i), first_party: i === 1 || i === 59,
+    fact_id: i === 4 ? 3 : i === 3 || i === 5 ? 2 : 1, fact_subject: null, fact_action: null, fact_object: null,
+    fact_conditions: null, evidence: null, structured_fact: null,
+  }));
+  const story = { title: "测试事件", digest: "上一版综述使用过的内容" };
+  const rewrite = buildStoryDigestInput(story, reports, { corrected: true });
+  const lines = rewrite.match(/^.*报道 report-\d+｜/gm);
+  assert.deepEqual(lines, [
+    "【早期】【一手】报道 report-2｜",
+    "【早期】报道 report-5｜",
+    "【早期】报道 report-6｜",
+    ...reports.slice(-40).map((r) => `${r.first_party ? "【一手】" : ""}报道 ${r.id}｜`),
+  ]);
+  assert.doesNotMatch(rewrite, /上一版综述/);
+
+  const incremental = buildStoryDigestInput(story, reports, { corrected: false, knownArticleIds: reports.slice(0, -1).map((r) => r.id) });
+  assert.match(incremental, /上一版综述/);
+  assert.doesNotMatch(incremental, /报道 report-5｜/);
+  assert.match(incremental, /【新】报道 report-60｜/);
 });
 
 /** Runs the script against a provider stub; a refusal comes back as its exit code and output. */
