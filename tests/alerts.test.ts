@@ -240,6 +240,28 @@ test("Jina costs above the Beijing month's threshold are announced to the owner"
   }
 });
 
+test("local-only backups are a digest finding only after a backup exists", async () => {
+  const env = Object.fromEntries(Object.entries(process.env).filter(([key]) => key.startsWith("DB_BACKUP_STORE_")));
+  for (const key of Object.keys(env)) delete process.env[key];
+  const now = Date.now();
+  const backup = async () => (await collectFindings(now)).filter((f) => f.key.startsWith("backup."));
+  try {
+    await sql`DELETE FROM settings WHERE key = 'backup.last'`;
+    assert.deepEqual(await backup(), []);
+    await sql`INSERT INTO settings (key, value) VALUES ('backup.last', ${sql.json({
+      at: new Date(now).toISOString(), uploaded: false, objects: [{ key: "local-only:fixture.dump" }],
+    })})`;
+    const [finding, ...rest] = await backup();
+    assert.deepEqual(rest, []);
+    assert.equal(finding?.key, "backup.local-only");
+    assert.equal(finding.level, "later");
+    assert.match(finding.detail ?? "", /最近一次.*本机只保留最近 3 份/);
+  } finally {
+    Object.assign(process.env, env);
+    await sql`DELETE FROM settings WHERE key = 'backup.last'`;
+  }
+});
+
 // Backup failures may overwrite the latest-attempt summary. Alert age must use the last successful
 // run; repeated failures must not reset it. With no success ever, age starts at the first attempt.
 test("backup failures still escalate after fifty hours without a success", async () => {

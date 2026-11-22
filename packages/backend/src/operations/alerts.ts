@@ -15,19 +15,20 @@
 // Delivery goes through sendAlert (alert webhook or ops chat, internal-chat fallback; off unless FEISHU_INTERNAL_ENABLED).
 import { randomUUID } from "node:crypto";
 import type { AdminCosts } from "@aihot/contracts/admin";
-import { addDays, beijingAt, beijingDate, beijingDay, beijingMidnight, beijingStamp, isValidDate, monthRange } from "@aihot/contracts/time";
+import { addDays, beijingAt, beijingDate, beijingDay, beijingMidnight, beijingStamp, isValidDate, isoWeekLabel, isoWeekRange, monthRange } from "@aihot/contracts/time";
 import { ALERTS, EDITION_TIMES } from "@aihot/site";
 import { audit } from "../audit.ts";
 import { sql } from "../db.ts";
 import { agentConfigured, agentTransportFindings, flushAgentEvents, handoffs, wakeAgent, wakeDigest } from "../notify/agent.ts";
 import { duration, formatAlert, formatRecovery, formatReturn, sendAlert, type Finding, type Level } from "../notify/feishu.ts";
 import { stepsOnService } from "../editorial/models.ts";
-import { backupConfigured } from "./backup.ts";
+import { backupConfigured, KEEP_LOCAL } from "./backup.ts";
 import { dailyAttemptCosts, latestProviderBalances } from "./balances.ts";
 import { GROUPING_WARN_AFTER_MS, waitingSelectedNews } from "./grouping.ts";
 import { upstreamFindings } from "../media/upstream.ts";
 import { serverModules } from "../modules.ts";
 import { awaitingRelease, providerAccessRefused } from "../providers/receipts.ts";
+import { dueMonthly, dueWeekly } from "../reports/compose.ts";
 import { SOURCE_PROBLEMS, sourceHealth } from "../sources/health.ts";
 
 const REPEAT_MS: Record<Exclude<Level, "later">, number> = { now: 3600_000, today: 24 * 3600_000 };
@@ -62,6 +63,7 @@ const CHECKS: Check[] = [
   selectedGrouping,
   contentProcessing,
   dailyReportFindings,
+  periodReportFindings,
   // Money, and things only the owner can do
   providerFindings,
   jinaMonthlyCost,
@@ -234,8 +236,12 @@ async function refusedDeliveries(now: number, open: AlertState): Promise<Finding
 }
 
 async function backupAge(now: number): Promise<Finding[]> {
-  if (!backupConfigured()) return [];
   const [b] = await sql<{ value: { at: string; uploaded: boolean; filesError?: string } }[]>`SELECT value FROM settings WHERE key = 'backup.last'`;
+  if (!backupConfigured()) {
+    if (!b) return [];
+    return [{ key: "backup.local-only", level: "later", title: "数据库备份只留在本机，没有上传",
+      detail: `最近一次 ${beijingStamp(b.value.at)}；本机只保留最近 ${KEEP_LOCAL} 份，机器坏掉就没有备份` }];
+  }
   // A failed archive updates backup.last too. Reuse the run history so repeated failures cannot
   // reset the age; before the first success, count from the first attempt rather than from now.
   const [runs] = await sql<{ last_ok: Date | null; first_attempt: Date | null }[]>`
@@ -615,11 +621,42 @@ async function checkCostAlerts(now: number, state: AlertState, sent: string[]) {
   // Missing prices is a "later" follow-up: like the others it waits for the 09:00 digest (sendDigest), not an alert.
 }
 
-const DAILY_PREFIX = "report.daily:";
-const dailyDate = (key: string) => key.startsWith(DAILY_PREFIX) && isValidDate(key.slice(DAILY_PREFIX.length))
-  ? key.slice(DAILY_PREFIX.length) : undefined;
+const GAP_PREFIX = { daily: "report.daily:", weekly: "report.weekly:", monthly: "report.monthly:" } as const;
+type GapKind = keyof typeof GAP_PREFIX;
+const GAP_KINDS = Object.keys(GAP_PREFIX) as GapKind[];
+const gapOf = (stateKey: string): { kind: GapKind; key: string } | undefined => {
+  for (const kind of GAP_KINDS) {
+    if (!stateKey.startsWith(GAP_PREFIX[kind])) continue;
+    const key = stateKey.slice(GAP_PREFIX[kind].length);
+    if (kind === "daily" ? !isValidDate(key) : !/^\d{4}-(W\d{2}|\d{2})$/.test(key)) return undefined;
+    return { kind, key };
+  }
+  return undefined;
+};
+const DAILY_PREFIX = GAP_PREFIX.daily;
+const dailyDate = (key: string) => {
+  const gap = gapOf(key);
+  return gap?.kind === "daily" ? gap.key : undefined;
+};
 /** Missing dailies are looked for, and announced ones followed, over the last seven Beijing calendar days. */
 const dailyScanFrom = (now: number) => addDays(beijingDate(now), -6);
+const REPORT_NAMES = { daily: "日报", weekly: "周报", monthly: "月报" } as const;
+const SCAN_SPANS = { daily: "七天", weekly: "四周", monthly: "三期" } as const;
+const PERIOD_SCAN = {
+  weekly: { due: dueWeekly, range: isoWeekRange, previous: isoWeekLabel, count: 4 },
+  monthly: { due: dueMonthly, range: monthRange, previous: (date: string) => date.slice(0, 7), count: 3 },
+};
+
+function periodScan(kind: keyof typeof PERIOD_SCAN, now: number) {
+  const { due, range, previous, count } = PERIOD_SCAN[kind];
+  let key = due(new Date(now));
+  return Array.from({ length: count }, () => {
+    const period = range(key)!;
+    const edition = { key, end: period.end };
+    key = previous(addDays(period.start, -1));
+    return edition;
+  });
+}
 
 async function alertState(): Promise<AlertState> {
   const [row] = await sql<{ value: AlertState }[]>`SELECT value FROM settings WHERE key = 'alerts.state'`;
@@ -672,7 +709,7 @@ async function dailyReportFindings(now: number, open: AlertState): Promise<Findi
   const starts = [activity?.first_report, activity?.first_attempt && beijingDate(activity.first_attempt)]
     .filter((date): date is string => !!date && isValidDate(date)).sort();
   const start = starts[0] ?? today;
-  // New gaps and announced editions alike are followed for the scan window; settleDailies closes older ones.
+  // New gaps and announced editions alike are followed for the scan window; settleReports closes older ones.
   const from = dailyScanFrom(now);
   const dates = new Set(Object.keys(open).map(dailyDate).filter((date): date is string => !!date && date >= from));
   for (let date = from; date <= today; date = addDays(date, 1)) {
@@ -690,33 +727,60 @@ async function dailyReportFindings(now: number, open: AlertState): Promise<Findi
   }));
 }
 
+async function periodReportFindings(now: number): Promise<Finding[]> {
+  if (!collecting() || !modelsOn()) return [];
+  const [{ first: firstDaily }] = await sql<{ first: string | null }[]>`SELECT min(key) AS first FROM reports WHERE kind = 'daily'`;
+  if (!firstDaily) return [];
+  const findings: Finding[] = [];
+  for (const kind of ["weekly", "monthly"] as const) {
+    const overdue = periodScan(kind, now).filter(({ end }) =>
+      end >= firstDaily && now >= beijingAt(addDays(end, 1), EDITION_TIMES[kind]).getTime() + 2 * 3600_000).map(({ key }) => key);
+    if (!overdue.length) continue;
+    const published = new Set((await sql<{ key: string }[]>`SELECT key FROM reports WHERE kind = ${kind} AND key IN ${sql(overdue)}`).map(r => r.key));
+    const name = REPORT_NAMES[kind];
+    findings.push(...overdue.filter(key => !published.has(key)).map((key): Finding => ({
+      key: `${GAP_PREFIX[kind]}${key}`, level: "now",
+      title: `${key} 的${name}还没生成`, impact: `读者看不到 ${key} 的${name}`,
+      heals: "尚未补齐；需查看运行记录确认是否需要人工补做",
+      action: "把这条发给 AI 排查补跑",
+      detail: `reports ${kind} ${key} 不存在；看 reports.compose 的运行记录`,
+    })));
+  }
+  return findings;
+}
+
 /**
  * Announced editions this round did not find, because generation is paused or they fell out of the scan
  * window. Only an edition that exists has recovered (checkAlerts says so); one still missing stays open
  * quietly within the window, and past it is closed with one message instead of being reminded about forever.
  */
-async function settleDailies(open: AlertState, found: Set<string>, now: number): Promise<{ missing: Set<string>; sent: string[] }> {
+async function settleReports(open: AlertState, found: Set<string>, now: number): Promise<{ missing: Set<string>; sent: string[] }> {
   const missing = new Set<string>();
   const sent: string[] = [];
-  const dates = Object.keys(open).filter((key) => !found.has(key)).map(dailyDate).filter((date): date is string => !!date);
-  if (!dates.length) return { missing, sent };
-  const published = new Set((await sql<{ key: string }[]>`SELECT key FROM reports WHERE kind = 'daily' AND key IN ${sql(dates)}`).map((r) => r.key));
-  for (const date of dates.filter((date) => !published.has(date))) {
-    const key = `${DAILY_PREFIX}${date}`;
-    const entry = open[key]!;
-    if (date >= dailyScanFrom(now)) {
-      missing.add(key);
-      continue;
-    }
-    if (entry.sentAt) {
-      if (await sendAlert(`${date} 的日报没能补出，停止提醒`, [`读者看不到 ${date} 的日报；缺期从 ${beijingStamp(new Date(entry.since))} 起，已超出七天的检查范围`]) !== "sent") {
-        open[key] = undelivered(entry, now);
+  const gaps = Object.keys(open).filter((key) => !found.has(key)).map(gapOf);
+  for (const kind of GAP_KINDS) {
+    const issues = gaps.flatMap(gap => gap?.kind === kind ? [gap.key] : []);
+    if (!issues.length) continue;
+    const published = new Set((await sql<{ key: string }[]>`SELECT key FROM reports WHERE kind = ${kind} AND key IN ${sql(issues)}`).map(r => r.key));
+    const from = kind === "daily" ? dailyScanFrom(now) : periodScan(kind, now).at(-1)!.key;
+    for (const issue of issues.filter(issue => !published.has(issue))) {
+      const key = `${GAP_PREFIX[kind]}${issue}`;
+      const entry = open[key]!;
+      if (issue >= from) {
         missing.add(key);
         continue;
       }
-      sent.push(`${key}:expired`);
+      if (entry.sentAt) {
+        const name = REPORT_NAMES[kind];
+        if (await sendAlert(`${issue} 的${name}没能补出，停止提醒`, [`读者看不到 ${issue} 的${name}；缺期从 ${beijingStamp(new Date(entry.since))} 起，已超出${SCAN_SPANS[kind]}的检查范围`]) !== "sent") {
+          open[key] = undelivered(entry, now);
+          missing.add(key);
+          continue;
+        }
+        sent.push(`${key}:expired`);
+      }
+      delete open[key];
     }
-    delete open[key];
   }
   return { missing, sent };
 }
@@ -817,10 +881,10 @@ export async function checkAlerts(now = Date.now()) {
     }
   }
   const found = new Set(all.map((f) => f.key));
-  const dailies = await settleDailies(state, found, now);
-  sent.push(...dailies.sent);
+  const reports = await settleReports(state, found, now);
+  sent.push(...reports.sent);
   for (const [key, open] of Object.entries(state)) {
-    if (found.has(key) || dailies.missing.has(key) || open.privateNotice || key.startsWith("cost.")) continue;
+    if (found.has(key) || reports.missing.has(key) || open.privateNotice || key.startsWith("cost.")) continue;
     // An agent-only incident was never told to the owner, so clearing it stays quiet too.
     if (open.agentOnly || !open.sentAt) {
       delete state[key];
