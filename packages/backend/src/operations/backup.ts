@@ -6,7 +6,7 @@
 import { execFile } from "node:child_process";
 import { createHash, createHmac } from "node:crypto";
 import { createReadStream } from "node:fs";
-import { mkdir, readdir, rm, stat } from "node:fs/promises";
+import { mkdir, readdir, rename, rm, stat } from "node:fs/promises";
 import path from "node:path";
 import { promisify } from "node:util";
 import { beijingDate, beijingWeekday } from "@aihot/contracts/time";
@@ -15,7 +15,7 @@ import { sql } from "../db.ts";
 import { screenshotsForwarded } from "./feedback.ts";
 
 const run = promisify(execFile);
-const KEEP_LOCAL = 3;
+export const KEEP_LOCAL = 3;
 
 export interface Store {
   secretId: string;
@@ -98,6 +98,18 @@ async function readPart(file: string, start: number, length: number): Promise<Bu
   return Buffer.concat(chunks);
 }
 
+async function verifyObject(s: Store, key: string, size: number) {
+  const url = new URL(`${s.endpoint}/${key}`);
+  const res = await fetch(url, {
+    method: "HEAD", headers: signV4({ method: "HEAD", url, region: s.region, accessKey: s.secretId, secretKey: s.secretKey, payloadHash: EMPTY_SHA }),
+    signal: AbortSignal.timeout(60_000),
+  });
+  const contentLength = res.headers.get("content-length");
+  if (!res.ok || contentLength === null || Number(contentLength) !== size) {
+    throw new Error(`backup verify ${key}: HTTP ${res.status}, ${contentLength ?? "unknown"} bytes (expected ${size})`);
+  }
+}
+
 /**
  * Upload one file. A dump can outgrow what a single PUT survives: on a slow link the store answers 502
  * or drops the connection halfway, so above MULTIPART_FROM the file goes up in parts, each retried on
@@ -112,6 +124,7 @@ export async function upload(
     const headers = signV4({ method: "PUT", url, region: s.region, accessKey: s.secretId, secretKey: s.secretKey, payloadHash: sha, headers: { "content-length": String(size), "content-type": "application/octet-stream" } });
     const res = await fetch(url, { method: "PUT", headers, body: createReadStream(file) as never, duplex: "half", signal: AbortSignal.timeout(60 * 60_000) } as RequestInit);
     if (!res.ok) throw new Error(`backup upload ${key}: HTTP ${res.status} ${(await res.text()).slice(0, 300)}`);
+    await verifyObject(s, key, size);
     return;
   }
 
@@ -171,6 +184,7 @@ export async function upload(
     }
     throw error;
   }
+  await verifyObject(s, key, size);
 }
 
 export async function runBackup(now = new Date()) {
@@ -181,6 +195,7 @@ export async function runBackup(now = new Date()) {
   // Named after the database ("news_db" → news-db-…), so two databases backed up into one store stay apart.
   const name = sql.options.database.toLowerCase().replace(/[^a-z0-9]+/g, "-");
   const dump = path.join(dir, `${name}-${stamp}.dump`);
+  const dumpPart = `${dump}.part`;
   // execFile includes argv in failures. Give libpq credentials through its environment so neither
   // process listings nor a failed job's stored error contain them; keep other connection options.
   const connection = new URL(config.databaseUrl);
@@ -199,10 +214,16 @@ export async function runBackup(now = new Date()) {
   }).join("&");
   // Raw analytics events keep their table but not their rows: the privacy notice keeps them 30 days, a backup
   // lives up to 100, and their daily aggregates and visitor states are tables of their own.
-  await run("pg_dump", ["--format=custom", "--compress=6", "--no-owner", "--exclude-table-data=analytics_events", "--file", dump, connection.href], { env, maxBuffer: 16 * 1024 * 1024 });
-  // Verify before shipping: the archive must list cleanly.
-  await run("pg_restore", ["--list", dump], { maxBuffer: 64 * 1024 * 1024 });
+  try {
+    await run("pg_dump", ["--format=custom", "--compress=6", "--no-owner", "--exclude-table-data=analytics_events", "--file", dumpPart, connection.href], { env, maxBuffer: 16 * 1024 * 1024 });
+    await run("pg_restore", ["--list", dumpPart], { maxBuffer: 64 * 1024 * 1024 });
+    await rename(dumpPart, dump);
+  } catch (error) {
+    await rm(dumpPart, { force: true }).catch(() => {});
+    throw error;
+  }
   const files = path.join(dir, `${name}-files-${stamp}.tar.gz`);
+  const filesPart = `${files}.part`;
   // No archive when there are no attachments. A failure to read or pack existing files is
   // tried once more and otherwise reported: the database dump still ships, but the run fails.
   const kept: string[] = [];
@@ -220,10 +241,13 @@ export async function runBackup(now = new Date()) {
       if ((await readdir(path.join(config.dataDir, d), { recursive: true, withFileTypes: true })).some(entry => !entry.isDirectory())) kept.push(d);
     }
     if (kept.length) {
-      const pack = () => run("tar", ["-czf", files, "-C", config.dataDir, ...kept]);
+      const pack = () => run("tar", ["-czf", filesPart, "-C", config.dataDir, ...kept]);
       await pack().catch(() => pack());
+      await run("tar", ["-tzf", filesPart], { maxBuffer: 64 * 1024 * 1024 });
+      await rename(filesPart, files);
     }
   } catch (error: unknown) {
+    await rm(filesPart, { force: true }).catch(() => {});
     // tar's own words: the message starts with the whole command line, which can fill the excerpt.
     const stderr = (error as { stderr?: unknown })?.stderr;
     filesError = String(typeof stderr === "string" && stderr.trim() ? stderr.trim() : error instanceof Error ? error.message : error).slice(0, 300);

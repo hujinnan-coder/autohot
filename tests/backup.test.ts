@@ -32,6 +32,9 @@ Object.assign(process.env, env);
 const roots: string[] = [];
 const databases = new Set<string>();
 const objects = new Map<string, Buffer>();
+const verifiedKeys: string[] = [];
+let headStatus = 200;
+let headLengthDelta = 0;
 const PNG = await sharp({ create: { width: 4, height: 4, channels: 3, background: "#808080" } }).png().toBuffer();
 const NOW = new Date("2026-11-01T04:00:00Z");
 // Backups are named after the database ("news_db" → news-db-…).
@@ -40,9 +43,17 @@ const stem = sql.options.database.toLowerCase().replace(/[^a-z0-9]+/g, "-");
 globalThis.fetch = (async (input: string | URL | Request, init?: RequestInit) => {
   const url = new URL(input instanceof Request ? input.url : String(input));
   assert.equal(url.origin, "https://backup.invalid", "the backup fixture must not contact any real service");
+  const key = url.pathname.slice(1);
+  if (init?.method === "HEAD") {
+    verifiedKeys.push(key);
+    const object = objects.get(key);
+    if (!object || headStatus === 404) return new Response(null, { status: 404 });
+    return new Response(null, { status: headStatus, headers: { "Content-Length": String(object.length + headLengthDelta) } });
+  }
+  assert.equal(init?.method, "PUT");
   const chunks: Buffer[] = [];
   for await (const chunk of init!.body as unknown as AsyncIterable<Uint8Array>) chunks.push(Buffer.from(chunk));
-  objects.set(url.pathname.slice(1), Buffer.concat(chunks));
+  objects.set(key, Buffer.concat(chunks));
   return new Response(null, { status: 200 });
 }) as typeof fetch;
 
@@ -50,6 +61,9 @@ beforeEach(async () => {
   config.dataDir = await mkdtemp(path.join(tmpdir(), "aihot-backup-files-"));
   roots.push(config.dataDir);
   objects.clear();
+  verifiedKeys.length = 0;
+  headStatus = 200;
+  headLengthDelta = 0;
 });
 after(async () => {
   globalThis.fetch = originalFetch;
@@ -155,9 +169,49 @@ test("both attachment roots restore nested paths and bytes, without caches or pr
   assert.deepEqual(await readFile(path.join(data, "uploads/nested/user-file.bin")), upload);
   assert.deepEqual(await readFile(path.join(data, "feedback-screenshots/local.png")), PNG);
   assert.deepEqual([...objects.keys()].sort(), ["monthly"].flatMap(prefix => [`${prefix}/${stem}-202611010400.dump`, `${prefix}/${stem}-files-202611010400.tar.gz`]).sort());
+  assert.deepEqual(verifiedKeys, summary.objects.map(({ key }) => key));
+  assert.deepEqual((await readdir(path.join(config.dataDir, "backups"))).sort(), ["excluded.bin", `${stem}-202611010400.dump`, `${stem}-files-202611010400.tar.gz`].sort());
   for (const object of summary.objects) assert.equal(object.sha256, createHash("sha256").update(objects.get(object.key)!).digest("hex"));
 });
 
+for (const [label, status, delta, error] of [
+  ["a shorter object", 200, -1, /backup verify .*: HTTP 200, \d+ bytes \(expected \d+\)/],
+  ["a missing object", 404, 0, /backup verify .*: HTTP 404/],
+] as const) {
+  test(`HEAD reporting ${label} fails the backup without updating its summary`, async () => {
+    headStatus = status;
+    headLengthDelta = delta;
+    const readSummary = () => sql`SELECT value FROM settings WHERE key = 'backup.last'`;
+    const prior = await readSummary();
+    await assert.rejects(runBackup(NOW), error);
+    assert.equal(objects.size, 1, "the PUT completed before verification failed");
+    assert.deepEqual(verifiedKeys, [...objects.keys()]);
+    assert.deepEqual(await readSummary(), prior);
+  });
+}
+
+test("a dump rejected by pg_restore leaves neither a final file nor a partial one", async () => {
+  const bin = path.join(config.dataDir, "restore-bin");
+  await mkdir(bin);
+  await writeFile(path.join(bin, "pg_restore"), `#!/bin/sh
+test "$1" = --list && test -s "$2" || exit 3
+case "$2" in
+  *.dump.part) test ! -e "\${2%.part}" || exit 4 ;;
+  *) exit 5 ;;
+esac
+echo 'fictional invalid dump' >&2
+exit 2
+`, { mode: 0o755 });
+  const originalPath = process.env.PATH;
+  process.env.PATH = `${bin}:${originalPath}`;
+  try {
+    await assert.rejects(runBackup(NOW), /fictional invalid dump/);
+    assert.deepEqual(await readdir(path.join(config.dataDir, "backups")), []);
+    assert.equal(objects.size, 0);
+  } finally {
+    process.env.PATH = originalPath;
+  }
+});
 
 // One root present and the other absent is the first test (screenshots kept, uploads absent).
 for (const dirs of [[], ["uploads", "feedback-screenshots"], ["uploads/empty/nested"]]) {
@@ -208,7 +262,11 @@ n=0
 if [ -f "$BACKUP_TEST_COUNT" ]; then n=$(cat "$BACKUP_TEST_COUNT"); fi
 n=$((n+1))
 printf '%s' "$n" > "$BACKUP_TEST_COUNT"
-if [ "$n" -le "$BACKUP_TEST_FAILURES" ]; then echo 'fictional packing failure' >&2; exit 2; fi
+if [ "$1" = -czf ] && [ "$n" -le "$BACKUP_TEST_FAILURES" ]; then
+  printf 'partial archive' > "$2"
+  echo 'fictional packing failure' >&2
+  exit 2
+fi
 exec "$BACKUP_TEST_TAR" "$@"
 `, { mode: 0o755 });
   const replacement = { PATH: `${bin}:${process.env.PATH}`, BACKUP_TEST_COUNT: countFile, BACKUP_TEST_FAILURES: String(failures), BACKUP_TEST_TAR: realTar };
@@ -224,7 +282,7 @@ test("packing retries once and a successful retry preserves the screenshot", asy
   await save("feedback-screenshots/retry.png");
   await withPackingFailures(1, async count => {
     assert.equal((await runBackup(NOW)).uploaded, true);
-    assert.equal(await count(), 2);
+    assert.equal(await count(), 3, "two writes and one verification");
   });
   const { data } = await extractSavedFiles();
   assert.deepEqual(await readFile(path.join(data, "feedback-screenshots/retry.png")), PNG);
@@ -238,6 +296,7 @@ test("persistent packing failure still sends the database and reports incomplete
   });
   assert.equal(objects.size, 1);
   assert.ok([...objects.keys()].every(key => key.endsWith(".dump")));
+  assert.deepEqual(await readdir(path.join(config.dataDir, "backups")), [`${stem}-202611010400.dump`]);
   const [row] = await sql`SELECT value FROM settings WHERE key = 'backup.last'`;
   assert.equal(row!.value.uploaded, false);
   assert.match(row!.value.filesError, /^fictional packing failure/);
@@ -313,16 +372,23 @@ for (const phase of ["pg_dump", "tar"] as const) {
       const exec = cp.execFile;
       cp.execFile = (...args) => {
         const child = exec(...args);
-        process.send({ cmd: args[0], pid: child.pid });
+        if (args[0] !== "tar" || args[1][0] === "-czf") process.send({ cmd: args[0], pid: child.pid });
         return child;
       };
       syncBuiltinESMExports();
       const { runBackup } = await import("@aihot/backend/operations/backup");
       const { getBoss, stopBoss } = await import("@aihot/backend/jobs/queue");
       const { closeDb } = await import("@aihot/backend/db");
+      const sizes = new Map();
       globalThis.fetch = async (input, init) => {
-        assert.equal(new URL(input).origin, "https://backup.invalid");
-        for await (const chunk of init.body) {} // consume the real dump/archive, never send it outside
+        const url = new URL(input);
+        assert.equal(url.origin, "https://backup.invalid");
+        if (init.method === "HEAD") {
+          return sizes.has(url.pathname) ? new Response(null, { headers: { "Content-Length": String(sizes.get(url.pathname)) } }) : new Response(null, { status: 404 });
+        }
+        let size = 0;
+        for await (const chunk of init.body) size += chunk.length;
+        sizes.set(url.pathname, size);
         return new Response(null, { status: 200 });
       };
       const boss = await getBoss();
