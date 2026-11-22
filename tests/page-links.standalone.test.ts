@@ -11,7 +11,7 @@ import { after, before, test } from "node:test";
 import * as cheerio from "cheerio";
 import type { SiteItemDetail, StoryDetail } from "@aihot/contracts/site";
 import { beijingDate } from "@aihot/contracts/time";
-import { ITEM_COPY, withSubject } from "@aihot/site";
+import { ITEM_COPY } from "@aihot/site";
 import { fakeApi, FIXTURE_AT, itemDetail, startWebServer, type WebServer } from "../apps/web/tests/web-server.ts";
 
 const agent = { slug: "agent", name: "Agent 智能体" };
@@ -56,7 +56,8 @@ function railOf($: cheerio.CheerioAPI, heading: string): string[] {
 }
 
 test("an article a daily carries links to that issue, in the rail and first among the phone chips", async () => {
-  const daily = withSubject("日报");
+  // 0d5f7fd 起页面家具统一用短名；行业词只保留在 SEO 与 Agent 描述里。
+  const daily = "日报";
   for (const [id, name] of [["links-lead", `11月7日 ${daily} · 头条`], ["links-entry", `11月7日 ${daily}`]] as const) {
     const $ = await page(`/items/${id}`);
     const links = $("a[href='/daily/2026-11-07']");
