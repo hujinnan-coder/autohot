@@ -5,6 +5,7 @@ import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { after, test } from "node:test";
+import { setTimeout as sleep } from "node:timers/promises";
 import postgres from "postgres";
 import { runMigrations } from "../scripts/migrate.ts";
 
@@ -23,6 +24,69 @@ function fixture(files: Record<string, string>) {
   }
   return root;
 }
+
+test("a concurrent migration runner waits for the lock and reads the ledger after release", async () => {
+  const name = "9011_concurrent.sql";
+  const ddl = "CREATE TABLE migration_concurrent (id int);";
+  const root = fixture({ [`database/migrations/${name}`]: ddl });
+  const holder = await other.reserve();
+  try {
+    await holder`SELECT pg_advisory_lock(hashtext('aihot.schema.migrations'))`;
+    const migration = runMigrations(db, root);
+    const finishedEarly = migration.then(() => assert.fail("migration finished while the lock was held"));
+    try {
+      const deadline = Date.now() + 5_000;
+      for (;;) {
+        const [waiting] = await Promise.race([finishedEarly, holder`
+          SELECT 1 FROM pg_locks WHERE locktype = 'advisory' AND NOT granted
+            AND pg_backend_pid() = ANY(pg_blocking_pids(pid))`]);
+        if (waiting) break;
+        assert.ok(Date.now() < deadline, "migration runner never waited for the advisory lock");
+        await Promise.race([finishedEarly, sleep(25)]);
+      }
+      // Keep the actual runner waiting past its 10-second DDL timeout.
+      await Promise.race([finishedEarly, sleep(11_000)]);
+      await holder.unsafe(ddl);
+      await holder`INSERT INTO schema_migrations (name) VALUES (${name})`;
+    } finally {
+      await holder`SELECT pg_advisory_unlock(hashtext('aihot.schema.migrations'))`;
+      await migration;
+    }
+    assert.equal(await migration, 0);
+  } finally { holder.release(); }
+});
+
+test("an advisory lock wait is canceled with a statement timeout and succeeds with it disabled", async () => {
+  const holder = await other.reserve();
+  const waiter = await db.reserve();
+  try {
+    await holder`SELECT pg_advisory_lock(hashtext('aihot.schema.migrations'))`;
+    try {
+      await waiter`SET lock_timeout = '60s'`;
+      await waiter`SET statement_timeout = '1s'`;
+      await assert.rejects(waiter`SELECT pg_advisory_lock(hashtext('aihot.schema.migrations'))`, { code: "57014" });
+
+      await waiter`SET statement_timeout = '0'`;
+      const lock = waiter`SELECT pg_advisory_lock(hashtext('aihot.schema.migrations'))`.execute();
+      try {
+        await Promise.race([
+          lock.then(() => assert.fail("second session acquired the lock before release")),
+          sleep(3_000),
+        ]);
+      } finally {
+        await holder`SELECT pg_advisory_unlock(hashtext('aihot.schema.migrations'))`;
+        await lock;
+      }
+      const [released] = await waiter`SELECT pg_advisory_unlock(hashtext('aihot.schema.migrations')) AS unlocked`;
+      assert.equal(released.unlocked, true);
+    } finally {
+      await holder`SELECT pg_advisory_unlock_all()`;
+      await waiter`SELECT pg_advisory_unlock_all()`;
+      await waiter`RESET statement_timeout`;
+      await waiter`RESET lock_timeout`;
+    }
+  } finally { waiter.release(); holder.release(); }
+});
 
 test("unsafe later files and duplicate module names fail before any change", async () => {
   await assert.rejects(runMigrations(db, fixture({

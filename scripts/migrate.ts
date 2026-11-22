@@ -46,6 +46,11 @@ export async function runMigrations(sql: postgres.Sql, root: string, { backupWai
   });
   const session = await sql.reserve();
   try {
+    // 等锁期间关闭语句超时，让迁移进程可以等待完整的 60 秒。
+    await session`SET lock_timeout = '60s'`;
+    await session`SET statement_timeout = '0'`;
+    await session`SELECT pg_advisory_lock(hashtext('aihot.schema.migrations'))`;
+    // 恢复后续 DDL 原有的 1 秒锁超时和 10 秒语句超时。
     await session`SET lock_timeout = '1s'`;
     await session`SET statement_timeout = '10s'`;
     await session`CREATE TABLE IF NOT EXISTS schema_migrations (name text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now())`;
@@ -91,7 +96,11 @@ export async function runMigrations(sql: postgres.Sql, root: string, { backupWai
     console.log(count === 0 ? "database is up to date" : `${count} migration(s) applied`);
     return count;
   } finally {
-    try { await session`RESET lock_timeout`; await session`RESET statement_timeout`; }
+    try {
+      await session`RESET lock_timeout`;
+      await session`RESET statement_timeout`;
+      await session`SELECT pg_advisory_unlock(hashtext('aihot.schema.migrations'))`;
+    }
     finally { session.release(); }
   }
 }
