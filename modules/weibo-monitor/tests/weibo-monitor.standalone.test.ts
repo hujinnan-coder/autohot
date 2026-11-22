@@ -76,19 +76,53 @@ test("rejects missing JSON, malformed JSON, and API errors", () => {
   assert.throws(() => parseTimeline('{"ok":1,"data":{}}'), /no cards array/);
 });
 
-test("truncates the title at 140 characters and prefixes the full repost text", () => {
+test("truncates the title at 140 characters and keeps the original post and full repost comment", () => {
   const text = "车".repeat(136) + "🚗" + "企".repeat(10);
   const { items: [item] } = parseTimeline(timeline([{ card_type: 9, mblog: {
     ...post,
     text,
     isLongText: true,
-    retweeted_status: { user: { screen_name: "原作者" }, text: "原帖", pics: post.pics },
+    retweeted_status: {
+      id: "5361796274981766",
+      created_at: "Thu Nov 05 07:30:00 +0800 2026",
+      user: { screen_name: "原作者" },
+      text: "<b>新车上市</b><br>售价 19.99 万元",
+      pics: post.pics,
+    },
   } }]));
   assert.equal(item.title, "车".repeat(136) + "🚗...");
-  assert.equal(item.bodyText, `【转发 @原作者】\n${text}`);
+  assert.equal(item.bodyText, `【原帖 @原作者】\n新车上市 售价 19.99 万元\n\n【转发评论 @雷军】\n${text}`);
   assert.equal(item.author, "雷军");
+  assert.deepEqual(item.raw, {
+    verified_reason: "小米创办人",
+    retweeted_status: {
+      id: "5361796274981766",
+      created_at: "Thu Nov 05 07:30:00 +0800 2026",
+      user: { screen_name: "原作者" },
+    },
+  });
   const { items: [short] } = parseTimeline(timeline([{ card_type: 9, mblog: { ...post, text: "车".repeat(140) } }]));
   assert.equal(short.title, "车".repeat(140));
+});
+
+test("imports a repost without a comment using the original text", () => {
+  const { items } = parseTimeline(timeline([{ card_type: 9, mblog: {
+    ...post,
+    text: "",
+    retweeted_status: { user: { screen_name: "原作者" }, text: "召回 200 辆" },
+  } }]));
+  assert.equal(items.length, 1);
+  assert.equal(items[0].title, "召回 200 辆");
+  assert.equal(items[0].bodyText, "【原帖 @原作者】\n召回 200 辆");
+});
+
+test("marks a repost whose original text is missing", () => {
+  const { items: [item] } = parseTimeline(timeline([{ card_type: 9, mblog: {
+    ...post,
+    text: "值得关注",
+    retweeted_status: { user: { screen_name: "原作者" } },
+  } }]));
+  assert.equal(item.bodyText, "【转发 @原作者】（原帖正文缺失）\n值得关注");
 });
 
 test("fast, mid, and rest scans recur after 120, 240, and 720 minutes from the tick", () => {

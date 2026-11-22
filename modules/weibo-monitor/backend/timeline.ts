@@ -23,6 +23,13 @@ interface User {
   profile_image_url?: string;
 }
 
+interface RetweetedStatus {
+  id?: string;
+  text?: string;
+  created_at?: string;
+  user?: User;
+}
+
 interface Card {
   card_type?: number;
   mblog?: {
@@ -30,7 +37,7 @@ interface Card {
     text?: string;
     created_at?: string;
     user?: User;
-    retweeted_status?: { user?: User };
+    retweeted_status?: RetweetedStatus;
   };
 }
 
@@ -58,18 +65,38 @@ export function parseTimeline(markdown: string) {
     // 有效，每次扫描都会用它刷新两个源，且 produceImage 成功后图进磁盘缓存，过期也不裂图。
     const url = post.user?.profile_image_url ?? post.user?.avatar_hd;
     if (avatar === null && typeof url === "string" && /^https?:\/\//i.test(url) && URL.canParse(url)) avatar = url;
-    if (typeof post.id !== "string" || !/^\d+$/.test(post.id) || typeof post.text !== "string") return [];
-    const text = stripTags(post.text);
-    if (!text) return [];
+    if (typeof post.id !== "string" || !/^\d+$/.test(post.id)) return [];
+    const text = typeof post.text === "string" ? stripTags(post.text) : "";
+    const original = post.retweeted_status;
+    const originalText = typeof original?.text === "string" ? stripTags(original.text) : "";
+    if (!text && !originalText) return [];
     const date = typeof post.created_at === "string" ? parseWeiboDate(post.created_at) : null;
-    const originalAuthor = authorName(post.retweeted_status?.user) ?? "未知作者";
+    const author = authorName(post.user);
+    const originalAuthor = authorName(original?.user);
+    let bodyText = text;
+    if (originalText) {
+      bodyText = `【原帖 @${originalAuthor ?? "未知作者"}】\n${originalText}`;
+      if (text) bodyText += `\n\n【转发评论 @${author ?? "未知作者"}】\n${text}`;
+    } else if (original) {
+      bodyText = `【转发 @${originalAuthor ?? "未知作者"}】（原帖正文缺失）\n${text}`;
+    }
+    const verifiedReason = post.user?.verified_reason;
     return [{
       url: `https://m.weibo.cn/status/${post.id}`,
-      title: truncate(text, 140, "..."),
-      bodyText: post.retweeted_status ? `【转发 @${originalAuthor}】\n${text}` : text,
+      title: truncate(text || originalText, 140, "..."),
+      bodyText,
       publishedAt: date?.toISOString() ?? null,
-      author: authorName(post.user),
-      raw: typeof post.user?.verified_reason === "string" ? { verified_reason: post.user.verified_reason } : {},
+      author,
+      raw: {
+        ...(typeof verifiedReason === "string" ? { verified_reason: verifiedReason } : {}),
+        ...(original && {
+          retweeted_status: {
+            id: typeof original.id === "string" ? original.id : undefined,
+            created_at: typeof original.created_at === "string" ? original.created_at : undefined,
+            user: { screen_name: originalAuthor },
+          },
+        }),
+      },
     }];
   });
   return { items, avatar };
