@@ -1,7 +1,7 @@
 import { looseQuery, sendProblem } from "@aihot/api/http/respond";
 import { siteHandler } from "@aihot/api/routes/site";
 import { defineServerModule } from "@aihot/backend/modules";
-import { findTopic, loadTopicPage } from "@aihot/backend/publication/topics";
+import { findTopic, loadFollowingItems } from "@aihot/backend/publication/topics";
 import type { FeedItemSummary } from "@aihot/contracts/site";
 import type { FollowingFeed } from "./feed.ts";
 
@@ -20,21 +20,17 @@ export default defineServerModule({
         return sendProblem(req, reply, { status: 400, code: "bad_request", detail: `slugs 最多 ${MAX_SLUGS} 个` });
       }
 
-      const pagesOf = await Promise.all(slugs.map(slug =>
-        Promise.all(Array.from({ length: pages }, (_, i) => loadTopicPage(slug, i + 1)))));
+      const { idsBySlug, items: found, hasMore } = await loadFollowingItems(slugs, pages);
+      const byId = new Map(found.map((item) => [item.id, item]));
       const seen = new Map<string, FeedItemSummary>();
-      let hasMore = false;
-      let served = 0;
-      for (const byPage of pagesOf) {
-        const first = byPage[0];
-        if (!first) continue;
-        served++;
-        if (first.pageCount > pages) hasMore = true;
-        for (const page of byPage) {
-          if (!page) continue;
-          for (const item of page.items) if (!seen.has(item.id)) seen.set(item.id, item);
+      for (const ids of idsBySlug.values()) {
+        for (const id of ids) {
+          const item = byId.get(id);
+          if (item && !seen.has(id)) seen.set(id, item);
         }
       }
+      // A known topic's first page counts even when it has no items.
+      const served = idsBySlug.size;
       const items = [...seen.values()].sort((a, b) => a.timelineAt < b.timelineAt ? 1 : a.timelineAt > b.timelineAt ? -1 : 0);
       return reply.header("Cache-Control", "public, max-age=30, s-maxage=30").send({ items, hasMore, served } satisfies FollowingFeed);
     }));

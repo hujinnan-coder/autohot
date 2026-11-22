@@ -19,8 +19,9 @@ import { upsertMaterial } from "@aihot/backend/content/materials";
 import { stopBoss } from "@aihot/backend/jobs/queue";
 import { installModules } from "@aihot/backend/modules";
 import { publishArticle } from "@aihot/backend/publication/publish";
-import { TOPICS, TOPIC_PAGE_SIZE, loadTopicPage, listTopicSummaries, topicsOfStory } from "@aihot/backend/publication/topics";
+import { TOPICS, TOPIC_PAGE_SIZE, loadFollowingItems, loadTopicPage, listTopicSummaries, topicsOfStory } from "@aihot/backend/publication/topics";
 import type { FollowingFeed } from "@aihot/following/feed";
+import type { FeedItemSummary } from "@aihot/contracts/site";
 import { SERVER_MODULES } from "@aihot/site/modules/server";
 import { buildApp } from "../apps/api/src/app.ts";
 
@@ -187,7 +188,7 @@ before(async () => {
   for (const [i, brand] of ["bmw", "volvo", "bmw", "volvo"].entries()) {
     orderedFollowingIds.push(await report({ at: hoursAgo(2 + i), title: `${brand} 发布新车型 ${i} ${T}`, subjects: [brand] }));
   }
-  sharedFollowingId = await report({ at: hoursAgo(2), title: `吉利和极氪发布联合公告 ${T}`, subjects: ["geely", "zeekr"] });
+  sharedFollowingId = await report({ at: hoursAgo(2.5), title: `吉利和极氪发布联合公告 ${T}`, subjects: ["geely", "zeekr"] });
   for (let i = 0; i <= TOPIC_PAGE_SIZE; i++) {
     pagedFollowingIds.push(await report({ at: hoursAgo(2 + i), title: `比亚迪发布新车型 ${i} ${T}`, subjects: ["byd"] }));
   }
@@ -230,15 +231,31 @@ test("following paginates each topic and keeps topics with fewer pages", async (
   assert.deepEqual(ids(body.items).sort(), [...pagedFollowingIds, ...orderedFollowingIds.filter((_, i) => i % 2 === 0)].sort());
 });
 
+test("following's batched read returns the same items as merging individual topic pages", async () => {
+  const slugs = ["geely", "zeekr", "byd", "maserati"];
+  const pages = 2;
+  const now = new Date();
+  const oldItems = new Map<string, FeedItemSummary>();
+  for (const slug of slugs) {
+    for (let p = 1; p <= pages; p++) {
+      const topicPage = await loadTopicPage(slug, p, now);
+      for (const item of topicPage?.items ?? []) oldItems.set(item.id, item);
+    }
+  }
+  const expected = ids([...oldItems.values()].sort((a, b) => b.timelineAt.localeCompare(a.timelineAt)));
+  assert.ok(expected.includes(sharedFollowingId) && expected.includes(pagedFollowingIds.at(-1)!));
+  assert.deepEqual(ids((await loadFollowingItems(slugs, pages, now)).items), expected);
+});
+
 test("following accepts 30 topics and rejects 31", async () => {
   const slugs = TOPICS.slice(0, 31).map(topic => topic.slug);
   assert.equal(slugs.length, 31);
   assert.equal((await followingFeed(slugs)).statusCode, 400);
-  const res = await followingFeed(slugs.slice(0, 30));
+  const res = await followingFeed(slugs.slice(0, 30), 10);
   assert.equal(res.statusCode, 200);
   const body = res.json<FollowingFeed>();
   assert.equal(body.served, 30);
-  assert.ok(body.items.length <= 30 * TOPIC_PAGE_SIZE);
+  assert.ok(body.items.length <= 30 * 10 * TOPIC_PAGE_SIZE);
 });
 
 test("following ignores unknown slugs and repeated topics", async () => {
@@ -253,4 +270,16 @@ test("following with no slug returns an empty feed", async () => {
   const res = await app.inject("/api/site/following/feed");
   assert.equal(res.statusCode, 200);
   assert.deepEqual(res.json<FollowingFeed>(), { items: [], hasMore: false, served: 0 });
+});
+
+test("following filters a withdrawal while the cached topic still seats the item", async (t) => {
+  // Start beyond any index reused by earlier tests and keep the next two reads within its TTL.
+  t.mock.timers.enable({ apis: ["Date"], now: Date.now() + 61_000 });
+  const slugs = ["geely"];
+  assert.deepEqual(ids((await loadFollowingItems(slugs, 1)).items), [sharedFollowingId]);
+  await sql`UPDATE publications SET visibility = 'withdrawn' WHERE article_id = ${sharedFollowingId}`;
+  t.mock.timers.tick(1_000);
+  const result = await loadFollowingItems(slugs, 1);
+  assert.deepEqual(result.idsBySlug.get("geely"), [sharedFollowingId]);
+  assert.deepEqual(ids(result.items), []);
 });

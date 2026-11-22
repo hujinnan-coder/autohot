@@ -6,7 +6,7 @@
 // fact, as v1 and RSS do.
 import type { CategoryKey } from "@aihot/contracts/taxonomy";
 import type {
-  Brand, TopicGroup, TopicGroupKey, TopicLink, TopicPage, TopicSummary, TopicsResponse,
+  Brand, FeedItemSummary, TopicGroup, TopicGroupKey, TopicLink, TopicPage, TopicSummary, TopicsResponse,
 } from "@aihot/contracts/site";
 import { readFileSync } from "node:fs";
 import path from "node:path";
@@ -365,6 +365,36 @@ export async function loadTopicPage(slug: string, page: number, now?: Date): Pro
     pageCount,
     pageSize: TOPIC_PAGE_SIZE,
   };
+}
+
+/**
+ * Read the first pages of several topics without loadTopicPage's counts, brands or module parts.
+ * Membership can lag by the index's 60-second TTL. The shared item projection and seatedCondition
+ * still read live content and filter withdrawals, just as on topic pages.
+ */
+export async function loadFollowingItems(
+  slugs: string[], pages: number, now?: Date,
+): Promise<{ idsBySlug: Map<string, string[]>; items: FeedItemSummary[]; hasMore: boolean }> {
+  const idsBySlug = new Map<string, string[]>();
+  if (slugs.length === 0) return { idsBySlug, items: [], hasMore: false };
+  const index = await topicIndex(now);
+  const at = now ?? new Date();
+  const limit = pages * TOPIC_PAGE_SIZE;
+  const all = new Set<string>();
+  let hasMore = false;
+  for (const slug of slugs) {
+    const seats = index.bySlug.get(slug) ?? [];
+    const ids = seats.slice(0, limit).map((s) => s.id);
+    idsBySlug.set(slug, ids);
+    for (const id of ids) all.add(id);
+    if (seats.length > limit) hasMore = true;
+  }
+  const rows = all.size
+    ? await sql<ItemRow[]>`SELECT ${ITEM_COLUMNS} ${ITEM_FROM}
+        WHERE p.article_id = ANY(${[...all]}::text[]) AND ${seatedCondition(at)}
+        ORDER BY p.timeline_at DESC, p.article_id DESC`
+    : [];
+  return { idsBySlug, items: rows.map(toFeedItemSummary), hasMore };
 }
 
 const STORY_TOPICS = 6;
