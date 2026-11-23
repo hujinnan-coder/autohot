@@ -1060,24 +1060,6 @@
       "enabled": false
     },
     {
-      "id": "x-fredericlambert",
-      "name": "Frederic Lambert（Electrek）",
-      "kind": "x_search",
-      "config": {
-        "query": "from:FredericLambert -filter:replies",
-        "searchType": "Latest"
-      },
-      "tier": "T2",
-      "participation_mode": "editorial",
-      "interval_minutes": 120,
-      "tags": [
-        "记者"
-      ],
-      "site_fulltext": false,
-      "syndicate_fulltext": false,
-      "enabled": false
-    },
-    {
       "id": "x-sokane1",
       "name": "Sean O'Kane（WSJ）",
       "kind": "x_search",
@@ -6476,6 +6458,1417 @@
       "tags": [
         "官方",
         "中国车市"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-jimfarley98",
+      "name": "Jim Farley（福特汽车 CEO）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:jimfarley98 -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "高管"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-taylorogan",
+      "name": "Taylor Ogan（Snow Bull Capital CEO）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:TaylorOgan -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "分析师"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-petercbigelow",
+      "name": "Pete Bigelow（Kodiak Robotics 传播）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:PeterCBigelow -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "分析师"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-wmorrill3",
+      "name": "Wes Morrill（特斯拉 Cybertruck 首席工程师）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:wmorrill3 -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "高管"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-davideggert00",
+      "name": "David Eggert（Crain's Detroit 政策记者）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:DavidEggert00 -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-afonsoev",
+      "name": "Afonso（EV_CARBA 创始人）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:AfonsoEV_ -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "自媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-alexroy144",
+      "name": "Alex Roy（The Autonocast 联合创始人）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:AlexRoy144 -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "自媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-zachgorchow",
+      "name": "Zach Gorchow（Gongwer Michigan 总裁）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:ZachGorchow -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-milankovac",
+      "name": "Milan Kovac（前特斯拉 FSD 与 Optimus 负责人）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:_milankovac_ -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "高管"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-alanisnking",
+      "name": "Alanis King（汽车视频创作者）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:alanisnking -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "自媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-itskyleconner",
+      "name": "Kyle Conner（Out of Spec Studios 负…）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:itskyleconner -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "自媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-ntwork",
+      "name": "Nick Twork（Lucid Motors 传播负责人）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:ntwork -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "高管"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-ray4tesla",
+      "name": "Ray（特斯拉资讯博主）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:ray4tesla -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "自媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-travisraxelrod",
+      "name": "Travis Axelrod（特斯拉投资者关系）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:travisraxelrod -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "高管"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-mdezegher",
+      "name": "Max（特斯拉超充业务负责人）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:MdeZegher -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "高管"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-larsmoravy",
+      "name": "Lars Moravy（特斯拉高管）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:larsmoravy -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "高管"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-mtruby",
+      "name": "Mark Truby（福特汽车首席传播官）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:mtruby -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "高管"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-robmaurer",
+      "name": "Rob Maurer（First Principles Grou…）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:robmaurer -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "分析师"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-geely-kevin",
+      "name": "Kevin Chen（吉利汽车集团全球传播与品牌负责人）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:Geely_Kevin -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "高管"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-gfilche",
+      "name": "Gali（HyperChange 创作者）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:Gfilche -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "自媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-grantschwab",
+      "name": "Grant Schwab（底特律新闻 华盛顿记者）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:GrantSchwab -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-missgoelectric",
+      "name": "GoElectric（电动车自媒体）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:MissGoElectric -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "自媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-techtekedra",
+      "name": "Tekedra Mawakana（Waymo 联合 CEO）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:TechTekedra -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "高管"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-jessicaray0",
+      "name": "Jessica Ray（MotorWeek 数字制作人）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:jessicaray0 -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "自媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-airevthingtrnsp",
+      "name": "Danny Lee（彭博社亚洲航空与交通记者）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:AirEVthingTRNSP -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-andrthie",
+      "name": "André Thierig（特斯拉柏林超级工厂负责人）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:AndrThie -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "高管"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-ericetesla",
+      "name": "Eric（特斯拉 Robotaxi 负责人）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:EricETesla -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "高管"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-jchengwsj",
+      "name": "Jonathan Cheng（华尔街日报中国分社社长）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:JChengWSJ -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-jas0nyu",
+      "name": "Jason（电动车与中国车市观察者）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:Jas0nYu -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "分析师"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-roamingnorway",
+      "name": "William Jarbeaux（Out of Spec Roaming 负…）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:RoamingNorway -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "自媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-tashaark",
+      "name": "Tasha Keeney（ARK Invest 投资分析总监）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:TashaARK -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "分析师"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-uibyadam",
+      "name": "Adam Kasprzak（特斯拉 UI 设计主管）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:UIbyAdam -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "高管"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-alex-avoigt",
+      "name": "Alex Avoigt（特斯拉领域 YouTuber、作者）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:alex_avoigt -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "自媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-davidntracy",
+      "name": "David Tracy（The Autopian 联合创始人）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:davidntracy -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "自媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-greentheonly",
+      "name": "green（特斯拉固件与 FSD 信息分析者）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:greentheonly -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "自媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-kyleichan",
+      "name": "Kyle Chan（布鲁金斯学会研究员）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:kyleichan -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "分析师"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-patrickmwilson",
+      "name": "Patrick Wilson（底特律自由报 新闻总监）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:patrickmwilson -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-thealso",
+      "name": "Jim（AlsoDriven 联合创始人）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:thealso -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "自媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-xiaopenghexpeng",
+      "name": "何小鹏（小鹏汽车董事长兼 CEO）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:xiaopenghexpeng -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "高管"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-breanacnoble",
+      "name": "Breana Noble（底特律新闻 汽车与商业记者）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:BreanaCNoble -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-changxche",
+      "name": "Chang Che（纽约客撰稿人）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:Changxche -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-corysteuben",
+      "name": "Cory Steuben（Lucid Motors 高级总监）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:CorySteuben -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "高管"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-dnbethleblanc",
+      "name": "Beth LeBlanc（底特律新闻 记者）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:DNBethLeBlanc -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-davidmoss",
+      "name": "David Moss（自动驾驶主题全职创作者）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:DavidMoss -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "自媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-davidzipper",
+      "name": "David Zipper（交通、城市与科技撰稿人）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:DavidZipper -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-fredlambert",
+      "name": "Fred Lambert（Electrek 主编）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:FredLambert -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-gregkable",
+      "name": "Greg Kable（汽车记者）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:GregKable -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-mcmuckraker",
+      "name": "Steve Neavling（Metro Times 调查记者）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:MCmuckraker -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-matthardigree",
+      "name": "Matt Hardigree（The Autopian 出版人）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:MattHardigree -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "自媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-rebeccabellan",
+      "name": "Rebecca Bellan（TechCrunch 高级记者）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:RebeccaBellan -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-stevefowler",
+      "name": "Steve Fowler（汽车与科技记者）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:SteveFowler -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-tim-stevens",
+      "name": "Tim Stevens（自由撰稿人）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:Tim_Stevens -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-vincebond86",
+      "name": "Vince Bond Jr.（Automotive News 记者）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:VinceBond86 -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-wassymbensaid",
+      "name": "Wassym Bensaid（Rivian 软件负责人）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:WassymBensaid -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "高管"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-adrianfclarke",
+      "name": "Adrian Clarke（前路虎外观设计师）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:adrianfclarke -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "自媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-brianxpeng",
+      "name": "顾宏地 Brian Gu（小鹏汽车副董事长兼总裁）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:brianxpeng -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "高管"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-danwpriestley",
+      "name": "Dan Priestley（特斯拉 Semi 项目）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:danWpriestley -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "高管"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-gbrulte",
+      "name": "Grayson Brulte（Road to Autonomy 创始人）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:gbrulte -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "分析师"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-jlareauan",
+      "name": "Jamie LaReau（底特律自由报、今日美国记者）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:jlareauan -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-johndstoll",
+      "name": "John D. Stoll（作者）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:johndstoll -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-jonmcneill",
+      "name": "Jon McNeill（DVx CEO）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:jonmcneill -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "高管"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-kirstenkorosec",
+      "name": "Kirsten Korosec（TechCrunch 交通编辑）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:kirstenkorosec -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-onlyyoontv",
+      "name": "Eunice Yoon（CNBC 中国分社社长兼记者）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:onlyyoontv -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-peebles",
+      "name": "Peebles Squire（Rivian 企业传播）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:peebles -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "高管"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-reed",
+      "name": "Waymo 工程师（简介极简）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:reed -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "高管"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-saswat101",
+      "name": "Saswat Panigrahi（Waymo 首席产品官）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:saswat101 -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "高管"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-techiedani",
+      "name": "Dani（科技与汽车内容创作者）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:techiedani -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "自媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-ajbooth11",
+      "name": "AJ Booth（特斯拉能源与充电业务负责人）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:AJBooth11 -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "高管"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-itskimjava",
+      "name": "Kim Java（电动车评测 YouTuber）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:ItsKimJava -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "自媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-karacarlson2",
+      "name": "Kara Carlson（彭博社记者）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:KaraCarlson2 -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-nicolewakelin",
+      "name": "Nicole Wakelin（汽车记者）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:NicoleWakelin -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-rebeccatinucci",
+      "name": "Rebecca Tinucci（Uber Freight CEO）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:RebeccaTinucci -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "高管"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-rodneyhooper13",
+      "name": "Rodney Hooper（RK Equity）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:RodneyHooper13 -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "分析师"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-suzkp",
+      "name": "Suzanne Philion（Waymo 首席营销官）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:SuzKP -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "高管"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-therideshareguy",
+      "name": "Harry Campbell（The Driverless Digest…）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:TheRideshareGuy -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "分析师"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-aicha2evans",
+      "name": "Aicha Evans（Zoox CEO）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:aicha2evans -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "高管"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-carswithmiles",
+      "name": "Miles Somerville（Cars With Miles 汽车视频）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:carswithmiles -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "自媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-driversside",
+      "name": "Jimmy Dinsmore（Driver's Side 新车评测专栏作者）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:driversside -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "自媒体"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-ethanteicher",
+      "name": "Ethan Teicher（Waymo 传播）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:ethanteicher -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "高管"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-globallithium",
+      "name": "Joe Lowry（Global Lithium 创始人）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:globallithium -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "分析师"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-liumiao",
+      "name": "Liu Miao（CarNewsChina 电动车与电池新闻…）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:liumiao -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-rawat-ritvik",
+      "name": "Ritvik Rawat（特斯拉 AI 硬件与推理软件负责人）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:rawat_ritvik -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "高管"
+      ],
+      "site_fulltext": false,
+      "syndicate_fulltext": false
+    },
+    {
+      "id": "x-suvratkothari",
+      "name": "Suvrat Kothari（InsideEVs 记者）",
+      "kind": "x_search",
+      "config": {
+        "query": "from:suvratkothari -filter:replies",
+        "searchType": "Latest"
+      },
+      "tier": "T2",
+      "participation_mode": "editorial",
+      "interval_minutes": 120,
+      "tags": [
+        "记者"
       ],
       "site_fulltext": false,
       "syndicate_fulltext": false
