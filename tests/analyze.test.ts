@@ -213,7 +213,9 @@ test("structure retains grounded conditions and rejects invented or unseen quote
 test("structure JSON with missing or invalid scope or fact is rejected", async () => {
   for (const marker of Object.keys(invalidStructures)) {
     const id = await article(marker);
-    await assert.rejects(analyzeArticle(id), ModelOutputError, marker);
+    // Failed articles are grouped by the first 120 characters of the message: the step's purpose leads,
+    // so a structure degradation can be told from unusable output of any other step.
+    await assert.rejects(analyzeArticle(id), (error: unknown) => error instanceof ModelOutputError && /^\[structure_article\] unusable output/.test(error.message), marker);
     const [receipt] = await sql`SELECT status FROM receipts WHERE purpose = 'structure_article' AND subject LIKE ${`article:${id}@%`}`;
     assert.equal(receipt?.status, "failed", marker);
     assert.equal((await sql`SELECT 1 FROM analyses WHERE article_id = ${id}`).length, 0, marker);
