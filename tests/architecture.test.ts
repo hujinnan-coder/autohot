@@ -122,6 +122,16 @@ test("grouping stays serial: no database constraint stops two workers from found
     "归组必须保持 localConcurrency: 1。facts 和 stories 无唯一约束,两个进程会重复建事件");
 });
 
+// A job handler's return value reaches pgboss.job.output only with perJobResults. The engine's queues
+// do not switch it on: a plan that has a handler "return { state: ... }" and later asserts on job.output
+// is built on a mechanism that does not exist. Module queues (workModuleQueues) do use perJobResults.
+test("engine job handlers cannot report state through job output", () => {
+  const src = readFileSync(path.join(ROOT, BACKEND, "jobs/queue.ts"), "utf8");
+  const work = src.slice(src.indexOf("export async function work<"), src.indexOf("export async function workModuleQueues"));
+  assert.doesNotMatch(work, /perJobResults/,
+    "work() does not pass perJobResults: a handler's return value is discarded. 要让任务输出可查,改用显式落库,或给该队列单独启用 perJobResults 并同步改本断言");
+});
+
 // Nothing kept that nothing uses. Stored state and settings outlive the code that used them, and an
 // unread field still costs a query; each check names what to delete. They compare names, so a column
 // whose name its table's code also uses for something else slips through. Tests, fixtures and local
