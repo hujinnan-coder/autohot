@@ -5870,7 +5870,7 @@
         "官方",
         "海外"
       ],
-      "site_fulltext": false,
+      "site_fulltext": true,
       "syndicate_fulltext": false
     },
     {
@@ -5964,7 +5964,7 @@
         "官方",
         "海外"
       ],
-      "site_fulltext": false,
+      "site_fulltext": true,
       "syndicate_fulltext": false
     },
     {
@@ -6013,7 +6013,7 @@
         "海外",
         "电动车"
       ],
-      "site_fulltext": false,
+      "site_fulltext": true,
       "syndicate_fulltext": false
     },
     {
@@ -6047,7 +6047,7 @@
         "官方",
         "海外"
       ],
-      "site_fulltext": false,
+      "site_fulltext": true,
       "syndicate_fulltext": false
     },
     {
