@@ -75,3 +75,4 @@
 - Codex 沙箱连不上本机 Postgres，也监听不了本地端口；连库和起服务的测试留主机跑。
 - 派 Codex 的命令要带 `PATH="$HOME/.local/node/bin:$PATH"`（默认 node 22 太旧），结尾 `< /dev/null` 必须有。
 - `npm test` 需要显式 `DATABASE_URL`，且库名以 `_test` 或 `_ci` 结尾。
+- **重启 worker/api 前先跑迁移**（`node --env-file=.env scripts/migrate.ts`）：服务从工作区直跑 .ts，新代码可能引用新列。2026-11-23 事故：另一会话 21:36 重启 worker 未跑迁移，新 digest.ts 查 `report_hashes` 缺列，3 小时失败 112 个综述任务（已补迁移并重入队恢复）。
