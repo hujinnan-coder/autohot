@@ -55,11 +55,12 @@ async function report(title: string, at: Date, score: number, selected: boolean,
 }
 
 /** A fact of an event (a new event unless `story` is given), reported by `members`. */
-async function fact(members: string[], story?: number): Promise<number> {
+async function fact(members: string[], story?: number, object?: string): Promise<number> {
   const id = story ?? (await sql<{ id: number }[]>`INSERT INTO stories (public_id, title) VALUES (${randomUUID()}, '事件') RETURNING id`)[0]!.id;
   const [f] = await sql<{ id: number }[]>`INSERT INTO facts (public_id, story_id, title) VALUES (${randomUUID()}, ${id}, '事实') RETURNING id`;
   for (const m of members) await sql`INSERT INTO fact_articles (fact_id, article_id, role) VALUES (${f!.id}, ${m}, 'primary')`;
   await sql`UPDATE publications SET fact_id = ${f!.id}, story_id = ${id} WHERE article_id = ANY(${members})`;
+  if (object !== undefined) await sql`UPDATE facts SET object = ${object} WHERE id = ${f!.id}`;
   return id;
 }
 
@@ -70,6 +71,38 @@ async function content(date: string): Promise<Content> {
   return r!.content;
 }
 const carried = (c: Content) => [...c.sections.flatMap((s) => s.items), ...c.flashes, ...(c.picks ?? [])].map((i) => i.itemId);
+
+test("a daily lead yields to the first main entry whose fact object did not lead recently", async () => {
+  const yesterday = "2021-06-01";
+  const yesterdayLead = await report("昨日同车型头条", hoursBefore(yesterday, 5), 92, true);
+  await fact([yesterdayLead], undefined, "Xcar-1");
+  await composeDaily(yesterday);
+
+  const today = "2021-06-02";
+  const repeated = await report("同车型的独立新进展", hoursBefore(today, 6), 94, true);
+  await fact([repeated], undefined, "Xcar-1");
+  const next = await report("另一车型的新进展", hoursBefore(today, 5), 90, true);
+  await fact([next], undefined, "Xcar-2");
+
+  await composeDaily(today);
+  const c = await content(today);
+  assert.equal(c.leadItemId, next);
+  assert.ok(c.sections.flatMap((s) => s.items).some((item) => item.itemId === repeated), "the yielded lead remains a main entry");
+});
+
+test("a daily lead stays first when its fact object differs from recent leads", async () => {
+  const yesterday = "2021-06-08";
+  const yesterdayLead = await report("昨日车型头条", hoursBefore(yesterday, 5), 92, true);
+  await fact([yesterdayLead], undefined, "Xcar-1");
+  await composeDaily(yesterday);
+
+  const today = "2021-06-09";
+  const lead = await report("不同车型的头条", hoursBefore(today, 6), 94, true);
+  await fact([lead], undefined, "Xcar-3");
+
+  await composeDaily(today);
+  assert.equal((await content(today)).leadItemId, lead);
+});
 
 test("a thin issue fills its highlights with the window's best reports it left out, the same on every outlet", async () => {
   const day = "2021-03-09";

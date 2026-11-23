@@ -87,6 +87,39 @@ function windowPoint(at: Date): string {
 /** The highlights a daily's front page lists after its lead (今日看点). */
 const DAILY_HIGHLIGHTS = 3;
 
+/** Let a daily's first entry yield when its fact object led one of the last three issues. */
+async function dailyLead(date: string, main: EditionEntry[]): Promise<EditionEntry | undefined> {
+  const first = main[0];
+  if (!first) return undefined;
+  const normalize = (value: string) => value.toLowerCase().replace(/\s/g, "");
+  const earlier = await sql<{ object: string }[]>`
+    SELECT f.object
+    FROM (
+      SELECT content->>'leadItemId' AS item_id
+      FROM reports
+      WHERE kind = 'daily' AND key < ${date}
+      ORDER BY key DESC LIMIT 3
+    ) recent
+    JOIN publications p ON p.article_id = recent.item_id
+    JOIN fact_articles fa ON fa.article_id = p.article_id AND fa.role <> 'mention'
+    JOIN facts f ON f.id = fa.fact_id
+    WHERE f.object IS NOT NULL AND f.object <> ''`;
+  const previousObjects = new Set(earlier.map(({ object }) => normalize(object)).filter(Boolean));
+  if (previousObjects.size === 0) return first;
+
+  const factIds = [...new Set(main.flatMap(({ entry }) => entry.factId ? [entry.factId] : []))];
+  if (!factIds.length) return first;
+  const facts = await sql<{ public_id: string; object: string | null }[]>`
+    SELECT public_id, object FROM facts WHERE public_id = ANY(${factIds}::text[])`;
+  const objectsByFact = new Map(facts.map(({ public_id, object }) => [public_id, object ? normalize(object) : ""]));
+  const conflicts = (candidate: EditionEntry) => {
+    const object = candidate.entry.factId ? objectsByFact.get(candidate.entry.factId) : "";
+    return Boolean(object && previousObjects.has(object));
+  };
+  if (!conflicts(first)) return first;
+  return main.find((candidate, index) => index > 0 && !conflicts(candidate)) ?? first;
+}
+
 /**
  * Daily report for Beijing date D covers the 24 hours up to the site's edition time on D (EDITION_TIMES).
  * Its most important entry leads, in its own words, and the next three are today's highlights; a thin issue
@@ -103,7 +136,8 @@ export async function composeDaily(date: string, reason?: string): Promise<{ key
   // Nothing judged in the window is a failure upstream, not a quiet day: the run fails and is caught up later.
   if (edition.entries.length === 0 && edition.stats.judgedReports === 0) throw new Error(`daily ${date}: nothing judged in its window`);
   const issue = arrangeDaily(edition.entries);
-  const [lead, ...rest] = issue.main;
+  const lead = await dailyLead(date, issue.main);
+  const rest = issue.main.filter((entry) => entry !== lead);
   const highlights = rest.slice(0, DAILY_HIGHLIGHTS).map((e) => e.entry.itemId);
   const picks = lead ? await dailyPicks(date, start, end, [...issue.main, ...issue.flashes], DAILY_HIGHLIGHTS - highlights.length) : [];
   const content = {
