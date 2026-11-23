@@ -51,6 +51,7 @@ function Figure({ n, unit }: { n: number; unit: string }) {
 }
 
 const KIND_ORDER: Array<[string, string]> = [
+  ["weibo", "微博"],
   ["x_search", "X"],
   ["rss", "RSS"],
   ["web_list", "网页"],

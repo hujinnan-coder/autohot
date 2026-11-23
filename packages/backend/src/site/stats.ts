@@ -30,7 +30,18 @@ async function querySiteStats(now: Date): Promise<SiteStats> {
              -- Measure recent site intake and keep the original date for archived selections.
              (SELECT count(*) FROM publications p WHERE ${selectedCondition(now)}
                 AND (CASE WHEN p.backfill THEN p.timeline_at ELSE p.discovered_at END) > ${dayAgo})::int AS "selectedDay"`,
-    sql<{ kind: string; n: number }[]>`SELECT kind, count(*)::int AS n FROM sources WHERE enabled GROUP BY kind ORDER BY kind`,
+    // The Weibo channel (channelOf's prefixes) is one figure per account: a monitored account runs
+    // on two sources at once (the module's page reader and the free stream), so it counts once by uid.
+    // A kind without sources stays out, as the plain grouping kept it.
+    sql<{ kind: string; n: number }[]>`
+      SELECT kind, n FROM (
+        SELECT 'weibo' AS kind, count(DISTINCT regexp_replace(id, '\\D', '', 'g'))::int AS n
+        FROM sources WHERE enabled AND (id LIKE 'weibo-%' OR id LIKE 'weibopage-%')
+        UNION ALL
+        SELECT kind, count(*)::int AS n FROM sources WHERE enabled
+          AND NOT (id LIKE 'weibo-%' OR id LIKE 'weibopage-%') AND kind <> 'external'
+        GROUP BY kind
+      ) k WHERE n > 0 ORDER BY kind`,
     // A shuffle that holds for the day, so the river keeps its sources between visits.
     sql<{ name: string; kind: string; heat_only: boolean }[]>`
       SELECT name, kind, participation_mode = 'hot_signal' AS heat_only FROM sources WHERE enabled
