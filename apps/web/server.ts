@@ -1,17 +1,21 @@
 // Production web server: built client assets, the shared redirect table and SSR. Api-owned paths are
 // proxied to the api process, so one port serves the whole site; a reverse proxy in front may also send
 // them to the api directly.
+import { AsyncLocalStorage } from "node:async_hooks";
 import { createReadStream } from "node:fs";
 import { stat } from "node:fs/promises";
 import { createServer } from "node:http";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { createRequestListener } from "@react-router/node";
-import type { ServerBuild } from "react-router";
-import { isApiOwned, isPrivatePage, resolveRedirect } from "@aihot/contracts/http-policy";
-import { BROWSER_MAX_SECONDS } from "./app/lib/api.server.ts";
+import { RouterContextProvider, type ServerBuild } from "react-router";
+import { isApiOwned, isPrivatePage, resolveRedirect, type RedirectDecision } from "@aihot/contracts/http-policy";
+import { READER_PAGE_HEADERS, READER_PRIVATE_HEADERS } from "@aihot/contracts/reader";
+import { BROWSER_MAX_SECONDS, READER_WALL_ENABLED } from "./app/lib/api.server.ts";
 import { proxyToApi } from "./app/lib/api-proxy.server.ts";
 import { logError } from "./app/lib/errors.server.ts";
+import { checkReaderPage, READER_ACCESS } from "./app/lib/reader-wall.server.ts";
+import type { ReaderPageAccess } from "./app/lib/reader-wall.ts";
 
 const PORT = Number(process.env.WEB_PORT || 3000);
 const HOST = process.env.WEB_HOST || "127.0.0.1";
@@ -47,7 +51,11 @@ const build: ServerBuild = await import(pathToFileURL(path.resolve(import.meta.d
 const routes = Object.fromEntries(Object.entries(build.routes).map(([id, route]) => [id,
   route?.module.default && !route.module.loader ? { ...route, module: { ...route.module, loader: () => null } } : route,
 ]));
-const ssr = createRequestListener({ build: { ...build, routes }, mode: "production" });
+const readerAccess = new AsyncLocalStorage<ReaderPageAccess>();
+const ssr = createRequestListener({
+  build: { ...build, routes }, mode: "production",
+  getLoadContext: () => Object.assign(new RouterContextProvider(), { [READER_ACCESS]: readerAccess.getStore() }),
+});
 
 class BadRequest extends Error {}
 
@@ -90,21 +98,33 @@ const server = createServer((req, res) => {
     const bad = error instanceof BadRequest || error instanceof URIError;
     if (!bad) logError(error, { msg: "web request failed", method: req.method, path: (req.url ?? "").split("?")[0]!.slice(0, 200) });
     if (res.headersSent) return res.destroy();
-    res.writeHead(bad ? 400 : 500, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store" });
+    res.writeHead(bad ? 400 : 500, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "no-store",
+      ...(READER_WALL_ENABLED ? READER_PRIVATE_HEADERS : {}) });
     res.end(bad ? "Bad request" : "Internal error");
   });
 });
+
+function pageUrl(target: string): URL {
+  // An origin-form target is a path even when it starts with //, not a new URL authority.
+  return new URL(target.startsWith("/") ? `http://web.local${target}` : target, "http://web.local");
+}
+
+function redirectResponse(res: import("node:http").ServerResponse, decision: RedirectDecision, readerWall = false) {
+  for (const [k, v] of Object.entries(decision.headers)) res.setHeader(k, v);
+  if (readerWall) for (const [k, v] of Object.entries(READER_PRIVATE_HEADERS)) res.setHeader(k, v);
+  if (decision.location) res.setHeader("Location", decision.location);
+  res.statusCode = decision.status;
+  return res.end(decision.location ? undefined : decision.status === 410 ? "Gone" : "Not found");
+}
 
 /**
  * The one writer of page response headers: a route only says how long shared caches may keep it (cachedPage, edgeTtl).
  * Public navigation returns all matched loaders, so `_routes` never changes a cached answer.
  */
 function pageResponse(req: import("node:http").IncomingMessage, res: import("node:http").ServerResponse) {
-  const target = req.url ?? "/";
-  // An origin-form target is a path even when it starts with //, not a new URL authority.
-  const url = new URL(target.startsWith("/") ? `http://web.local${target}` : target, "http://web.local");
+  const url = pageUrl(req.url ?? "/");
   const pathname = decodeURIComponent(url.pathname).replace(/\.data$/, "");
-  const publicRead = (req.method === "GET" || req.method === "HEAD") && !isPrivatePage(pathname);
+  const publicRead = !READER_WALL_ENABLED && (req.method === "GET" || req.method === "HEAD") && !isPrivatePage(pathname);
   if (publicRead && url.pathname.endsWith(".data")) {
     url.searchParams.delete("_routes");
     req.url = url.pathname + url.search;
@@ -153,14 +173,9 @@ async function handle(req: import("node:http").IncomingMessage, res: import("nod
   const search = qi >= 0 ? raw.slice(qi) : "";
 
   const decision = resolveRedirect(pathname, search);
-  if (decision) {
-    for (const [k, v] of Object.entries(decision.headers)) res.setHeader(k, v);
-    if (decision.location) res.setHeader("Location", decision.location);
-    res.statusCode = decision.status;
-    return res.end(decision.location ? undefined : decision.status === 410 ? "Gone" : "Not found");
-  }
-
-  if (isApiOwned(pathname)) {
+  const apiOwned = isApiOwned(pathname);
+  if (decision && (!READER_WALL_ENABLED || apiOwned)) return redirectResponse(res, decision);
+  if (apiOwned) {
     // The visitor's address, decided here: the one the trusted proxy saw (the last X-Forwarded-For
     // entry), or this connection's own. Both headers carry only that.
     const forwarded = String(req.headers["x-forwarded-for"] ?? "").split(",").map((v) => v.trim()).filter(Boolean);
@@ -168,7 +183,18 @@ async function handle(req: import("node:http").IncomingMessage, res: import("nod
     return proxyToApi(req, res, { "x-forwarded-for": client, "x-real-ip": client });
   }
 
-  if ((req.method === "GET" || req.method === "HEAD") && pathname.includes(".") && (await serveStatic(pathname, res))) return;
+  if (!decision && (req.method === "GET" || req.method === "HEAD") && pathname.includes(".") && (await serveStatic(pathname, res))) return;
+  if (READER_WALL_ENABLED) {
+    const url = pageUrl(raw);
+    const access = await checkReaderPage(url, req.headers.cookie ?? "", req.method ?? "GET");
+    if (access.redirect && !url.pathname.endsWith(".data")) {
+      res.writeHead(302, { ...READER_PAGE_HEADERS, Location: access.redirect });
+      return res.end();
+    }
+    if (decision && !access.redirect) return redirectResponse(res, decision, true);
+    pageResponse(req, res);
+    return readerAccess.run(access, () => ssr(req, res));
+  }
   pageResponse(req, res);
   return ssr(req, res);
 }

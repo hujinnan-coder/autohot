@@ -7,6 +7,8 @@ import { linkMentions } from "@aihot/contracts/mentions";
 import { addressRuns } from "@aihot/contracts/addresses";
 import { cachedPage, loadOr404 } from "../lib/api.server";
 import { loadFollowups } from "../features/item/followups.server";
+import { loadReaderPreview } from "../lib/reader-preview.server";
+import { ReaderPreview } from "../components/ReaderPreview";
 import { pageReuse } from "../lib/page-reuse";
 import { articleLd, breadcrumbLd, pageMeta, siteUrl, titled } from "../lib/seo";
 import { fullDateTime, timeAgo } from "../lib/format";
@@ -37,20 +39,22 @@ export { pageHeaders as headers } from "../lib/api.server";
 
 const PosterSheet = lazy(() => import("../features/item/PosterSheet"));
 
-export async function loader({ params, request }: Route.LoaderArgs) {
+export async function loader({ params, request, context }: Route.LoaderArgs) {
+  const share = await loadReaderPreview(context, request, "items", params.id);
+  if (share) return share;
   const upstream = new Headers();
   const item = await loadOr404<SiteItemDetail>(`/api/site/items/${encodeURIComponent(params.id)}`, { responseHeaders: upstream, signal: request.signal });
   return cachedPage(60, { item, followups: await loadFollowups(item, request.signal) }, upstream);
 }
 
 type Loaded = { item: SiteItemDetail; followups: StoryFollowupsResponse | null };
-type Preview = { item: null; preview: FeedItemSummary; detail: Promise<Loaded> };
 
 /**
  * Phones: an article tapped in a list opens at once with what the card showed (title, summary, reason),
  * while its full text loads. Opened any other way, or on desktop, the page waits for its data as usual.
  */
 const reuse = pageReuse<typeof loader>();
+type Preview = { item: null; preview: FeedItemSummary; detail: ReturnType<typeof reuse.clientLoader> };
 export const { shouldRevalidate } = reuse;
 export async function clientLoader(args: ClientLoaderFunctionArgs) {
   const { params } = args;
@@ -62,6 +66,7 @@ clientLoader.hydrate = true as const;
 
 export function meta({ loaderData }: Route.MetaArgs) {
   if (!loaderData) return [{ title: titled("内容不存在") }, { name: "robots", content: "noindex" }];
+  if ("readerPreview" in loaderData) return [{ title: titled(loaderData.readerPreview.title) }, { name: "robots", content: "noindex, nofollow" }];
   const { item } = loaderData;
   if (!item) return [{ title: titled(loaderData.preview.title) }];
   return pageMeta({
@@ -222,12 +227,15 @@ function Toast({ text }: { text: string | null }) {
 }
 
 export default function ItemPage() {
-  const data = useLoaderData<typeof clientLoader>() as Loaded | Preview;
+  const data = useLoaderData<typeof clientLoader>();
+  if ("readerPreview" in data) return <ReaderPreview preview={data.readerPreview} returnTo={data.returnTo} />;
   if (data.item) return <ItemView key={`${data.item.id}:${data.item.bodyLanguage}`} item={data.item} followups={data.followups} />;
   return (
     <Suspense fallback={<ItemPreview preview={data.preview} />}>
       <Await resolve={data.detail} errorElement={<ItemGone />}>
-        {(loaded) => <ItemView key={`${loaded.item.id}:${loaded.item.bodyLanguage}`} item={loaded.item} followups={loaded.followups} />}
+        {(loaded: Awaited<Preview["detail"]>) => "readerPreview" in loaded
+          ? <ReaderPreview preview={loaded.readerPreview} returnTo={loaded.returnTo} />
+          : <ItemView key={`${loaded.item.id}:${loaded.item.bodyLanguage}`} item={loaded.item} followups={loaded.followups} />}
       </Await>
     </Suspense>
   );

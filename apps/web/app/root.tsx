@@ -16,10 +16,14 @@ import { SearchOverlay } from "./features/search/SearchOverlay";
 import { BackToTop, NavigationProgress } from "./components/shell/Chrome";
 import { buttonClass } from "./components/ui/Controls";
 import { rememberPage, APPEARANCE_BOOT_SCRIPT, useAppearanceSync } from "./lib/local-state";
-import { apiGet } from "./lib/api.server";
+import { apiGet, READER_WALL_ENABLED } from "./lib/api.server";
+import { checkedReaderPage, readerWallMiddleware } from "./lib/reader-wall.server";
 import { useHydratedFlag } from "./lib/hydration";
 import { titled } from "./lib/seo";
 import { webModules } from "./site-modules";
+import { useScreen } from "./components/shell/screens";
+
+export const middleware = READER_WALL_ENABLED ? [readerWallMiddleware] : [];
 
 export const links: Route.LinksFunction = () => [
   { rel: "icon", href: "/favicon.ico", sizes: "any" },
@@ -30,26 +34,30 @@ export const links: Route.LinksFunction = () => [
 ];
 
 /** The release rendering this document: once a newer one is deployed, a render error reloads the page (entry.client). */
-export async function loader({ request }: Route.LoaderArgs) {
+export async function loader({ request, context }: Route.LoaderArgs) {
   const release = process.env.AIHOT_RELEASE ?? null;
+  const access = checkedReaderPage(context);
+  const reader = READER_WALL_ENABLED ? { signedIn: !!access?.status, isolated: !!access?.isolated } : undefined;
+  if (reader?.isolated) return { changelogVersion: null, release, reader };
   try {
     const meta = await apiGet<SiteMeta>("/api/site/meta", {
       headers: Object.assign({}, ...webModules().map((m) => m.root?.documentHeaders?.(request) ?? {})),
       signal: request.signal,
     });
-    return { ...meta, release };
+    return { ...meta, release, ...(reader && { reader }) };
   } catch {
-    return { changelogVersion: null, release };
+    return { changelogVersion: null, release, ...(reader && { reader }) };
   }
 }
 
-export const shouldRevalidate: ShouldRevalidateFunction = () => false;
+// Even a navigation to a page without a loader must ask the server when the reader wall is on.
+export const shouldRevalidate: ShouldRevalidateFunction = () => typeof document !== "undefined" && document.documentElement.hasAttribute("data-reader-wall");
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const site = useRouteLoaderData<typeof loader>("root");
   const [documentRelease] = useState(site?.release ?? null);
   return (
-    <html lang={SITE.locale} suppressHydrationWarning>
+    <html lang={SITE.locale} data-reader-wall={site?.reader ? "" : undefined} suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
         {documentRelease && <meta name="aihot-release" content={documentRelease} />}
@@ -111,10 +119,12 @@ function SiteShell({ changelogVersion, children }: { changelogVersion: string | 
 
 export default function App() {
   const meta = useLoaderData<typeof loader>();
+  const screen = useScreen();
+  const standalone = !!(meta.reader?.isolated || screen.standalone);
   useHydratedFlag();
   useAppearanceSync();
   const { pathname, search } = useLocation();
-  useEffect(() => rememberPage(pathname + search), [pathname, search]);
+  useEffect(() => { if (!standalone) rememberPage(pathname + search); }, [pathname, search, standalone]);
   usePageTransition();
   // iOS Safari only shows :active (pressed) styles once the document listens for touches.
   useEffect(() => {
@@ -124,6 +134,7 @@ export default function App() {
   }, []);
   // The admin pages, the engine's and the modules', have their own chrome.
   if (pathname === "/admin" || pathname.startsWith("/admin/")) return <Outlet />;
+  if (standalone) return <main id="main"><Outlet /></main>;
   return (
     <>
       <SiteShell changelogVersion={meta.changelogVersion}>
@@ -138,6 +149,7 @@ export function ErrorBoundary() {
   useAppearanceSync();
   const error = useRouteError();
   const site = useRouteLoaderData<typeof loader>("root");
+  const screen = useScreen();
   const { pathname, search, hash } = useLocation();
   const status = isRouteErrorResponse(error) ? error.status : 500;
   const notFound = status === 404;
@@ -166,6 +178,7 @@ export function ErrorBoundary() {
   );
   // Admin errors stay out of the site's shell too.
   if (pathname === "/admin" || pathname.startsWith("/admin/")) return body;
+  if (site?.reader?.isolated || screen.standalone) return <main id="main">{body}</main>;
   // The modules' parts after the page stay: a gray page's 404 is where someone on the preview list signs in.
   return (
     <>

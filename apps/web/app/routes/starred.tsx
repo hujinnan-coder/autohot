@@ -98,7 +98,7 @@ export default function StarredPage() {
     );
 
   const action = "text-[12.5px] text-ink-3 transition-colors hover:text-accent";
-  const Account = webModules().find((m) => m.account)?.account;
+  const Account = webModules().find((m) => m.account && (m.accountPlaces?.includes("starred") ?? true))?.account;
   const localNote = <p className="rounded-tile border border-line bg-surface px-4 py-2.5 text-[12.5px] text-ink-3">不用登录，收藏直接存在这个浏览器里；清除浏览器数据或换设备都不会同步，换设备前可以先导出备份。</p>;
   return (
     <div className="pb-12">

@@ -101,6 +101,8 @@ services:
       AIHOT_RELEASE: ${AIHOT_RELEASE:-}
       WEB_HOST: 0.0.0.0
       WEB_PORT: "3000"
+      READER_WALL_ENABLED: ${READER_WALL_ENABLED:-false}
+      READER_INTERNAL_TOKEN: ${READER_INTERNAL_TOKEN:-}
     ports:
       - "${PORT:-3000}:3000"
     depends_on:

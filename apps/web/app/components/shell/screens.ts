@@ -15,6 +15,8 @@ export interface Screen {
   name?: string;
   /** The page draws its own bottom toolbar instead of the tab bar (articles). */
   toolbar?: boolean;
+  /** The page uses its own top bar and footer instead of the content navigation. */
+  standalone?: boolean;
 }
 
 /** What the current page declares: route handles merged from the root down, the deepest route winning. */

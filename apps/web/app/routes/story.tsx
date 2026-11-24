@@ -8,6 +8,8 @@ import { linkMentions } from "@aihot/contracts/mentions";
 import { addressRuns } from "@aihot/contracts/addresses";
 import { MentionText } from "../components/ui/MentionText";
 import { cachedPage, loadOr404 } from "../lib/api.server";
+import { loadReaderPreview } from "../lib/reader-preview.server";
+import { ReaderPreview } from "../components/ReaderPreview";
 import { pageReuse } from "../lib/page-reuse";
 import { breadcrumbLd, pageMeta, storyLd, titled } from "../lib/seo";
 import { beijingDate, beijingTime } from "@aihot/contracts/time";
@@ -30,7 +32,9 @@ export const handle: Screen = { home: UP.tab };
 export { pageHeaders as headers } from "../lib/api.server";
 export const { clientLoader, shouldRevalidate } = pageReuse<typeof loader>();
 
-export async function loader({ params, request }: Route.LoaderArgs) {
+export async function loader({ params, request, context }: Route.LoaderArgs) {
+  const share = await loadReaderPreview(context, request, "story", params.publicId);
+  if (share) return share;
   const upstream = new Headers();
   const story = await loadOr404<StoryDetail>(`/api/site/stories/${encodeURIComponent(params.publicId)}`, { responseHeaders: upstream, signal: request.signal, merged: (id) => `/story/${id}` });
   return cachedPage(60, { story }, upstream);
@@ -38,6 +42,7 @@ export async function loader({ params, request }: Route.LoaderArgs) {
 
 export function meta({ loaderData }: Route.MetaArgs) {
   if (!loaderData) return [{ title: titled("事件不存在") }, { name: "robots", content: "noindex" }];
+  if ("readerPreview" in loaderData) return [{ title: titled(loaderData.readerPreview.title) }, { name: "robots", content: "noindex, nofollow" }];
   const s = loaderData.story;
   return pageMeta({
     title: s.title,
@@ -140,7 +145,12 @@ type Order = "desc" | "asc";
 const viewCache = sessionCache<{ savedAt: number; filter: Filter; order: Order }>("aihot:story-view:", 30 * 60 * 1000);
 
 export default function StoryPage() {
-  const { story } = useLoaderData<typeof loader>();
+  const loaded = useLoaderData<typeof loader>();
+  if ("readerPreview" in loaded) return <ReaderPreview preview={loaded.readerPreview} returnTo={loaded.returnTo} />;
+  return <StoryView story={loaded.story} />;
+}
+
+function StoryView({ story }: { story: StoryDetail }) {
   const entry = useLocation().key;
   const [filter, setFilter] = useState<Filter>(() => viewCache.peek(entry)?.filter ?? "all");
   const [order, setOrder] = useState<Order>(() => viewCache.peek(entry)?.order ?? "desc");

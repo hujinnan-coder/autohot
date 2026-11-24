@@ -2,13 +2,17 @@
 // process never touches the database; SSR reads the api over loopback with keep-alive, one or two
 // requests per page.
 import { data, redirect, type HeadersArgs } from "react-router";
+import { READER_PRIVATE_HEADERS } from "@aihot/contracts/reader";
 import { logError } from "./errors.server.ts";
 
 /** Where the api listens (API_BASE_URL, set by the deployment); development uses the default. */
 export const API_BASE_URL = process.env.API_BASE_URL || "http://127.0.0.1:3001";
+export const READER_WALL_ENABLED = process.env.READER_WALL_ENABLED === "true";
+const readerInternalToken = READER_WALL_ENABLED ? process.env.READER_INTERNAL_TOKEN?.trim() : undefined;
+if (readerInternalToken && !/^[\x21-\x7e]+$/.test(readerInternalToken)) throw new Error("Invalid reader internal token format");
 
 /** An api answer other than 2xx. A merged story answers 308 with the story it now lives in. */
-class ApiError extends Error {
+export class ApiError extends Error {
   readonly status: number;
   readonly mergedInto: string | null;
   readonly requestId: string | null;
@@ -35,7 +39,8 @@ export async function apiGet<T>(path: string, init?: { signal?: AbortSignal; hea
   if (Date.now() < openUntil) throw new Error("api unreachable (circuit open)");
   try {
     const res = await fetch(`${API_BASE_URL}${path}`, {
-      headers: { accept: "application/json", "x-aihot-ssr": "1", ...init?.headers },
+      headers: { accept: "application/json", "x-aihot-ssr": "1", ...init?.headers,
+        ...(readerInternalToken ? { "x-reader-internal": readerInternalToken } : {}) },
       redirect: "manual",
       signal: init?.signal ? AbortSignal.any([init.signal, AbortSignal.timeout(15_000)]) : AbortSignal.timeout(15_000),
     });
@@ -110,6 +115,7 @@ export function edgeTtl(seconds: number): Record<string, string> {
  * Time the page already spent in a cache is used up, and a revisit never renews it. Pair it with `pageHeaders`.
  */
 export function cachedPage<T extends object>(seconds: number, value: T, upstream?: Headers) {
+  if (READER_WALL_ENABLED) return data({ ...value, expiresAt: 0 }, { headers: READER_PRIVATE_HEADERS });
   const now = Date.now();
   const second = Math.floor(now / 1000);
   let deadline = second + seconds;

@@ -6,6 +6,7 @@
 // page's code: the page waits for its parts while its own code loads (site-modules.ts `loadParts`) and then
 // renders them like any import.
 import type { ComponentType, ReactNode } from "react";
+import type { ReaderPreview } from "@aihot/contracts/reader";
 import type { TopicSummary } from "@aihot/contracts/site";
 import type { NavItem, Tab } from "./components/shell/nav";
 
@@ -111,6 +112,10 @@ export interface WebModule {
   name: string;
   /** The reader's account, from a module that offers one, drawn where the place asks (before hydration: signed out). */
   account?: ComponentType<{ place: AccountPlace }>;
+  /** Places where the account replaces the engine's own default row or note. */
+  accountPlaces?: readonly AccountPlace[];
+  /** A limited view of an article or story shared with a signed-out reader. */
+  readerPreview?: ComponentType<{ preview: ReaderPreview; returnTo: string }>;
   /** The email of the reader signed in in this browser, or null (read after hydration). */
   signedInEmail?: () => string | null;
   /** Desktop sidebar: entries in a section between the engine's 内容 and 更多; modules naming the same section share it. */

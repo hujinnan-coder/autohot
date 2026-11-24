@@ -17,6 +17,7 @@ function endToEnd(headers: IncomingHttpHeaders): IncomingHttpHeaders {
 /** `set` replaces headers after the filter: the proxy's own facts, which a client cannot remove. */
 export function proxyToApi(req: IncomingMessage, res: ServerResponse, set: OutgoingHttpHeaders = {}): void {
   const headers: OutgoingHttpHeaders = { ...endToEnd(req.headers), ...set };
+  delete headers["x-reader-internal"];
   // A body without a length arrived chunked; it goes on chunked, since Node frames only some methods
   // that way by default (not DELETE, for one) and an unframed body would corrupt the pooled connection.
   if (req.headers["transfer-encoding"] && req.headers["content-length"] === undefined) headers["transfer-encoding"] = "chunked";
