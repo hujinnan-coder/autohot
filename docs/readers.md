@@ -19,13 +19,19 @@
 | `READER_INVITE_TTL_HOURS` | 72 | 站长码、申请码和子码的有效小时数 |
 | `READER_CHILD_INVITES_ENABLED` / `READER_CHILD_INVITE_QUOTA` | `false` / 2 | 子码开关与激活发放数量 |
 | `READER_IDLE_HOURS` / `READER_SESSION_DAYS` / `READER_MAX_SESSIONS` | 72 / 30 / 3 | 空闲小时数、绝对有效天数和同时保留的会话数 |
-| `READER_MAIL_ENABLED` | `false` | 只有 `true` 才调用邮件驱动。默认驱动目前会返回未配置，生产邮箱验证需接入服务商 |
+| `READER_MAIL_ENABLED` | `false` | 只有 `true` 才通过邮件驱动发送验证码、邀请和通知 |
+| `MAIL_SMTP_HOST` | 空 | SMTP 服务器。阿里云邮件推送（DirectMail）填 `smtpdm.aliyun.com` |
+| `MAIL_SMTP_PORT` | 空 | DirectMail 填 `465`，使用隐式 TLS。其他端口要求 STARTTLS |
+| `MAIL_SMTP_USER` | 空 | SMTP 认证账号，也是发件地址。From 的显示名取 `SITE.name` |
+| `MAIL_SMTP_PASSWORD` | 空 | 发件地址对应的 SMTP 密码 |
 | `READER_INACTIVE_DAYS` | 30 | 不活跃阈值为天数×24 小时。达到阈值后的首个北京时间 11:00 发第一次提醒 |
 | `READER_INACTIVE_GRACE_DAYS` | 3 | 首次提醒后的第几天 09:00 发第二次提醒、11:00 检查删除 |
 | `READER_ADMIN_EMAIL` | 空 | 选填。读者邮件启用时，接收每周一的待删除汇总 |
 | `READER_TERMS_VERSION` / `READER_PRIVACY_VERSION` | `1` / `1` | 前端提交的当前条款、隐私说明版本。修改文案时同步更新 |
 
 验证码 6 位、10 分钟有效、连续 5 次错误作废。同一邮箱 60 秒发一次、每小时至多 5 次，每个 IP 每小时至多 20 次。申请每 IP 每小时至多 5 次，同邮箱同时只能有一条待审。验证码验证后的凭据有效 10 分钟，只能兑换一次。非生产环境关闭邮件开关时，验证码仅写服务端日志，凭据仍须走验证接口取得。
+
+生产环境和显式配置了 SMTP 的开发环境共用 SMTP 驱动，四项缺一时驱动返回未配置。部署到服务器时，将本机 `.env` 中这四行 SMTP 配置复制到服务器的 `.env`。启用邮件时，确保 API 和 worker 都读取到这四项及 `READER_MAIL_ENABLED=true`。投递失败时，服务端记录失败类型，例如连接失败、认证失败或 SMTP 拒绝收件地址。
 
 API 登录墙默认拦截全部内容路由，包括 RSS、MCP、Agent、Markdown、媒体代理、`llms.txt` 和站点地图。活动读者会话和内部令牌可通过 API 门禁。站点通过 `@aihot/site` 的 `ADMIN` 启用后台时，真实管理员会话也可通行。开墙后，内容门禁和读者管理接口均拒绝 `DEV_AUTH_ROLE=admin` 提供的开发管理员身份。`x-aihot-ssr` 只是现有 SSR 标记。例外路径集中在 [gate-policy.ts](../modules/reader-accounts/backend/gate-policy.ts)，包括健康检查、账号、管理员及其登录入口、使用独立令牌的 ingest、静态文件和精简 OG 图。日报、周报、月报的分享图仅显示报告名与日期，主题和事件分享图仅显示标题，条目分享图可显示标题与摘要，静态页面分享图可显示栏目说明。含评分或其他详情的文章海报受墙保护。读者 API 与受墙保护的响应均禁止共享缓存，写请求需提供与 Host 和协议匹配的 `Origin`。
 

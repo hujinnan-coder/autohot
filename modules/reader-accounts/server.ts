@@ -18,7 +18,7 @@ import { applyReaderHeaders, readerGate, readerInternalAllowed, writeOriginAllow
 import { inactivitySchedules } from "./backend/inactivity.ts";
 import * as input from "./backend/inputs.ts";
 import { adminIssueInvites, checkInvite, childInvites, issueChildInvite, listInvites, revokeInvite, type IssuedInvite } from "./backend/invites.ts";
-import { NotConfigured, plainMail, unconfiguredMailer, type Mail, type Mailer } from "./backend/mailer.ts";
+import { createSmtpMailer, NotConfigured, plainMail, SmtpSendError, type Mail, type Mailer } from "./backend/mailer.ts";
 import { cancelOtp, issueOtp, verifyOtp } from "./backend/otp.ts";
 import { PRIVATE_RESPONSE, readerCookie } from "./backend/rules.ts";
 import { endReaderSession, findSession, validPrincipal, type ReaderUser } from "./backend/sessions.ts";
@@ -78,7 +78,7 @@ export function createReaderAccounts(options: {
     throw new Error("开登录墙时必须关闭 DEV_AUTH_ROLE");
   }
   const policy = options.policy ?? readerConfig(process.env, credential("auth", "SESSION_SECRET"));
-  const mailer = options.mailer ?? unconfiguredMailer;
+  const mailer = options.mailer ?? createSmtpMailer();
   const siteUrl = options.siteUrl ?? config.siteUrl;
   const consent = { terms_version: policy.termsVersion, privacy_version: policy.privacyVersion };
 
@@ -101,7 +101,10 @@ export function createReaderAccounts(options: {
       await mailer.send(mail);
       return true;
     } catch (error) {
-      log?.warn({ purpose, failure: error instanceof NotConfigured ? "not_configured" : "send_failed" }, "reader mail unavailable");
+      const failure = error instanceof NotConfigured ? "not_configured"
+        : error instanceof SmtpSendError ? error.failure : "send_failed";
+      if (log) log.warn({ purpose, failure }, "reader mail unavailable");
+      else console.warn(JSON.stringify({ level: "warn", msg: "reader mail unavailable", purpose, failure }));
       return false;
     }
   }

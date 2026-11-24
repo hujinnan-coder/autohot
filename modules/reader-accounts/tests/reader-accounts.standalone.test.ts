@@ -2,11 +2,12 @@ import assert from "node:assert/strict";
 import { readdirSync, readFileSync } from "node:fs";
 import { test } from "node:test";
 import { beijingAt } from "@aihot/contracts/time";
+import { SITE } from "@aihot/site";
 import { migrationPlan } from "../../../scripts/migration-safety.ts";
 import { DAY, HOUR, LIMITS, MINUTE, readerConfig } from "../backend/config.ts";
 import { publicWallPath } from "../backend/gate-policy.ts";
 import { adminLookupsInput, eventsInput } from "../backend/inputs.ts";
-import { NotConfigured, unconfiguredMailer } from "../backend/mailer.ts";
+import { createSmtpMailer, NotConfigured, plainMail, SmtpSendError, unconfiguredMailer } from "../backend/mailer.ts";
 import { displayInvite, EVENT_KINDS, generateInvite, normalizeInvite, otpRetryAfter, sameOrigin, secretHash, sessionTiming } from "../backend/rules.ts";
 
 test("invitation codes use the unambiguous alphabet, accept formatting and hash with the deployment key", () => {
@@ -114,6 +115,79 @@ test("reader configuration requires both secrets and a 32-character token for an
   assert.equal(readerConfig({ ...wall, READER_INTERNAL_TOKEN: token }, "test").internalToken, token);
   assert.equal(readerConfig({ READER_INTERNAL_TOKEN: "short" }, null).wallEnabled, false);
   await assert.rejects(unconfiguredMailer.send({ to: "test@example.test", subject: "", text: "", html: "" }), NotConfigured);
+});
+
+// SMTP cases use an explicit environment and a per-test transport factory. They never load Nodemailer or open a socket.
+const smtpEnv = {
+  MAIL_SMTP_HOST: "smtp.example.test",
+  MAIL_SMTP_PORT: "465",
+  MAIL_SMTP_USER: "sender@example.test",
+  MAIL_SMTP_PASSWORD: " test-credential ",
+};
+const smtpMail = plainMail("reader@example.test", "邮箱验证码", "验证码 123456\n有效期 10 分钟");
+
+test("SMTP returns the unconfigured mailer when any setting is missing or the port is invalid", async () => {
+  const incomplete = Object.keys(smtpEnv).map(key => ({ ...smtpEnv, [key]: undefined }));
+  for (const env of [...incomplete, ...["", "0", "65536", "4.65", "smtp"].map(port => ({ ...smtpEnv, MAIL_SMTP_PORT: port }))]) {
+    const mailer = createSmtpMailer({ env, createTransport: () => assert.fail("incomplete configuration created transport") });
+    await assert.rejects(mailer.send(smtpMail), NotConfigured);
+  }
+});
+
+test("SMTP builds a TLS transport and sends site-branded plain text and HTML from the authenticated address", async () => {
+  for (const port of [465, 587]) {
+    let created = 0;
+    let sent = 0;
+    const mailer = createSmtpMailer({
+      env: { ...smtpEnv, MAIL_SMTP_PORT: String(port) },
+      createTransport(options) {
+        created++;
+        assert.deepEqual(options, {
+          host: smtpEnv.MAIL_SMTP_HOST, port, secure: port === 465, requireTLS: port !== 465,
+          auth: { user: smtpEnv.MAIL_SMTP_USER, pass: smtpEnv.MAIL_SMTP_PASSWORD },
+        });
+        return {
+          async sendMail(message) {
+            sent++;
+            assert.deepEqual(message, { ...smtpMail, from: { name: SITE.name, address: smtpEnv.MAIL_SMTP_USER } });
+          },
+        };
+      },
+    });
+    assert.equal(created, 0);
+    await mailer.send(smtpMail);
+    await mailer.send(smtpMail);
+    assert.equal(created, 1);
+    assert.equal(sent, 2);
+  }
+});
+
+test("SMTP classifies connection, authentication and recipient failures without retaining the provider error", async () => {
+  for (const [details, failure] of [
+    [{ code: "EDNS" }, "connection_failed"],
+    [{ code: "ECONNECTION" }, "connection_failed"],
+    [{ code: "ESOCKET" }, "connection_failed"],
+    [{ code: "ETIMEDOUT" }, "connection_failed"],
+    [{ code: "ETLS" }, "connection_failed"],
+    [{ code: "EAUTH", command: "AUTH LOGIN", responseCode: 535 }, "authentication_failed"],
+    [{ code: "ENOAUTH" }, "authentication_failed"],
+    [{ code: "EENVELOPE", command: "RCPT TO", responseCode: 550 }, "recipient_rejected"],
+    [{ code: "EENVELOPE", command: "MAIL FROM", responseCode: 550 }, "send_failed"],
+    [{ code: "EMESSAGE", command: "DATA", responseCode: 550 }, "send_failed"],
+    [{}, "send_failed"],
+  ] as const) {
+    const providerError = Object.assign(new Error("untrusted SMTP reply"), details);
+    const mailer = createSmtpMailer({ env: smtpEnv, createTransport: () => ({
+      async sendMail() { throw providerError; },
+    }) });
+    await assert.rejects(mailer.send(smtpMail), (error: unknown) => {
+      assert.ok(error instanceof SmtpSendError);
+      assert.equal(error.failure, failure, JSON.stringify(details));
+      assert.equal(error.message, failure);
+      assert.equal(error.cause, undefined);
+      return true;
+    });
+  }
 });
 
 test("each reader migration is a single online-safe statement", () => {
