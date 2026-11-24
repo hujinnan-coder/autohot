@@ -167,6 +167,8 @@ export interface Previewer {
 }
 
 export interface ServerModule {
+  /** Optional request gate, run before redirects and route handlers by apps/api/src/app.ts. Send a reply to stop the request. */
+  gate?: (req: FastifyRequest, reply: FastifyReply, pathname: string) => Promise<void>;
   /** Its folder under modules/. */
   name: string;
   /** Who besides the engine's admin may open gray pages (ModulePage.gray) and read their data (admin/preview.ts). */

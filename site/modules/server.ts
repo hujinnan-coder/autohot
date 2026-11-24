@@ -3,5 +3,6 @@ import type { ServerModule } from "@aihot/backend/modules";
 import following from "@aihot/following/server";
 import labeling from "@aihot/labeling/server";
 import weiboMonitor from "@aihot/weibo-monitor/server";
+import readerAccounts from "@aihot/reader-accounts/server";
 
-export const SERVER_MODULES: readonly ServerModule[] = [following, labeling, weiboMonitor];
+export const SERVER_MODULES: readonly ServerModule[] = [following, labeling, weiboMonitor, readerAccounts];

@@ -1,6 +1,7 @@
 // Stories (events) and the hot ranking through the public read layer. The website sees heat values;
 // v1 and MCP only see ranks and counts.
 import type { HeatPoint, HotResponse, StoryDetail, StoryReportView } from "@aihot/contracts/site";
+import type { ReaderPreview } from "@aihot/contracts/reader";
 import { SITE } from "@aihot/site";
 import { sql } from "../db.ts";
 import { shared } from "../lib/cache.ts";
@@ -122,6 +123,14 @@ async function storyContent(storyId: number, now: Date) {
   if (!latestReport) return null;
   const firstReportAt = primaryReports[primaryReports.length - 1]!.at;
   return { s, reports, primaryReports, developments, latestReport, firstReportAt };
+}
+
+/** The story title and the latest report available on its public timeline. */
+export async function loadStoryShare(storyId: number, now = new Date()): Promise<ReaderPreview | null> {
+  const content = await storyContent(storyId, now);
+  if (!content) return null;
+  const { s, latestReport } = content;
+  return { title: s.title, summary: latestReport.summary, source: publicSourceName(latestReport.source_name), published_at: latestReport.at.toISOString() };
 }
 
 async function relatedStories(storyId: number, now: Date) {

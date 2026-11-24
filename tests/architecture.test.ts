@@ -91,8 +91,12 @@ const OWNERS: Record<string, string> = {
   reader_previewers: "../../../modules/accounts/backend/",
   reader_sync_usage: "../../../modules/accounts/backend/",
   reader_accounts: "../../../modules/accounts/backend/", reader_logins: "../../../modules/accounts/backend/",
-  reader_sessions: "../../../modules/accounts/backend/", reader_codes: "../../../modules/accounts/backend/",
+  reader_codes: "../../../modules/accounts/backend/",
   reader_code_sends: "../../../modules/accounts/backend/", reader_data: "../../../modules/accounts/backend/",
+  ...Object.fromEntries([
+    "reader_users", "reader_auth_identities", "reader_invites", "reader_applications", "reader_otps", "reader_sessions",
+    "reader_events", "reader_event_daily", "reader_consents", "reader_login_log", "reader_activity_daily",
+  ].map(table => [table, "../../../modules/reader-accounts/backend/"])),
 };
 
 test("the tables that carry a rule are written only by the code that owns it", () => {

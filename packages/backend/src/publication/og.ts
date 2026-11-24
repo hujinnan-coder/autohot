@@ -1,11 +1,23 @@
 // Share images only need public title/summary metadata. Keep the same page visibility rule without
 // loading bodies, translations, related stories or signed media that never appear on these cards.
 import { CATEGORY_LABELS, type CategoryKey } from '@aihot/contracts/taxonomy';
+import type { ReaderPreview } from '@aihot/contracts/reader';
 import { beijingDate } from '@aihot/contracts/time';
 import { ITEM_COPY, withSubject } from '@aihot/site';
 import type { OgCard } from '../media/og.ts';
 import { sql } from '../db.ts';
 import { hasItemPage, publicSourceName } from './rules.ts';
+import { seatedCondition } from './scope.ts';
+
+/** Recent home selections, with one card per selection slot. */
+export async function loadLandingSamples(now = new Date()): Promise<ReaderPreview[]> {
+  const rows = await sql<{ title: string; summary: string | null; source_name: string; timeline_at: Date }[]>`
+    SELECT p.title, p.summary, s.name AS source_name, p.timeline_at
+    FROM publications p JOIN sources s ON s.id = p.source_id
+    WHERE ${seatedCondition(now)}
+    ORDER BY p.sort_at DESC, p.article_id DESC LIMIT 2`;
+  return rows.map(row => ({ title: row.title, summary: row.summary, source: publicSourceName(row.source_name), published_at: row.timeline_at.toISOString() }));
+}
 
 export async function loadItemShare(id: string) {
   const [row] = await sql<{

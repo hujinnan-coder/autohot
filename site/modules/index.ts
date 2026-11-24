@@ -4,5 +4,6 @@
 import type { ModuleDeclaration } from "@aihot/contracts/modules";
 import labeling from "@aihot/labeling/module";
 import following from "@aihot/following/module";
+import readerAccounts from "@aihot/reader-accounts/module";
 
-export const MODULES: readonly ModuleDeclaration[] = [following, labeling];
+export const MODULES: readonly ModuleDeclaration[] = [following, labeling, readerAccounts];

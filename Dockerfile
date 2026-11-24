@@ -19,6 +19,7 @@ COPY industry/package.json industry/
 COPY site/package.json site/
 COPY modules/following/package.json modules/following/
 COPY modules/labeling/package.json modules/labeling/
+COPY modules/reader-accounts/package.json modules/reader-accounts/
 COPY modules/weibo-monitor/package.json modules/weibo-monitor/
 RUN npm ci --no-audit --no-fund ${NPM_REGISTRY:+--registry=$NPM_REGISTRY}
 COPY . .

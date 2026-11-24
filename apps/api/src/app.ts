@@ -68,12 +68,17 @@ export async function buildApp(options?: { onRoute?: (route: RouteOptions) => vo
     for (const m of serverModules()) m.on?.requestAnswered?.(req, reply, path);
   });
 
+  const gates = serverModules().flatMap(m => m.gate ? [m.gate] : []);
   // Central redirect table (shared with the web server).
   app.addHook("onRequest", async (req, reply) => {
     const raw = req.raw.url ?? "/";
     const qi = raw.indexOf("?");
     const pathname = qi >= 0 ? raw.slice(0, qi) : raw;
     const search = qi >= 0 ? raw.slice(qi) : "";
+    for (const gate of gates) {
+      await gate(req, reply, pathname);
+      if (reply.sent) return reply;
+    }
     if (OAUTH_PROBE_PATHS.includes(pathname)) {
       return reply.code(404).header("Cache-Control", "public, max-age=3600").type("application/json").send('{"error":"not_found"}');
     }
@@ -92,7 +97,7 @@ export async function buildApp(options?: { onRoute?: (route: RouteOptions) => vo
   });
 
   registerSite(app);
-  registerOg(app);
+  registerOg(app, gates.length > 0);
   registerAdminAuth(app);
   // Admin pages and sign-in are site-dependent; preview identity is available on every site.
   if (ADMIN) registerAdmin(app);

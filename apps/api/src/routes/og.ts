@@ -38,14 +38,17 @@ function notFound(reply: FastifyReply) {
 
 const REPORT_NAMES: Record<ReportKind, string> = { daily: withSubject("日报"), weekly: withSubject("周报"), monthly: withSubject("月报") };
 
-export function registerOg(app: FastifyInstance) {
-  app.get("/og/site.png", (req, reply) => send(req, reply, PAGES.site!, 86400));
+export function registerOg(app: FastifyInstance, summaryOnly = false) {
+  const sendCard = (req: FastifyRequest, reply: FastifyReply, card: OgCard, maxAge: number, cacheControl?: string) =>
+    send(req, reply, summaryOnly ? { kicker: "", title: card.title, subtitle: card.subtitle } : card, maxAge, cacheControl);
+
+  app.get("/og/site.png", (req, reply) => sendCard(req, reply, PAGES.site!, 86400));
 
   app.get("/og/pages/:file", async (req, reply) => {
     const name = (req.params as { file: string }).file.replace(/\.png$/, "");
     const card = Object.hasOwn(PAGES, name) ? PAGES[name] : undefined;
     if (!card || !(req.params as { file: string }).file.endsWith(".png")) return notFound(reply);
-    return send(req, reply, card, 86400);
+    return sendCard(req, reply, card, 86400);
   });
 
   app.get("/og/items/:file", async (req, reply) => {
@@ -53,7 +56,7 @@ export function registerOg(app: FastifyInstance) {
     if (!file.endsWith(".png")) return notFound(reply);
     const card = await loadItemOgCard(file.slice(0, -4));
     if (!card) return notFound(reply);
-    return send(req, reply, card, 3600, CONTENT_IMAGE_CACHE);
+    return sendCard(req, reply, card, 3600, CONTENT_IMAGE_CACHE);
   });
 
   // Phone share poster for an article (1080×1440), generated on first request and cached by content.
@@ -82,9 +85,11 @@ export function registerOg(app: FastifyInstance) {
     if (!["daily", "weekly", "monthly"].includes(kind) || !file.endsWith(".png")) return notFound(reply);
     const r = await loadReport(kind as ReportKind, file.slice(0, -4));
     if (!r) return notFound(reply);
+    const issue = `${REPORT_NAMES[r.kind]} · ${reportDateLabel(r.kind, r.key)}`;
+    if (summaryOnly) return sendCard(req, reply, { kicker: "", title: issue }, 3600, CONTENT_IMAGE_CACHE);
     const count = r.sections.reduce((n, s) => n + s.items.length, 0);
-    return send(req, reply, {
-      kicker: `${REPORT_NAMES[r.kind]} · ${reportDateLabel(r.kind, r.key)}`,
+    return sendCard(req, reply, {
+      kicker: issue,
       title: r.lead?.title ?? r.title,
       subtitle: r.lead?.leadParagraph ?? r.overview,
       // A quiet day's issue (REPORTS.quiet) has nothing to count.
@@ -96,7 +101,7 @@ export function registerOg(app: FastifyInstance) {
     const file = (req.params as { file: string }).file;
     const t = file.endsWith(".png") ? findTopic(file.slice(0, -4)) : null;
     if (!t) return notFound(reply);
-    return send(req, reply, { kicker: `主题 · ${TOPIC_GROUPS.find((g) => g.key === t.group)?.name ?? ""}`, title: `${t.name} 最新动态`, subtitle: t.definition }, 86400);
+    return sendCard(req, reply, { kicker: `主题 · ${TOPIC_GROUPS.find((g) => g.key === t.group)?.name ?? ""}`, title: `${t.name} 最新动态`, subtitle: summaryOnly ? undefined : t.definition }, 86400);
   });
 
   app.get("/og/stories/:file", async (req, reply) => {
@@ -106,10 +111,10 @@ export function registerOg(app: FastifyInstance) {
     if (found.kind !== "found") return notFound(reply);
     const s = await loadStoryDetail(found.storyId);
     if (!s) return notFound(reply);
-    return send(req, reply, {
+    return sendCard(req, reply, {
       kicker: s.whyHot.rank ? `热点第 ${s.whyHot.rank} · 事件` : "事件",
       title: s.title,
-      subtitle: s.latest ?? s.digest,
+      subtitle: summaryOnly ? undefined : s.latest ?? s.digest,
       meta: `${s.sourceCount} 个来源 · ${s.reportCount} 篇报道`,
       accent: s.whyHot.rank ? "hot" : "teal",
     }, 3600, CONTENT_IMAGE_CACHE);
