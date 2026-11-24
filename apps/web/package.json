@@ -15,19 +15,19 @@
     "@aihot/contracts": "*",
     "@aihot/industry": "*",
     "@aihot/site": "*",
-    "@react-router/node": "8.4.0",
+    "@react-router/node": "8.5.2",
     "highlight.js": "11.12.0",
-    "isbot": "5.2.2",
-    "react": "19.3.0",
-    "react-dom": "19.3.0",
-    "react-router": "8.4.0"
+    "isbot": "5.2.3",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "react-router": "8.5.2"
   },
   "devDependencies": {
-    "@react-router/dev": "8.4.0",
-    "@tailwindcss/vite": "4.3.3",
+    "@react-router/dev": "8.5.2",
+    "@tailwindcss/vite": "4.3.5",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
-    "tailwindcss": "4.3.3",
-    "vite": "8.3.3"
+    "tailwindcss": "4.3.5",
+    "vite": "8.3.8"
   }
 }
