@@ -220,11 +220,11 @@ async function sparklines(storyIds: number[], at: Date): Promise<Map<number, Arr
   return out;
 }
 
-// Shared by concurrent readers of a ranking, but read again each time: a cover's visibility and licence
-// follow publication changes.
+// Shared by concurrent readers of a ranking, but read again each time: a cover's visibility follows
+// publication changes.
 const hotCovers = shared((ranking: HotRanking) => String(ranking.id), queryHotCovers);
 
-/** A picture per story from its public full-text reports, the representative first, wide enough for a card. */
+/** A picture per story from its public reports, the representative first, wide enough for a card. */
 async function queryHotCovers({ entries }: HotRanking) {
   const at = new Date();
   const ids = entries.map((e) => e.storyId);
@@ -236,7 +236,7 @@ async function queryHotCovers({ entries }: HotRanking) {
       SELECT m FROM jsonb_array_elements(coalesce(a.media, '[]'::jsonb)) m
       WHERE m->>'kind' = 'image' AND coalesce((m->>'width')::numeric, 800) >= 480 LIMIT 1
     ) img
-    WHERE p.story_id = ANY(${ids}::bigint[]) AND ${listedCondition(at)} AND p.body_mode <> 'summary' AND NOT p.suppress_original
+    WHERE p.story_id = ANY(${ids}::bigint[]) AND ${listedCondition(at)} AND NOT p.suppress_original
     ORDER BY p.story_id, (p.article_id::text = ANY(${reps}::text[])) DESC, p.first_party DESC, p.selected DESC, coalesce(p.score, 0) DESC, p.article_id`;
   const covers = new Map(rows.map((c) => [Number(c.story_id), { url: c.m.url, width: typeof c.m.width === "number" ? c.m.width : null, height: typeof c.m.height === "number" ? c.m.height : null }]));
   return covers;

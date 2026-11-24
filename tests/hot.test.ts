@@ -217,7 +217,7 @@ test("hot cards send a Unicode-safe excerpt while the event keeps its complete p
   assert.equal((await loadHot()).entries[0]!.summary, "短摘要");
 });
 
-test("hot covers follow current visibility and full-text rights within one ranking", async () => {
+test("hot covers follow current visibility within one ranking", async () => {
   const src = "cover-scope";
   const at = new Date(Date.now() - 90_000);
   await sql`INSERT INTO sources (id,name,kind,tier,participation_mode,next_fetch_at)
@@ -249,7 +249,7 @@ test("hot covers follow current visibility and full-text rights within one ranki
   await sql`UPDATE publications SET visibility = 'withdrawn' WHERE article_id = 'cover-primary'`;
   assert.equal(await cover(), "https://example.org/fallback.png", "a withdrawn secondary report cannot remain the cover");
   await sql`UPDATE publications SET body_mode = 'summary' WHERE article_id = 'cover-fallback'`;
-  assert.equal(await cover(), null, "revoking full-text permission also removes its cover");
+  assert.equal(await cover(), "https://example.org/fallback.png", "a summary report can still lend its picture to the card");
 });
 
 test("faces are 精选组 sources by tier (T1, T1.5, T2), at most 6; 氛围组 only counts in +N", async () => {
