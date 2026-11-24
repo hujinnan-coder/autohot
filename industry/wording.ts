@@ -2,4 +2,7 @@
 // 写作那一步写完中文标题、摘要和推荐理由后逐个查，用了就让模型只改这些地方一次（packages/backend/src/editorial/
 // analyze.ts 的 mendWording）。只列一眼就能判断的写法：拿不准的不列，否则会误改正常的词。空着就不查。
 
-export const READER_WORDING: ReadonlyArray<readonly [RegExp, string]> = [];
+export const READER_WORDING: ReadonlyArray<readonly [RegExp, string]> = [
+  // 方程豹的钛系列车型名带“钛”字（钛3/钛7/钛9），“泰”是音译错写；“泰国”不匹配（泰后面不是数字）。
+  [/泰(?=\d)/u, "车型名写“钛”：方程豹的钛系列是钛3、钛7、钛9，不用“泰”"],
+];

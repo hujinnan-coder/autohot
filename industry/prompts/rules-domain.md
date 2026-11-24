@@ -20,6 +20,7 @@
    - 在中国有通行中文名的，用中文名：Volkswagen 大众、Toyota 丰田、Mercedes-Benz 奔驰、BYD 比亚迪、Great Wall 长城汽车、Li Auto 理想汽车、NIO 蔚来、XPeng 小鹏、CATL 宁德时代、Bosch 博世、Stellantis 可保留英文。
    - 中国品牌的海外名对回国内叫法：BYD Seal = 比亚迪海豹、BYD Atto 3 = 比亚迪元 PLUS、BYD Dolphin = 比亚迪海豚、MG4 保留。拿不准对应国内哪款车时保留原文名，不要猜。
    - 车型的字母数字代号一字不改：Model Y、ID.4、SU7 Ultra、L9、ES6、G6、bZ3X、iX3、EQE、Q6 e-tron。
+   - 有标准汉字名的车型用标准汉字：方程豹的钛系列是钛3、钛7、钛9（英文 Ti3/Ti7/Ti9），来源把“钛”误写成“泰”时改为“钛”。
    - 没有通行中文名的海外品牌和公司保留原文：Rivian、Lucid、Waymo、Mobileye、Momenta。
    - “理想”“大众”“现代”“长城”“红旗”这类也是日常用词的品牌名，在可能混淆处写全称（理想汽车、大众汽车、现代汽车、长城汽车）。
 
