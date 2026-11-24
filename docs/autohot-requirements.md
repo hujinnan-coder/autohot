@@ -269,7 +269,7 @@ Automotive News（403）、BYDOTA（超时）。站长 2026-11-20 确认：连�
   - **D（9）**：极星（待人工补验）、electrek/notateslaapp/motorweek（无条款页）、autoactu/autoexpress/whatcar（页面缺失或 403）、电动邦（无声明）、乘联会（官网 403 未核实）。
   - **C（84）**：其余全部。**高危维权对象**：汽车之家/界面/21世纪/第一电动/央视网（有偿授权 500–1000 元/千字＋法务通道，汽车之家有批量诉讼史）；日经/KED Global 明文禁止爬虫；Politico Europe/Rapporteur 的 CC 转载政策已失效（Politico /republishing/ 404，Rapporteur 归 Mediahuis 后保留所有权利），按 C 处理；国内车企官网 6 家（上汽/江汽/重汽/雷克萨斯中国/丰田中国/北汽）法律声明明确"未经书面许可不得复制传播"。
   - **图片边界**：图片授权普遍独立于文字——Rapporteur 明文照片版权归署名来源，Valnet 排除图片，Bauer 禁图文分离。热点卡片取缩略图、文章页出配图都要单独看图片授权，不能拿文字授权推。
-  - **结论与候选**：现状（4 家外文新闻室开全文）经核实 3 家成立。**11-24 站长拍板"A+B 全开"已执行**：新开 19 源（部委协会 8 + cvworld + Valnet 2 + Bauer 2 + 车企官网 4 + 工信部/市监总局 2），`sources.json` 与库内 `sources.site_fulltext` 同步置 true，`republishSource` 逐源重发布（19 源共 706 条投影翻 full、0 撤下），worker/api 已重启。注意两点：Valnet 条款排除图片（近 30 天 topspeed/hotcars 仅 9 篇正文带图，**站长 11-24 裁定保留带图，不撤图不退回摘要**）；极星为 D 档维持已开状态，人工补验条款后再定。
+  - **结论与候选**：现状（4 家外文新闻室开全文）经核实 3 家成立。**11-24 站长拍板"A+B 全开"已执行**：新开 19 源（部委协会 8 + cvworld + Valnet 2 + Bauer 2 + 车企官网 4 + 工信部/市监总局 2），`sources.json` 与库内 `sources.site_fulltext` 同步置 true，`republishSource` 逐源重发布（19 源共 706 条投影翻 full、0 撤下），worker/api 已重启。注意两点：Valnet 条款排除图片（近 30 天 topspeed/hotcars 仅 9 篇正文带图，**站长 11-24 裁定保留带图，不撤图不退回摘要**）；极星条款页 JS 渲染机读不到（media.polestar.com/copyright），**站长 11-24 裁定归入 A 档**，维持已开全文。
 - **引擎的既有约定**：AIHOT 引擎默认“公开内容匿名”，没有读者账号。登录墙、关注、早晚报双刊和销量榜都是 autohot 自己的功能，尽量做成 `modules/` 下的模块，以便继续合并上游更新。
 
 ## 15. 需要站长准备
