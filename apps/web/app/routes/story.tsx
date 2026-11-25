@@ -257,7 +257,7 @@ function StoryView({ story }: { story: StoryDetail }) {
           <Panel id={SECTIONS.overview} title="先了解这件事" right={overview?.label} className="order-1">
             {overview ? (
               <>
-                <p className="whitespace-pre-line text-[15px] leading-[1.85] text-ink-2"><MentionText runs={overviewRuns} /></p>
+                <p className="max-w-[660px] whitespace-pre-line text-[15px] leading-[1.85] text-ink-2"><MentionText runs={overviewRuns} /></p>
                 {overview.note && (
                   <p className="mt-2 text-[12px] text-ink-4" suppressHydrationWarning>
                     {overview.note}

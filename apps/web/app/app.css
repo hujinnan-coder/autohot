@@ -79,7 +79,11 @@
      `wide` the site navigation is a rail of the phone's tabs, from there the full sidebar. From `side` a
      desktop page sets its side column (an article's rail, a reading page's aside, the report archive)
      beside the text, which keeps about 600px next to the site sidebar; narrower desktops read in one
-     column, as phones do. */
+     column, as phones do.
+     Foldables rechecked 2026-11-25: an iPhone Duo's inner screen upright (626) stays on the phone
+     shell by design (a wide phone, thumb-reachable tabs); a Xiaomi 18 Fold's inner screen (≈790)
+     reads the one-column rail pages, and a Mate XT unfolded upright (1116) the full sidebar, still
+     one column, short of `side`. */
   --breakpoint-sm: 641px;
   --breakpoint-lg: 700px;
   --breakpoint-md: 768px;

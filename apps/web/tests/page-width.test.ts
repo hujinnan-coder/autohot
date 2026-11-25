@@ -1,7 +1,10 @@
 // Failures: an unbroken URL in a report's lead widened the phone layout and pushed the fifth tab off
 // screen; an open "另外 N 家也报道了" took its longest title's width and scrolled a narrow desktop window
-// sideways (2026-10-16). Pages must fit the window at phone, narrow-phone, unfolded-foldable (669 upright,
-// 711 for an Android foldable, which reads the desktop pages beside the rail) and full-sidebar (941) widths.
+// sideways (2026-10-16). Pages must fit the window at phone (393), narrow-phone (320) and wide-phone
+// widths (466, an iPhone Duo's cover screen; 626, its inner screen upright, which reads the phone shell),
+// unfolded foldables (669 upright, 711 for an Android foldable, which reads the desktop pages beside the
+// rail; 790, a Xiaomi 18 Fold's inner screen) and full-sidebar widths (941; 1116, a Mate XT unfolded
+// upright, which reads one column beside the full sidebar, short of `side`).
 // Narrow desktops read in one column (2026-10-30): what a side column holds there (an article's reason,
 // topics, original and outline; the switch between reports) must stay within reach.
 import assert from "node:assert/strict";
@@ -105,8 +108,8 @@ function pastEdge(width: number): string[] {
   ];
 }
 
-for (const engine of ["Chromium", "WebKit"] as const) test(`${engine}: pages stay within the screen at 320, 393, 669, 711 and 941 pixels`, async () => {
-  for (const width of [393, 320, 669, 711, 941]) {
+for (const engine of ["Chromium", "WebKit"] as const) test(`${engine}: pages stay within the screen at 320, 393, 466, 626, 669, 711, 790, 941 and 1116 pixels`, async () => {
+  for (const width of [320, 393, 466, 626, 669, 711, 790, 941, 1116]) {
     const context = await (engine === "Chromium" ? chrome : safari).newContext({ viewport: { width, height: 873 }, isMobile: width < 941, reducedMotion: "reduce" });
     try {
       const page = await context.newPage();
