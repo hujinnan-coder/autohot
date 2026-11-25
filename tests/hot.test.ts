@@ -7,7 +7,7 @@ import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
 import { after, test } from "node:test";
 import { closeDb, sql } from "@aihot/backend/db";
-import { heatRows, snapshotHeat, type HotEntry } from "@aihot/backend/events/hot";
+import { computeHotRanking, heatRows, snapshotHeat, type HotEntry } from "@aihot/backend/events/hot";
 import { dailyRetention } from "@aihot/backend/operations/retention";
 import { loadHotStrip, rankingExtras } from "@aihot/backend/publication/hot";
 import { loadHot, loadStoryDetail, v1HotTopics } from "@aihot/backend/publication/stories";
@@ -136,6 +136,40 @@ test("the change compares with the earlier time's full 48-hour window, without s
 
 // Snapshot batching must keep incomplete-hour repair, upsert idempotency and corrected cohort
 // counts.
+test("a story ranks only when one of its reports is selected", async () => {
+  const at = new Date(Date.now() - 60_000);
+  const none = await story();
+  const some = await story();
+  // Each story: two independent editorial sources so it clears MIN_PARTICIPANTS.
+  for (const [sid, key, selected] of [
+    [none, "quiet-a", false], [none, "quiet-b", false],
+    [some, "loud-a", false], [some, "loud-b", true],
+  ] as const) {
+    const srcId = `${T}-${key}`;
+    await sql`INSERT INTO sources (id,name,kind,tier,participation_mode,created_at,next_fetch_at)
+      VALUES (${srcId},${srcId},'rss','T2','editorial','2099-01-01','2100-01-01')`;
+    const [f] = await sql<{ id: number }[]>`INSERT INTO facts(public_id,story_id,title) VALUES (${key},${sid},${key}) RETURNING id`;
+    await sql`INSERT INTO articles(id,source_id,identity_key,url,title,discovered_at,timeline_at)
+      VALUES (${key},${srcId},${key},${`https://example.org/${key}`},${key},${at},${at})`;
+    await sql`INSERT INTO fact_articles(fact_id,article_id,role) VALUES (${f!.id},${key},'report')`;
+    await sql`INSERT INTO publications(article_id,source_id,title,url,timeline_at,discovered_at,sort_at,body_mode,eligible,selected,channel,story_id,fact_id,score,visible_after)
+      VALUES (${key},${srcId},${key},${`https://example.org/${key}`},${at},${at},${at},'summary',true,${selected},'news',${sid},${f!.id},${selected ? 60 : 30},${selected ? at : null})`;
+    await sql`INSERT INTO story_signals(story_id,article_id,participant_key,source_id,kind,observed_at)
+      VALUES (${sid},${key},${`source:${srcId}`},${srcId},'editorial',${at})`;
+  }
+  await computeHotRanking();
+  const hot = await loadHot();
+  const [rankedSome, rankedNone] = await Promise.all([loadStoryDetail(some), loadStoryDetail(none)]);
+  const board = await sql<{ entries: Array<{ "story_id": number }> }[]>`
+    SELECT entries FROM hot_rankings WHERE computed_at = (SELECT max(computed_at) FROM hot_rankings)`;
+  const ids = board[0]!.entries.map((e) => (e as Record<string, unknown>)["storyId"] as number);
+  assert.ok(ids.includes(some), `story ${some} missing from ${JSON.stringify(ids)}`);
+  assert.ok(!ids.includes(none), `story ${none} should not rank: ${JSON.stringify(ids)}`);
+  // Later tests insert their own rankings with older timestamps; drop ours so latestHotRanking sees theirs.
+  await sql`DELETE FROM hot_rankings WHERE computed_at = (SELECT max(computed_at) FROM hot_rankings)`;
+  void rankedSome; void rankedNone; void hot;
+});
+
 test("hourly snapshots are idempotent and repair an incomplete hour after collection catches up", async () => {
   const s = await story();
   const src = await source("snapshot");

@@ -54,7 +54,7 @@ export async function storedHotRanking(db: Db = sql): Promise<HotRanking | null>
   return { id: row.id, computedAt: row.computed_at.toISOString(), ruleVersion: row.rule_version, entries: row.entries, coverage: row.evidence };
 }
 
-export const HOT_RULE_VERSION = "heat-v1-48h-halflife24h";
+export const HOT_RULE_VERSION = "heat-v2-48h-halflife24h-needs-selected";
 /** Evidence counts while its source time is this recent (grouping looks back as far for discussion posts). */
 export const HEAT_WINDOW_HOURS = 48;
 const HALF_LIFE_HOURS = 24;
@@ -197,6 +197,9 @@ export async function computeHotRanking(at = new Date()): Promise<{ id: number; 
       WHERE f.story_id = ${r.story_id} AND ${evidenceCondition()} AND ${listedCondition(at)}
       ORDER BY p.article_id, (fa.role = 'primary') DESC, f.id`;
     if (reports.length === 0) continue;
+    // A story makes the board only when at least one of its reports is selected: heat from mere
+    // overseas echo-chambers (many sources restating one another, none selected) does not qualify.
+    if (!reports.some((report) => report.selected)) continue;
     // The event is shown under its own title, linked to the fact most sources report: the launch,
     // not the leak or teaser that came first. Between equally reported facts the earlier one stands,
     // so a single high-scoring follow-up cannot take the link.
