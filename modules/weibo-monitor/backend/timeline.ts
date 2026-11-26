@@ -101,3 +101,11 @@ export function parseTimeline(markdown: string) {
   });
   return { items, avatar };
 }
+
+export function selectFirstScanItems<T extends { publishedAt: string | null }>(items: readonly T[]): T[] {
+  return items.toSorted((a, b) => {
+    if (a.publishedAt === null) return b.publishedAt === null ? 0 : 1;
+    if (b.publishedAt === null) return -1;
+    return Date.parse(b.publishedAt) - Date.parse(a.publishedAt);
+  }).slice(0, 5);
+}

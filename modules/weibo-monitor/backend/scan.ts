@@ -6,9 +6,10 @@ import { jinaRead } from "@aihot/backend/providers/jina";
 import { produceImage } from "@aihot/backend/media/images";
 import { BudgetExceededError, completeReceipt } from "@aihot/backend/providers/receipts";
 import { accounts, nextDueAt, tickTime } from "./accounts.ts";
-import { parseTimeline } from "./timeline.ts";
+import { parseTimeline, selectFirstScanItems } from "./timeline.ts";
 
-const MAX_ACCOUNTS_PER_TICK = 4;
+// About 500 accounts across the three tiers need ~1150 scans a day. Six per tick only allows 36 an hour.
+const MAX_ACCOUNTS_PER_TICK = 10;
 
 interface DueAccount {
   source_id: string;
@@ -57,10 +58,11 @@ async function scanAccount(row: DueAccount, tick: Date): Promise<"ok" | "failed"
   const sourceId = row.source_id;
   const account = accounts.get(sourceId);
   if (!account) return "skipped";
-  const [run] = await sql<{ id: number }[]>`
+  const [run] = await sql<{ id: number; first: boolean }[]>`
     INSERT INTO fetch_runs (source_id, detail)
     SELECT id, ${sql.json({ owner: await runOwner() })} FROM sources
-    WHERE id = ${sourceId} AND enabled AND kind = 'external' RETURNING id`;
+    WHERE id = ${sourceId} AND enabled AND kind = 'external'
+    RETURNING id, (SELECT last_ok_at FROM sources WHERE sources.id = fetch_runs.source_id) IS NULL AS first`;
   if (!run) return "skipped";
 
   const dueAt = nextDueAt(account.tier, tick);
@@ -88,11 +90,12 @@ async function scanAccount(row: DueAccount, tick: Date): Promise<"ok" | "failed"
   }
 
   const { items, avatar } = timeline;
+  const itemsToIngest = run.first ? selectFirstScanItems(items) : items;
   try {
     await sql.begin(async tx => {
       let created = 0;
-      for (let i = 0; i < items.length; i += MAX_ITEMS) {
-        created += (await ingestItems({ sourceId, items: items.slice(i, i + MAX_ITEMS) }, { collectorTx: tx })).created;
+      for (let i = 0; i < itemsToIngest.length; i += MAX_ITEMS) {
+        created += (await ingestItems({ sourceId, items: itemsToIngest.slice(i, i + MAX_ITEMS) }, { collectorTx: tx })).created;
       }
       const recorded = await recordResult(tx, run.id, sourceId, dueAt, { found: items.length, created, error: null }, receiptId);
       // 微博图床对无 cookie 的抓取返回 403：头像写库前必须经图片代理验证真的出图，

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { accounts, initialDueAccounts, nextDueAt, tickTime, TICK_MINUTES } from "../backend/accounts.ts";
-import { parseTimeline, parseWeiboDate } from "../backend/timeline.ts";
+import { accounts, initialDueAccounts, nextDueAt, tickTime } from "../backend/accounts.ts";
+import { parseTimeline, parseWeiboDate, selectFirstScanItems } from "../backend/timeline.ts";
 
 const post = {
   id: "5361796274981767",
@@ -43,6 +43,26 @@ test("reads timeline JSON after the Jina headers and only imports text from post
     raw: { verified_reason: "小米创办人" },
   }]);
   assert.deepEqual(parseTimeline(timeline([])), { items: [], avatar: null });
+});
+
+test("the first scan selects the five newest items even when an old post is pinned first", () => {
+  const items = [1, 7, 6, 5, 4, 3, 2].map(day => ({ publishedAt: `2026-11-0${day}T00:00:00.000Z` }));
+  const originalOrder = [...items];
+  assert.deepEqual(selectFirstScanItems(items), items.slice(1, 6));
+  assert.deepEqual(items, originalOrder);
+});
+
+test("the first scan keeps every item when there are fewer than five", () => {
+  const older = { publishedAt: "2026-11-04T00:00:00.000Z" };
+  const newer = { publishedAt: "2026-11-05T00:00:00.000Z" };
+  assert.deepEqual(selectFirstScanItems([older, newer]), [newer, older]);
+});
+
+test("the first scan puts items without a publication date after dated items", () => {
+  const dated = [5, 4, 3, 2].map(day => ({ publishedAt: `2026-11-0${day}T00:00:00.000Z` }));
+  const undated = { publishedAt: null, id: "undated" };
+  const otherUndated = { publishedAt: null, id: "other-undated" };
+  assert.deepEqual(selectFirstScanItems([undated, ...dated, otherUndated]), [...dated, undated]);
 });
 
 test("reads an author's avatar even when the post has no plain text to import", () => {
@@ -133,27 +153,26 @@ test("fast, mid, and rest scans recur after 120, 240, and 720 minutes from the t
   assert.equal(nextDueAt("rest", tick).toISOString(), "2026-11-21T11:50:00.000Z");
 });
 
-test("initial due times spread all 82 accounts across their tier intervals", () => {
+test("initial due times spread all configured accounts evenly across their tier intervals", () => {
   const now = new Date("2026-11-20T00:00:00Z");
   const due = initialDueAccounts(now);
-  assert.equal(due.length, 82);
+  assert.equal(due.length, accounts.size);
   assert.equal(new Set(due.map(({ sourceId }) => sourceId)).size, accounts.size);
-  for (const [tier, count, last] of [
-    ["fast", 5, "2026-11-20T01:36:00.000Z"],
-    ["mid", 18, "2026-11-20T03:46:00.000Z"],
-    ["rest", 59, "2026-11-20T11:47:00.000Z"],
-  ] as const) {
-    const times = due.filter(({ sourceId }) => accounts.get(sourceId)!.tier === tier).map(({ nextDueAt }) => nextDueAt.getTime());
-    assert.equal(times.length, count);
-    assert.equal(Math.min(...times), now.getTime());
-    assert.equal(Math.max(...times), Date.parse(last));
+  for (const tier of ["fast", "mid", "rest"] as const) {
+    const count = [...accounts.values()].filter(account => account.tier === tier).length;
+    const minutes = due.filter(({ sourceId }) => accounts.get(sourceId)!.tier === tier)
+      .map(({ nextDueAt }) => (nextDueAt.getTime() - now.getTime()) / 60_000)
+      .sort((a, b) => a - b);
+    assert.equal(minutes.length, count);
+    if (count === 0) continue;
+    const interval = (nextDueAt(tier, now).getTime() - now.getTime()) / 60_000;
+    const spacing = interval / count;
+    assert.equal(minutes[0], 0);
+    for (const [index, minute] of minutes.entries()) {
+      const gap = (minutes[index + 1] ?? interval) - minute;
+      assert.ok(minute >= 0 && minute < interval);
+      assert.ok(gap >= Math.floor(spacing) && gap <= Math.ceil(spacing));
+    }
   }
   assert.deepEqual(accounts.get("weibopage-1243861097"), { uid: "1243861097", name: "李想", tier: "rest" });
-  const perTick = new Map<number, number>();
-  for (const { sourceId, nextDueAt: firstDue } of due) {
-    assert.ok(firstDue >= now && firstDue < nextDueAt(accounts.get(sourceId)!.tier, now));
-    const slot = Math.ceil(firstDue.getTime() / (TICK_MINUTES * 60_000));
-    perTick.set(slot, (perTick.get(slot) ?? 0) + 1);
-  }
-  assert.ok(Math.max(...perTick.values()) <= 4);
 });
