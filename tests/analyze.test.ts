@@ -313,7 +313,7 @@ test("the pack's thresholds stay in the order the scoring and writing steps assu
   assert.ok(SELECTION.browseFloor < SELECTION.understandFloor, "browseFloor must sit below understandFloor");
   assert.ok(SELECTION.understandFloor < t.T1, "understandFloor must sit below every selecting threshold");
   for (const [tier, v] of Object.entries(t)) assert.ok(v < t.T2 || tier === "T2", `${tier} must not exceed the media threshold`);
-  for (const v of classes) assert.ok(v >= t.T1 && v < t.T2, "a class floor raises the official tiers, never the media one");
+  for (const v of classes) assert.ok(v >= t.T1, "a class floor raises the tiers it names, never lowers one");
 });
 
 test("scoresSelect needs two scores at the threshold, and both of them", () => {

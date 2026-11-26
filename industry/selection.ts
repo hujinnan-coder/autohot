@@ -30,6 +30,9 @@ export const SELECTION = {
   classes: {
     supplier: { label: "供应链与技术", threshold: 55 },
     data: { label: "数据与榜单", threshold: 57 },
+    // 高产量快讯源（第一电动、IT之家这类分钟级快讯产品）：条目基数是普通源的数倍，同样的
+    // 分数线会批量放进同一事件的多条短讯。抬到 66：快讯里只有真正的大事（预售价格发布级别）进精选。
+    flash: { label: "高产量快讯", threshold: 66 },
   } as Record<string, { label: string; threshold: number }>,
   /**
    * 没入选、但平均分高于这个数的资料，也用精选的写法（内容理解：标题、摘要、推荐理由）来写，
