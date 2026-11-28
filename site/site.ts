@@ -162,7 +162,7 @@ export const ABOUT = {
   steps: {
     collect: "车企官方、主管部门与行业协会、汽车媒体都在看；更新越勤的源看得越勤，最快 15 分钟看一次。",
     store: "抓到的都存下来，同一件事的报道归到一起，热点榜就是从这里算出来的。",
-    select: `模型先看是不是汽车行业的事、对做营销的人有没有用，再写中文标题、摘要和${ITEM_COPY.reasonLabel}；没有实际信息的通稿和重复转发进不来。`,
+    select: `模型先看是不是汽车行业的事、对汽车行业从业者有没有用，再写中文标题、摘要和${ITEM_COPY.reasonLabel}；没有实际信息的通稿和重复转发进不来。`,
     publish: `${EDITION_WHEN.daily} 出日报，${EDITION_WHEN.weekly} 出周报，${EDITION_WHEN.monthly} 出月报。`,
   },
   /**
