@@ -2,21 +2,21 @@
 // Wordmark 是 AUTOHOT 的字母变形（SVG）；换站名时重新画一份，保持同样的参数。
 import { SITE } from "../site.ts";
 
-/** 字标：AUTOHOT 宽扁几何字形（参考埃安字母标），笔画顶端斜切，A 平顶带横杠，HOT 的 O 内嵌“热点”圆点。字母随文字颜色，圆点用强调色。 */
+/** 字标：综合三家车企字母标的形态——上汽奥迪的超宽扁粗体、阿维塔去横杠的尖顶 A、埃安的斜切折线；两个 O 是圆环（呼应奥迪四环），HOT 的 O 内嵌“热点”圆点。字母随文字颜色，圆点用强调色。 */
 export function Wordmark({ size = 24, className = "", title = SITE.name }: { size?: number; className?: string; title?: string }) {
   const glyphs: Record<string, string> = {
-    A: "M0 86L34 0H46L80 86H58L40 40.4L22 86ZM16 56H64V76H16Z",
-    U: "M0 4V46A40 40 0 0 0 80 46V0L60 4V46A20 20 0 0 1 40 66A20 20 0 0 1 20 46V0Z",
-    T: "M0 0H80L76 20H4ZM30 10H50V86H30Z",
-    O: "M34 0H46A34 34 0 0 1 80 34V52A34 34 0 0 1 46 86H34A34 34 0 0 1 0 52V34A34 34 0 0 1 34 0ZM34 20H46A14 14 0 0 1 60 34V52A14 14 0 0 1 46 66H34A14 14 0 0 1 20 52V34A14 14 0 0 1 34 20Z",
-    H: "M0 4L20 0V86H0ZM60 4L80 0V86H60ZM18 37H62V55H18Z",
+    A: "M0 80L35.5 0H46.5L82 80H60.1L41 37L21.9 80Z",
+    U: "M0 7V39A41 41 0 0 0 82 39V0L62 7V39A21 21 0 0 1 41 60A21 21 0 0 1 20 39V0Z",
+    T: "M0 0H82L75 20H7ZM31 8H51V80H31Z",
+    O: "M1 40A40 40 0 1 1 81 40A40 40 0 1 1 1 40ZM21 40A20 20 0 1 1 61 40A20 20 0 1 1 21 40Z",
+    H: "M0 7L20 0V80H0ZM62 7L82 0V80H62ZM18 33H64V51H18Z",
   };
   return (
-    <svg viewBox="-8 -8 630 102" height={size} width={Math.round((size * 630) / 102)} className={className} aria-label={title} role="img">
+    <svg viewBox="-8 -8 638 96" height={size} width={Math.round((size * 638) / 96)} className={className} aria-label={title} role="img">
       {["A", "U", "T", "O", "H", "O", "T"].map((l, i) => (
-        <path key={i} transform={`translate(${i * 89} 0)`} d={glyphs[l]} fill="currentColor" fillRule={l === "O" ? "evenodd" : undefined} />
+        <path key={i} transform={`translate(${i * 90} 0)`} d={glyphs[l]} fill="currentColor" fillRule={l === "O" ? "evenodd" : undefined} />
       ))}
-      <circle cx="485" cy="43" r="11.5" className="fill-accent" />
+      <circle cx="491" cy="40" r="11.5" className="fill-accent" />
     </svg>
   );
 }
