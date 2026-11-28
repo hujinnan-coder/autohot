@@ -33,6 +33,7 @@ try {
     SELECT id, title FROM stories
     WHERE merged_into IS NULL AND product_key IS NULL AND latest_at > now() - interval '12 days'
     ORDER BY id`;
+  let done = 0;
   const counts = await pmap(stories, 3, async ({ id, title }) => {
     for (let attempt = 0; ; attempt++) {
       try {
@@ -48,11 +49,14 @@ try {
           const updated = await tx`UPDATE stories SET product_key = ${res.data.productKey}, major_node = ${res.data.majorNode}
             WHERE id = ${id} AND merged_into IS NULL AND product_key IS NULL`;
           await completeReceipt(tx, res.receiptId);
+          done++;
+          if (done % 25 === 0) console.error(`进度 ${done}/${stories.length}`);
           return updated.count;
         });
       } catch (error) {
         // 预算是全服务共享的，worker 自己的采集与评分也在花：等窗口过去再试，别把事件判成失败。
         if (attempt < RETRIES && error instanceof Error && /Budget for \w+ exhausted/.test(error.message)) {
+          console.error(`事件 ${id} 预算已满，等一轮再试（${attempt + 1}/${RETRIES}）`);
           await new Promise((resolve) => setTimeout(resolve, RETRY_WAIT_MS));
           continue;
         }
