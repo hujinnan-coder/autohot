@@ -22,7 +22,11 @@ async function querySiteStats(now: Date): Promise<SiteStats> {
   const dayAgo = new Date(now.getTime() - 24 * 3600_000);
   const [[row], kinds, sample, latest] = await Promise.all([
     sql<Array<Omit<SiteStats, "sourceKinds" | "day" | "sampleSources" | "latest"> & { collected: number; selectedDay: number }>>`
-      SELECT (SELECT count(*) FROM sources WHERE enabled)::int AS sources,
+      -- A monitored weibo account runs on two sources at once (the module's page reader and the free
+      -- stream); the headline counts accounts, not source rows, so the same person isn't counted twice.
+      SELECT (SELECT count(*) FROM sources WHERE enabled)::int
+             - (SELECT count(*) FROM sources WHERE enabled AND id LIKE 'weibo-%')::int
+             + (SELECT count(DISTINCT regexp_replace(id, '\\D', '', 'g')) FROM sources WHERE enabled AND (id LIKE 'weibo-%' OR id LIKE 'weibopage-%'))::int AS sources,
              (SELECT count(*) FROM publications p WHERE p.visibility <> 'withdrawn')::int AS items,
              (SELECT count(*) FROM publications p WHERE ${selectedCondition(now)})::int AS selected,
              (SELECT count(*) FROM reports WHERE kind = 'daily')::int AS dailies,
