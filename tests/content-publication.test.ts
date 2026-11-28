@@ -8,6 +8,7 @@ import { loadTimeline } from "@aihot/backend/publication/timeline";
 import { loadStoryFollowups } from "@aihot/backend/publication/followups";
 import { loadGroupReports } from "@aihot/backend/publication/groups";
 import { loadItemDetail } from "@aihot/backend/publication/detail";
+import { readerWeiboLink } from "@aihot/backend/publication/links";
 import { loadStoryDetail, v1HotTopics, v1Story } from "@aihot/backend/publication/stories";
 import { candidates } from "@aihot/backend/reports/edition";
 import { byReportTime, composeStoryDigest, digestSelection, DIGEST_PROMPT_VERSION, DIGEST_SYSTEM, DigestSchema } from "@aihot/backend/events/digest";
@@ -66,6 +67,14 @@ async function report(sourceId: string, group: Awaited<ReturnType<typeof story>>
   await sql`INSERT INTO fact_articles (fact_id,article_id,role,evidence) VALUES (${group.factId},${id},${opts.role ?? 'report'},'Tasks consume usage.')`;
   return id;
 }
+
+test("synthetic weibo links face readers as the author's profile; real links pass through", () => {
+  // weibo-monitor 给拿不到 mid 的短帖造 `u/<uid>?weibo_post=<哈希>#<哈希>` 的合成地址（入库去重的身份）。
+  assert.equal(readerWeiboLink("https://m.weibo.cn/u/1670183810?weibo_post=89a2b251#89a2b251"), "https://m.weibo.cn/u/1670183810");
+  assert.equal(readerWeiboLink("https://m.weibo.cn/u/1670183810"), "https://m.weibo.cn/u/1670183810");
+  assert.equal(readerWeiboLink("https://m.weibo.cn/status/5370354725817575"), "https://m.weibo.cn/status/5370354725817575");
+  assert.equal(readerWeiboLink("https://example.org/article"), "https://example.org/article");
+});
 
 test("source tier and event ownership are separate; mentions of an entity do not establish authority", () => {
   const row = { body_mode: "full" as const, score: 70, timeline_at: now, source_tier: "T2", publisher_role: null, owner_entity_id: null, fact_subject: "Tesla" };
