@@ -131,8 +131,9 @@ export async function composeStoryDigest(storyId: number, opts: { rewrite?: bool
     }
     await tx`INSERT INTO story_digests (story_id, version, digest, receipt_id, article_ids, inputs_hash, report_hashes)
              VALUES (${storyId}, ${version}, ${nextDigest}, ${res.receiptId}, ${ids}, ${inputsHash}, ${tx.json(reportHashes)})`;
+    // 模型对车型拿不准时给 null：保留已有的车型与节点判定，不让重写抹掉回填的结果。
     const product = "productKey" in res.data
-      ? tx`product_key = ${res.data.productKey}, major_node = ${res.data.majorNode},`
+      ? tx`product_key = coalesce(${res.data.productKey}, product_key), major_node = coalesce(${res.data.majorNode}, major_node),`
       : tx``;
     await tx`UPDATE stories SET digest = ${nextDigest}, digest_updated_at = now(),
                title = CASE WHEN origin = 'manual' OR ${nextTitle} = '' THEN title ELSE ${nextTitle} END,

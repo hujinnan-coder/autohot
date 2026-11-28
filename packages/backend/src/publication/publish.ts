@@ -8,7 +8,7 @@ import { sha256, stableJson } from "../lib/ids.ts";
 import { collapseWhitespace, isChineseText } from "../lib/text.ts";
 import type { XPostData } from "../content/materials.ts";
 import { originalPostCopy } from "../content/posts.ts";
-import { itemUrl } from "./links.ts";
+import { itemUrl, readerWeiboLink } from "./links.ts";
 import { pickRepresentative, REPRESENTATIVE_COLUMNS, type RepresentativeIdentity } from "./representative.ts";
 import { enqueue, QUEUES, shutdownSignal } from "../jobs/queue.ts";
 import { editorialPolicy, emit } from "../modules.ts";
@@ -145,7 +145,7 @@ export function v1Payload(p: {
     originalTitle: p.originalTitle,
     summary: p.summary,
     source: { name: p.sourceName },
-    links: { aihot, original: p.url },
+    links: { aihot, original: readerWeiboLink(p.url) },
     publishedAt: p.publishedAt ? p.publishedAt.toISOString() : null,
     discoveredAt: p.discoveredAt.toISOString(),
     category: toPublicApiCategory(p.category),

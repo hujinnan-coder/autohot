@@ -6,6 +6,7 @@ import { sql } from "../db.ts";
 import { categoryCondition, channelCondition, tagCondition } from "./items.ts";
 import { evidenceCondition, listedCondition } from "./scope.ts";
 import { publicSourceName } from "./rules.ts";
+import { readerWeiboLink } from "./links.ts";
 
 export interface GroupReportsQuery {
   factPublicId: string;
@@ -35,7 +36,7 @@ export async function loadGroupReports(q: GroupReportsQuery, now = new Date()): 
       title: m.title,
       source: { name: publicSourceName(m.source_name) },
       timelineAt: m.timeline_at.toISOString(),
-      originalUrl: m.url,
+      originalUrl: readerWeiboLink(m.url),
     })),
   };
 }

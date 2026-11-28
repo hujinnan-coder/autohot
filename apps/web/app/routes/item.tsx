@@ -368,7 +368,9 @@ function ItemView({ item, followups }: Loaded) {
   const timeLabel = item.publishedAt ? "发布时间" : "收录时间";
   const summaryOnly = item.readingMode === "summary-only";
   const showOutline = item.outline.length >= 3;
-  const originalLabel = isX ? "在 X 查看原推" : "打开原文";
+  // 微博短帖拿不到 mid 时只有博主主页可去，按钮如实说明去向。
+  const originalIsProfile = /^https:\/\/m\.weibo\.cn\/u\/\d+$/.test(item.links.original);
+  const originalLabel = isX ? "在 X 查看原推" : originalIsProfile ? "博主微博主页" : "打开原文";
 
   const related = item.relatedStories.filter((s) => s.publicId !== item.story?.publicId);
   const [summaryRuns] = useMemo(() => linkMentions([item.summary], item.mentions), [item.summary, item.mentions]);

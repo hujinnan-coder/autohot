@@ -6,6 +6,7 @@ import { POLICY } from "@aihot/site";
 import { sql, type Db } from "../db.ts";
 import { isChineseText } from "../lib/text.ts";
 import { isEmptyOrLinkOnly, withXArticle } from "../content/posts.ts";
+import { readerWeiboLink } from "./links.ts";
 import { proxiedImage, proxiedImageSet } from "../media/imgproxy.ts";
 import { sourceOwnsPost } from "../sources/account.ts";
 import { pickRepresentative, REPRESENTATIVE_COLUMNS, type RepresentativeRow } from "./representative.ts";
@@ -208,7 +209,7 @@ export function toItemSummary(row: ItemRow): ItemSummary {
     summary: row.summary,
     reason: row.selected ? row.reason : null,
     source: { name: publicSourceName(row.source_name), ...(iconUrl ? { iconUrl } : {}) },
-    links: { original: row.url },
+    links: { original: readerWeiboLink(row.url) },
     publishedAt: row.published_at?.toISOString() ?? null,
     discoveredAt: row.discovered_at.toISOString(),
     timelineAt: row.timeline_at.toISOString(),
