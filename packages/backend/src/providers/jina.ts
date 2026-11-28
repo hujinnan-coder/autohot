@@ -22,22 +22,36 @@ const CONTENT = "\nMarkdown Content:\n";
  */
 export async function jinaRead(
   targetUrl: string,
-  opts: { purpose: string; subject: string; format?: "markdown" | "html"; cacheToleranceSeconds?: number; perRead?: boolean; round?: string; removeSelector?: string },
+  opts: {
+    purpose: string;
+    subject: string;
+    format?: "markdown" | "html";
+    cacheToleranceSeconds?: number;
+    perRead?: boolean;
+    round?: string;
+    removeSelector?: string;
+    waitForSelector?: string;
+    renderTimeoutSeconds?: number;
+  },
 ): Promise<{ markdown: string; raw: string; receiptId: number }> {
   const key = credential("collectors", "JINA_API_KEY");
   const base = (credential("collectors", "JINA_BASE_URL") ?? "https://r.jina.ai").replace(/\/$/, "");
   // A listing whose freshness matters (xAI news) caps how old Jina's cached rendering may be.
   const tolerance: Record<string, string> = Number.isInteger(opts.cacheToleranceSeconds) && opts.cacheToleranceSeconds! >= 0 ? { "x-cache-tolerance": String(opts.cacheToleranceSeconds) } : {};
   const remove: Record<string, string> = opts.removeSelector ? { "x-remove-selector": opts.removeSelector } : {};
+  const wait: Record<string, string> = opts.waitForSelector ? { "x-wait-for-selector": opts.waitForSelector } : {};
+  const renderTimeout = opts.renderTimeoutSeconds ?? 0;
+  const timeout: Record<string, string> = Number.isInteger(renderTimeout) && renderTimeout > 0 ? { "x-timeout": String(renderTimeout) } : {};
   const day = new Date().toISOString().slice(0, 10);
   // A per-read listing is keyed by an ID of its own, not the clock: two reads can see the same clock reading.
   const read = opts.round ? { round: opts.round } : opts.perRead ? { read: randomUUID() } : {};
   const receipt = await paidRequest(
-    { service: "jina", model: null, purpose: opts.purpose, subject: opts.subject, identity: { url: targetUrl, day, format: opts.format ?? "markdown", ...read, ...remove }, requestSummary: { url: targetUrl } },
+    { service: "jina", model: null, purpose: opts.purpose, subject: opts.subject, identity: { url: targetUrl, day, format: opts.format ?? "markdown", ...read, ...remove, ...wait, ...timeout }, requestSummary: { url: targetUrl } },
     async () => {
       const res = await guardedFetch(`${base}/${targetUrl}`, {
-        headers: { ...(key ? { authorization: `Bearer ${key}` } : {}), "x-return-format": opts.format ?? "markdown", accept: "text/plain", ...tolerance, ...remove },
-        timeoutMs: 60_000,
+        headers: { ...(key ? { authorization: `Bearer ${key}` } : {}), "x-return-format": opts.format ?? "markdown", accept: "text/plain", ...tolerance, ...remove, ...wait, ...timeout },
+        // Leave time for the request and response around Jina's own rendering deadline.
+        timeoutMs: timeout["x-timeout"] ? Math.max(60_000, renderTimeout * 1000 + 5_000) : 60_000,
         maxBytes: 6 * 1024 * 1024,
       });
       const text = res.text();

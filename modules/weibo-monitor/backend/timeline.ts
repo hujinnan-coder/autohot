@@ -1,6 +1,15 @@
+/// <reference lib="dom" />
+/// <reference lib="dom.iterable" />
+
+import { createHash } from "node:crypto";
+import { contentDocument } from "@aihot/backend/lib/page-content";
 import { collapseWhitespace, stripTags, truncate } from "@aihot/backend/lib/text";
+import { parseLooseDate, readRelativeDate } from "@aihot/backend/sources/dates";
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const WEIBO_ORIGIN = "https://m.weibo.cn";
+const WEIBO_UTC_OFFSET = "+08:00";
+const DAY_MS = 86_400_000;
 
 export function parseWeiboDate(value: string): Date | null {
   const match = /^(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun) ([A-Z][a-z]{2}) (\d{2}) (\d{2}:\d{2}:\d{2}) ([+-]\d{2})(\d{2}) (\d{4})$/.exec(value);
@@ -15,91 +24,87 @@ export function parseWeiboDate(value: string): Date | null {
   return Number.isFinite(date.getTime()) ? date : null;
 }
 
-interface User {
-  screen_name?: string;
-  verified_reason?: string;
-  avatar_hd?: string;
-  /** Signed image URL; the only form the CDN serves to a datacenter, valid for hours. */
-  profile_image_url?: string;
+export function parseWeiboDisplayDate(value: string, now = new Date()): Date | null {
+  if (!Number.isFinite(now.getTime())) return null;
+  const text = collapseWhitespace(value);
+  const relative = readRelativeDate(text, now, WEIBO_UTC_OFFSET).publishedAt;
+  if (relative) return relative;
+
+  // 微博的时分和月日均以北京时间显示。
+  const today = new Date(now.getTime() + 8 * 3600_000).toISOString().slice(0, 10);
+  if (/^\d{1,2}:\d{2}$/.test(text)) return parseLooseDate(today + " " + text, WEIBO_UTC_OFFSET);
+  if (!/^\d{2}-\d{2}(?: \d{1,2}:\d{2})?$/.test(text)) return null;
+  const year = Number(today.slice(0, 4));
+  const date = parseLooseDate(year + "-" + text, WEIBO_UTC_OFFSET);
+  return date && date.getTime() - now.getTime() > DAY_MS
+    ? parseLooseDate(year - 1 + "-" + text, WEIBO_UTC_OFFSET)
+    : date;
 }
 
-interface RetweetedStatus {
-  id?: string;
-  text?: string;
-  created_at?: string;
-  user?: User;
+function postHeader(article: Element): Element | null {
+  const previous = article.previousElementSibling;
+  return previous?.matches("header.weibo-top") ? previous : article.querySelector("header.weibo-top");
 }
 
-interface Card {
-  card_type?: number;
-  mblog?: {
-    id?: string;
-    text?: string;
-    created_at?: string;
-    user?: User;
-    retweeted_status?: RetweetedStatus;
-  };
-}
-
-function authorName(user: User | undefined): string | null {
-  return typeof user?.screen_name === "string" ? collapseWhitespace(user.screen_name) || null : null;
-}
-
-export function parseTimeline(markdown: string) {
-  const at = markdown.indexOf('{"ok"');
-  if (at === -1) throw new Error("Weibo timeline response has no JSON");
-  let response: { ok?: unknown; data?: { cards?: Array<Card | null> } };
-  try {
-    response = JSON.parse(markdown.slice(at));
-  } catch {
-    throw new Error("Weibo timeline response is not valid JSON");
+function postAvatar(article: Element | undefined): string | null {
+  if (!article) return null;
+  const header = postHeader(article);
+  for (const img of [...(header?.querySelectorAll("img[src]") ?? []), ...article.querySelectorAll("img[src]")]) {
+    const url = URL.parse(img.getAttribute("src") ?? "");
+    if (url?.protocol === "https:" && /^(?:tvax|wx)[a-z0-9-]*\.sinaimg\.cn$/.test(url.hostname)
+        && url.searchParams.get("Expires") && url.searchParams.get("ssig")) return url.href;
   }
-  if (response.ok !== 1) throw new Error("Weibo timeline returned ok != 1");
-  if (!Array.isArray(response.data?.cards)) throw new Error("Weibo timeline response has no cards array");
+  return null;
+}
 
-  let avatar: string | null = null;
-  const items = response.data.cards.flatMap(card => {
-    if (card?.card_type !== 9 || !card.mblog) return [];
-    const post = card.mblog;
-    // 带签名的 profile_image_url 是图床唯一放行的形态（avatar_hd 对数据中心直链 403）；签名约 9 小时
-    // 有效，每次扫描都会用它刷新两个源，且 produceImage 成功后图进磁盘缓存，过期也不裂图。
-    const url = post.user?.profile_image_url ?? post.user?.avatar_hd;
-    if (avatar === null && typeof url === "string" && /^https?:\/\//i.test(url) && URL.canParse(url)) avatar = url;
-    if (typeof post.id !== "string" || !/^\d+$/.test(post.id)) return [];
-    const text = typeof post.text === "string" ? stripTags(post.text) : "";
-    const original = post.retweeted_status;
-    const originalText = typeof original?.text === "string" ? stripTags(original.text) : "";
-    if (!text && !originalText) return [];
-    const date = typeof post.created_at === "string" ? parseWeiboDate(post.created_at) : null;
-    const author = authorName(post.user);
-    const originalAuthor = authorName(original?.user);
-    let bodyText = text;
-    if (originalText) {
-      bodyText = `【原帖 @${originalAuthor ?? "未知作者"}】\n${originalText}`;
-      if (text) bodyText += `\n\n【转发评论 @${author ?? "未知作者"}】\n${text}`;
-    } else if (original) {
-      bodyText = `【转发 @${originalAuthor ?? "未知作者"}】（原帖正文缺失）\n${text}`;
-    }
-    const verifiedReason = post.user?.verified_reason;
+function postText(article: Element): string {
+  for (const chrome of article.querySelectorAll("header, span.time, .tips-box, .weibo-media")) chrome.remove();
+  for (const control of article.querySelectorAll("a, button")) {
+    if (/^(?:展开全文|全文|关注|私信)$/.test(collapseWhitespace(control.textContent ?? ""))) control.remove();
+  }
+  return stripTags(article.innerHTML);
+}
+
+export function parseTimeline(html: string, { now = new Date(), uid }: { now?: Date; uid?: string } = {}) {
+  const document = contentDocument(html);
+  const articles = Array.from(document.querySelectorAll("article.weibo-main"));
+  const author = collapseWhitespace(document.querySelector(".mod-fil-n")?.textContent ?? "") || null;
+  const description = collapseWhitespace(document.querySelector(".mod-fil-desc")?.textContent ?? "");
+  const verifiedReason = /^微博认证：\s*(.+)$/.exec(description)?.[1];
+  if (!author && !articles.length) throw new Error("Weibo profile was not rendered");
+
+  // pageConfig 里的 UID 是被访问的账号，另一个 uid 字段属于访客。
+  const profileUid = uid ?? Array.from(document.querySelectorAll("script"), script =>
+    /\bpageConfig:\s*\[\s*\{\s*"type"\s*:\s*"uid"\s*,\s*"value"\s*:\s*"(\d+)"\s*\}/.exec(script.textContent ?? "")?.[1],
+  ).find(Boolean);
+  const avatar = postAvatar(articles[0]);
+  const items = articles.flatMap(article => {
+    const status = Array.from(article.querySelectorAll('a[href^="/status/"]'), link => link.getAttribute("href"))
+      .find(href => href && /^\/status\/\d+$/.test(href));
+    const time = postHeader(article)?.querySelector("span.time") ?? article.querySelector("span.time:not(.weibo-media span)");
+    const publishedAt = parseWeiboDisplayDate(time?.textContent ?? "", now)?.toISOString() ?? null;
+    const bodyText = postText(article);
+    if (!bodyText) return [];
+    if (!status && !profileUid) throw new Error("Weibo profile has no account UID");
+    const path = status ?? `/u/${profileUid}#${createHash("sha1").update(bodyText).digest("hex").slice(0, 16)}`;
     return [{
-      url: `https://m.weibo.cn/status/${post.id}`,
-      title: truncate(text || originalText, 140, "..."),
+      url: WEIBO_ORIGIN + path,
+      title: truncate(bodyText, 140, "..."),
       bodyText,
-      publishedAt: date?.toISOString() ?? null,
+      publishedAt,
       author,
-      raw: {
-        ...(typeof verifiedReason === "string" ? { verified_reason: verifiedReason } : {}),
-        ...(original && {
-          retweeted_status: {
-            id: typeof original.id === "string" ? original.id : undefined,
-            created_at: typeof original.created_at === "string" ? original.created_at : undefined,
-            user: { screen_name: originalAuthor },
-          },
-        }),
-      },
+      // 先收录转发正文，等拿到真实转发样本再拆分 retweeted_status。
+      raw: verifiedReason ? { verified_reason: verifiedReason } : {},
     }];
   });
   return { items, avatar };
+}
+
+/** 入库去重会去掉 URL 片段，短微博的哈希也放进查询参数。 */
+export function weiboUrlForIngest(url: string): string {
+  const link = new URL(url);
+  if (link.hash) link.searchParams.set("weibo_post", link.hash.slice(1));
+  return link.href;
 }
 
 export function selectFirstScanItems<T extends { publishedAt: string | null }>(items: readonly T[]): T[] {

@@ -6,7 +6,7 @@ import { jinaRead } from "@aihot/backend/providers/jina";
 import { produceImage } from "@aihot/backend/media/images";
 import { BudgetExceededError, completeReceipt } from "@aihot/backend/providers/receipts";
 import { accounts, nextDueAt, tickTime } from "./accounts.ts";
-import { parseTimeline, selectFirstScanItems } from "./timeline.ts";
+import { parseTimeline, selectFirstScanItems, weiboUrlForIngest } from "./timeline.ts";
 
 // About 500 accounts across the three tiers need ~1150 scans a day. Six per tick only allows 36 an hour.
 const MAX_ACCOUNTS_PER_TICK = 10;
@@ -70,14 +70,17 @@ async function scanAccount(row: DueAccount, tick: Date): Promise<"ok" | "failed"
   let receiptId: number | undefined;
   let timeline: ReturnType<typeof parseTimeline>;
   try {
-    const url = `https://m.weibo.cn/api/container/getIndex?type=uid&value=${uid}&containerid=107603${uid}`;
+    const url = `https://m.weibo.cn/u/${uid}`;
     const page = await jinaRead(url, {
       purpose: "source_listing",
       subject: `weibo:${uid}`,
       round: row.next_due_at.toISOString(),
+      waitForSelector: ".wb-item, .card-wrap, article",
+      renderTimeoutSeconds: 90,
+      format: "html",
     });
     receiptId = page.receiptId;
-    timeline = parseTimeline(page.markdown);
+    timeline = parseTimeline(page.markdown, { uid });
   } catch (error) {
     const budget = error instanceof BudgetExceededError;
     const outcome = { found: 0, created: 0, error: errorMessage(error) };
@@ -95,7 +98,8 @@ async function scanAccount(row: DueAccount, tick: Date): Promise<"ok" | "failed"
     await sql.begin(async tx => {
       let created = 0;
       for (let i = 0; i < itemsToIngest.length; i += MAX_ITEMS) {
-        created += (await ingestItems({ sourceId, items: itemsToIngest.slice(i, i + MAX_ITEMS) }, { collectorTx: tx })).created;
+        const batch = itemsToIngest.slice(i, i + MAX_ITEMS).map(item => ({ ...item, url: weiboUrlForIngest(item.url) }));
+        created += (await ingestItems({ sourceId, items: batch }, { collectorTx: tx })).created;
       }
       const recorded = await recordResult(tx, run.id, sourceId, dueAt, { found: items.length, created, error: null }, receiptId);
       // 微博图床对无 cookie 的抓取返回 403：头像写库前必须经图片代理验证真的出图，
