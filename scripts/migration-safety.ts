@@ -53,7 +53,9 @@ const IDENT = '(?:[a-z_][a-z0-9_$]*|"(?:[^"]|"")+")';
 const RELATION = `${IDENT}(?: \\. ${IDENT})?`;
 const TYPE = '(?:text|boolean|smallint|int|integer|bigint|real|double precision|numeric(?: \\( \\d+(?: , \\d+)? \\))?|timestamp(?: \\( \\d+ \\))?(?: with(?:out)? time zone)?|timestamptz|date|uuid|jsonb?|bytea)(?: \\[ \\])*';
 const LITERAL = `(?:'(?:[^']|'')*'|-?\\d+(?:\\.\\d+)?|true|false|null)(?: :: ${TYPE})?`;
-const addColumn = new RegExp(`^alter table ${RELATION} add column (?:if not exists )?${IDENT} ${TYPE}(?: not null)?(?: default ${LITERAL})?(?: not null)?$`, "i");
+const nullableColumn = `add column (?:if not exists )?${IDENT} ${TYPE}`;
+const addColumn = new RegExp(`^alter table ${RELATION} ${nullableColumn}(?: not null)?(?: default ${LITERAL})?(?: not null)?$`, "i");
+const addNullableColumns = new RegExp(`^alter table ${RELATION} ${nullableColumn}(?: , ${nullableColumn})+$`, "i");
 const alterDefault = new RegExp(`^alter table ${RELATION} alter column ${IDENT} (?:set default ${LITERAL}|drop default)$`, "i");
 const indexStart = new RegExp(`^create (unique )?index concurrently if not exists (${IDENT}) on (${RELATION}) `, "i");
 
@@ -90,6 +92,8 @@ export function migrationPlan(text: string): MigrationPlan {
   // on it fails the migration instead of disappearing with it. Whether its data may go is settled before
   // the change, and the release running while it applies no longer reads or writes it.
   if (new RegExp(`^drop table if exists ${RELATION}$`, "i").test(sql)) return { kind: "transaction" };
+  // 同一张表新增多个可空且无默认值的列只改目录，不增加表扫描或锁定其他表。
+  if (addNullableColumns.test(sql)) return { kind: "transaction" };
   if (!singleAction(tokens)) throw new Error("use one ALTER TABLE action per statement");
   // Only these per-table vacuum triggers: catalog changes under SHARE UPDATE EXCLUSIVE, without
   // disabling maintenance, changing its resource limits or broadening the storage-parameter syntax.

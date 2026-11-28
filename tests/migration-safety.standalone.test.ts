@@ -21,6 +21,8 @@ test("online migrations reject writes, blocking indexes and table rewrites befor
     "ALTER TABLE articles ADD CONSTRAINT key UNIQUE (id);",
     "ALTER TABLE articles ADD CONSTRAINT positive CHECK (id > 0);",
     "ALTER TABLE articles ADD COLUMN flag text, ADD CONSTRAINT positive CHECK (id > 0);",
+    "ALTER TABLE articles ADD COLUMN flag text, ADD COLUMN label text NOT NULL;",
+    "ALTER TABLE articles ADD COLUMN flag text, ADD COLUMN created_at timestamptz DEFAULT clock_timestamp();",
     "CREATE TABLE clone AS SELECT * FROM articles;",
     "DO $$ BEGIN UPDATE articles SET selected = true; END $$;",
     "SELECT pg_sleep(60);",
@@ -33,6 +35,7 @@ test("online migrations permit metadata changes and split constraint validation"
   for (const statement of [
     "CREATE TABLE example (id bigint PRIMARY KEY, body text NOT NULL);",
     "ALTER TABLE articles ADD COLUMN flag text;",
+    "ALTER TABLE articles ADD COLUMN flag text, ADD COLUMN reviewed boolean;",
     "ALTER TABLE articles ADD COLUMN IF NOT EXISTS selected boolean NOT NULL DEFAULT false;",
     "ALTER TABLE articles ADD COLUMN flag text DEFAULT 'pending' NOT NULL;",
     "ALTER TABLE articles ADD COLUMN tags text[] DEFAULT '{}'::text[];",

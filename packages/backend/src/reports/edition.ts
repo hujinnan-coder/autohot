@@ -7,6 +7,7 @@
 // independent participants, first-hand), and the first one leads. Sections are the industry pack's
 // (industry/taxonomy.ts CATEGORIES). A thin issue's highlights are filled from the window's best reports it
 // left out (dailyPicks).
+// 每期同车型优先保留所有特别重大节点，其余车型只留排序最前的一条，补充看点只收尚未出现的车型。
 import { addDays } from "@aihot/contracts/time";
 import { SELECTION } from "@aihot/industry/selection";
 import { CATEGORIES } from "@aihot/industry/taxonomy";
@@ -14,6 +15,7 @@ import { sql } from "../db.ts";
 import { currentSignals } from "../events/hot.ts";
 import { pickRepresentative, representativePriority, REPRESENTATIVE_COLUMNS, type RepresentativeIdentity } from "../publication/representative.ts";
 import { factSources } from "../publication/coverage.ts";
+import { dedupByProduct, productKeysOf, type ProductKeyed } from "../publication/product.ts";
 import { evidenceCondition, listedCondition, ownFactEvidenceCondition } from "../publication/scope.ts";
 
 /** Each category's section; several categories may share one, in the order the pack lists them. */
@@ -50,7 +52,7 @@ export interface ReportEntry {
   publishedAt: string;
 }
 
-export interface Candidate extends ReportEntry {
+export interface Candidate extends ReportEntry, ProductKeyed {
   category: string | null;
   factKey: string;
 }
@@ -70,7 +72,7 @@ export interface DailyEntry extends ReportEntry {
 }
 
 /** An entry while its issue is edited: what ranking and the editors need besides what is stored. */
-export interface EditionEntry {
+export interface EditionEntry extends ProductKeyed {
   entry: DailyEntry;
   category: string | null;
   tags: string[];
@@ -90,11 +92,13 @@ type ReportRow = RepresentativeIdentity & {
   first_party: boolean; body_mode: "full" | "summary"; timeline_at: Date;
   source_id: string; source_name: string; source_kind: string;
   fact_id: number | null; fact_public_id: string | null; story_id: number | null; story_public_id: string | null;
+  product_key: string | null; major_node: boolean | null;
 };
 
 const REPORT_FIELDS = sql`p.article_id AS id, p.title, p.summary, p.url, p.category, p.tags, p.score, (s.tier = 'T1') AS first_party, p.body_mode, p.timeline_at,
   ${REPRESENTATIVE_COLUMNS}, s.id AS source_id, s.name AS source_name, s.kind AS source_kind,
-  f.id AS fact_id, f.public_id AS fact_public_id, st.id AS story_id, st.public_id::text AS story_public_id`;
+  f.id AS fact_id, f.public_id AS fact_public_id, st.id AS story_id, st.public_id::text AS story_public_id,
+  st.product_key, st.major_node`;
 
 /**
  * The selected reports a period [start, end) carries. Each counts once, in the period readers first saw
@@ -155,7 +159,7 @@ export async function candidates(start: Date, end: Date): Promise<Candidate[]> {
   return [...groupBy(rows, factKeyOf)]
     .map(([factKey, members]): Candidate => {
       const r = pickRepresentative(members);
-      return { ...reportEntry(r), category: r.category, factKey };
+      return { ...reportEntry(r), category: r.category, factKey, productKey: r.product_key, majorNode: r.major_node };
     })
     .sort((a, b) => (b.score ?? 0) - (a.score ?? 0));
 }
@@ -193,10 +197,13 @@ export async function periodEntries(startDate: string, endDate: string): Promise
     const main = byId.get([...cs].sort((a, b) => b.sources - a.sources || a.key.localeCompare(b.key) || authority(a) - authority(b))[0]!.id)!;
     const rank = Math.max(...cs.map((c) => byId.get(c.id)!.score ?? 0)) + 5 * Math.log2(1 + Math.max(...cs.map((c) => c.sources)))
       + (cs.some((c) => c.lead) ? 6 : 0) + (cs.some((c) => c.highlight) ? 3 : 0) + 4 * (new Set(cs.map((c) => c.key)).size - 1);
-    return { candidate: { ...reportEntry(main), category: main.category, factKey: factKeyOf(main) }, rank };
+    return {
+      candidate: { ...reportEntry(main), category: main.category, factKey: factKeyOf(main), productKey: main.product_key, majorNode: main.major_node },
+      rank,
+    };
   });
   ranked.sort((a, b) => b.rank - a.rank || a.candidate.itemId.localeCompare(b.candidate.itemId));
-  return { entries: ranked.map((r) => r.candidate), issues: issues.length, hasEntries: true };
+  return { entries: dedupByProduct(ranked.map((r) => r.candidate)), issues: issues.length, hasEntries: true };
 }
 
 /** Every report an issue cites: its entries, what is listed under them, its flashes. */
@@ -234,11 +241,14 @@ export async function dailyPicks(date: string, start: Date, end: Date, issue: Ed
     ORDER BY p.score DESC, p.timeline_at, p.article_id`;
   const picks: ReportEntry[] = [];
   const events = new Set<string>();
+  const products = productKeysOf(issue);
   for (const r of rows) {
     const event = r.story_id === null ? factKeyOf(r) : `s:${r.story_id}`;
     if (events.has(event) || keys.has(factKeyOf(r)) || keys.has(`a:${r.id}`)) continue;
     if (r.story_id !== null && (stories.has(r.story_id) || (r.story_public_id && stories.has(r.story_public_id)))) continue;
+    if (r.product_key !== null && products.has(r.product_key)) continue;
     events.add(event);
+    if (r.product_key !== null) products.add(r.product_key);
     picks.push(reportEntry(r));
     if (picks.length === count) break;
   }
@@ -396,6 +406,7 @@ export async function dailyEdition(date: string, start: Date, end: Date): Promis
     const ids = new Set(fs.flatMap((f) => f.rows.map((r) => r.id)));
     return {
       entry, category: rep.category, tags: rep.tags, storyId, sourceIds, authority: representativePriority(rep), previous,
+      productKey: rep.product_key, majorNode: rep.major_node,
       mentions: new Set(storyId === null ? named.filter((n) => ids.has(n.article_id)).map((n) => n.story_id) : []),
       importance: importance({
         score,
@@ -406,9 +417,10 @@ export async function dailyEdition(date: string, start: Date, end: Date): Promis
     };
   });
   entries.sort((a, b) => b.importance - a.importance || a.entry.itemId.localeCompare(b.entry.itemId));
+  const deduped = dedupByProduct(entries);
   return {
-    entries,
-    stats: { judgedReports: judged, selectedReports: selected.length, facts: raw.length, repeatsSuppressed: raw.length - kept.length, fillIns: kept.filter((f) => !f.selected).length, events: entries.length },
+    entries: deduped,
+    stats: { judgedReports: judged, selectedReports: selected.length, facts: raw.length, repeatsSuppressed: raw.length - kept.length, fillIns: kept.filter((f) => !f.selected).length, events: deduped.length },
   };
 }
 

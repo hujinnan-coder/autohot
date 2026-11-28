@@ -8,7 +8,7 @@ import { upsertMaterial } from "@aihot/backend/content/materials";
 import { stopBoss } from "@aihot/backend/jobs/queue";
 import { publishArticle, publishArticleTx } from "@aihot/backend/publication/publish";
 import { composeDaily } from "@aihot/backend/reports/compose";
-import { candidates } from "@aihot/backend/reports/edition";
+import { candidates, periodEntries } from "@aihot/backend/reports/edition";
 
 const T = tag();
 const SOURCE = `test-report-boundary-${T}`;
@@ -111,6 +111,39 @@ test("midnight stays inside one issue: the window boundary is the edition time",
   }
   assert.equal(nextIssue.has(afterEdge), true, "07:01 is the next issue's");
   assert.equal(thisIssue.has(afterEdge), false);
+});
+
+test("period entries dedup products across dailies in the period's ranked order", async () => {
+  const first = "2020-03-02", second = "2020-03-03";
+  const issues = new Map<string, Array<{ itemId: string; sources: number }>>([[first, []], [second, []]]);
+  const items = new Map<string, string>();
+  for (const [date, label, productKey, majorNode, sources] of [
+    [first, "preview", "model-a", false, 12],
+    [first, "first-ordinary", "model-b", null, 10],
+    [first, "debut", "model-a", true, 8],
+    [second, "later-ordinary", "model-b", false, 6],
+    [second, "launch", "model-a", true, 4],
+  ] as const) {
+    const at = editionAt("daily", date, -60);
+    const itemId = await selected(label, at, at);
+    const [story] = await sql<{ id: number }[]>`
+      INSERT INTO stories (public_id, title, product_key, major_node)
+      VALUES (gen_random_uuid(), ${label}, ${productKey}, ${majorNode}) RETURNING id`;
+    const [fact] = await sql<{ id: number }[]>`
+      INSERT INTO facts (public_id, story_id, title) VALUES (${itemId}, ${story!.id}, ${label}) RETURNING id`;
+    await sql`INSERT INTO fact_articles (fact_id, article_id, role) VALUES (${fact!.id}, ${itemId}, 'report')`;
+    await sql`UPDATE publications SET fact_id = ${fact!.id} WHERE article_id = ${itemId}`;
+    issues.get(date)!.push({ itemId, sources });
+    items.set(label, itemId);
+  }
+  for (const [date, entries] of issues) {
+    const content = { sections: [{ items: entries }] };
+    await sql`INSERT INTO reports (kind, key, window_start, window_end, content, generated_at)
+      VALUES ('daily', ${date}, ${editionAt("daily", date, -86400)}, ${editionAt("daily", date)}, ${sql.json(content)}, now())`;
+  }
+  const period = await periodEntries(first, second);
+  assert.equal(period.issues, 2);
+  assert.deepEqual(period.entries.map((entry) => entry.itemId), [items.get("first-ordinary"), items.get("debut"), items.get("launch")]);
 });
 
 /** Observe an actual PostgreSQL lock wait before advancing the clock or releasing the transaction. */

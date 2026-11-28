@@ -10,6 +10,7 @@ import { closeDb, sql } from "@aihot/backend/db";
 import { computeHotRanking, heatRows, snapshotHeat, type HotEntry } from "@aihot/backend/events/hot";
 import { dailyRetention } from "@aihot/backend/operations/retention";
 import { loadHotStrip, rankingExtras } from "@aihot/backend/publication/hot";
+import { dedupByProduct } from "@aihot/backend/publication/product";
 import { loadHot, loadStoryDetail, v1HotTopics } from "@aihot/backend/publication/stories";
 import { buildApp } from "../apps/api/src/app.ts";
 
@@ -57,6 +58,20 @@ async function story() {
   return s!.id;
 }
 const rowOf = async (id: number, at = AT) => (await heatRows(at)).find((r) => Number(r.story_id) === id);
+
+test("product dedup keeps all major nodes or the first ordinary event in display order", () => {
+  const rows = [
+    { id: "preview", productKey: "model-a", majorNode: false },
+    { id: "unkeyed-first", productKey: null, majorNode: null },
+    { id: "first-ordinary", productKey: "model-b", majorNode: null },
+    { id: "debut", productKey: "model-a", majorNode: true },
+    { id: "later-ordinary", productKey: "model-b", majorNode: false },
+    { id: "unkeyed-second", productKey: null, majorNode: null },
+    { id: "launch", productKey: "model-a", majorNode: true },
+    { id: "delivery", productKey: "model-a", majorNode: null },
+  ];
+  assert.deepEqual(dedupByProduct(rows), [rows[1], rows[2], rows[3], rows[5], rows[6]]);
+});
 
 test("editorial heat follows factual membership; signal-only evidence survives without a fact", async () => {
   const s = await story();
@@ -140,6 +155,8 @@ test("a story ranks only when one of its reports is selected", async () => {
   const at = new Date(Date.now() - 60_000);
   const none = await story();
   const some = await story();
+  // 不能上榜的重大节点不能盖掉同车型有精选报道的普通事件。
+  await sql`UPDATE stories SET product_key = ${T}, major_node = (id = ${none}) WHERE id IN (${none}, ${some})`;
   // Each story: two independent editorial sources so it clears MIN_PARTICIPANTS.
   for (const [sid, key, selected] of [
     [none, "quiet-a", false], [none, "quiet-b", false],

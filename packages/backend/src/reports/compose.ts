@@ -293,7 +293,10 @@ async function composePeriod(kind: "weekly" | "monthly", key: string, startDate:
     leadItemId: lead.itemId,
     highlights: top.slice(1, 4).map((e) => e.itemId),
     overview,
-    themes: groups.map((g) => ({ heading: g.label, summary: intro(g), storyRefs: g.items.map(({ category: _c, factKey: _f, ...e }) => e) })),
+    themes: groups.map((g) => ({
+      heading: g.label, summary: intro(g),
+      storyRefs: g.items.map(({ category: _c, factKey: _f, productKey: _p, majorNode: _m, ...e }) => e),
+    })),
     storyOrder: top.map((e) => e.itemId),
     metrics: { totalStories: top.length, selectedCount: selected.length, reportsCovered: issues },
     generator: { version: REPORT_VERSION, model, written: overview !== null },

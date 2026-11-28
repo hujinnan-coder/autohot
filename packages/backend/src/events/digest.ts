@@ -17,6 +17,8 @@ export const DIGEST_SYSTEM = promptText("story-digest");
 export const DigestSchema = z.object({
   title: z.string().max(120).catch(""),
   digest: z.string().min(10).max(2000),
+  productKey: z.string().max(60).nullable().catch(null),
+  majorNode: z.boolean().nullable().catch(null),
 });
 
 /** Sampling of every digest request. */
@@ -129,9 +131,12 @@ export async function composeStoryDigest(storyId: number, opts: { rewrite?: bool
     }
     await tx`INSERT INTO story_digests (story_id, version, digest, receipt_id, article_ids, inputs_hash, report_hashes)
              VALUES (${storyId}, ${version}, ${nextDigest}, ${res.receiptId}, ${ids}, ${inputsHash}, ${tx.json(reportHashes)})`;
+    const product = "productKey" in res.data
+      ? tx`product_key = ${res.data.productKey}, major_node = ${res.data.majorNode},`
+      : tx``;
     await tx`UPDATE stories SET digest = ${nextDigest}, digest_updated_at = now(),
                title = CASE WHEN origin = 'manual' OR ${nextTitle} = '' THEN title ELSE ${nextTitle} END,
-               version = ${version}, updated_at = now()
+               ${product} version = ${version}, updated_at = now()
              WHERE id = ${storyId}`;
     for (const rid of new Set(allReceipts)) await completeReceipt(tx, rid);
     return true;

@@ -3,6 +3,7 @@
 // 24-hour half-life, and the source time (not collection time) places evidence in the window.
 import { COMMUNITY_FEEDS } from "@aihot/site";
 import { sql, type Db } from "../db.ts";
+import { dedupByProduct } from "../publication/product.ts";
 import { pickRepresentative, REPRESENTATIVE_COLUMNS, type RepresentativeIdentity } from "../publication/representative.ts";
 import { evidenceCondition, listedCondition } from "../publication/scope.ts";
 
@@ -54,7 +55,7 @@ export async function storedHotRanking(db: Db = sql): Promise<HotRanking | null>
   return { id: row.id, computedAt: row.computed_at.toISOString(), ruleVersion: row.rule_version, entries: row.entries, coverage: row.evidence };
 }
 
-export const HOT_RULE_VERSION = "heat-v2-48h-halflife24h-needs-selected";
+export const HOT_RULE_VERSION = "heat-v3-48h-halflife24h-selected-product-dedup";
 /** Evidence counts while its source time is this recent (grouping looks back as far for discussion posts). */
 export const HEAT_WINDOW_HOURS = 48;
 const HALF_LIFE_HOURS = 24;
@@ -64,6 +65,8 @@ interface HeatRow {
   story_id: number;
   public_id: string;
   title: string;
+  product_key: string | null;
+  major_node: boolean | null;
   first_report_at: Date | null;
   latest_at: Date | null;
   participants: number;
@@ -171,7 +174,7 @@ export async function heatRows(at: Date, behind: string[] = [], storyIds?: numbe
       FROM obs GROUP BY story_id
       HAVING count(*) FILTER (WHERE last_at IS NOT NULL) > 0
     )
-    SELECT a.story_id, st.public_id::text AS public_id, st.title, st.first_report_at, st.latest_at,
+    SELECT a.story_id, st.public_id::text AS public_id, st.title, st.first_report_at, st.latest_at, st.product_key, st.major_node,
            a.participants, a.heat, a.heat_prev, a.heat_obs, a.heat_prev_obs, a.behind_participants, a.uncomparable, a.recent6h, a.editorial_participants, a.signal_participants
     FROM agg a JOIN stories st ON st.id = a.story_id
     WHERE st.merged_into IS NULL`;
@@ -186,8 +189,17 @@ export async function computeHotRanking(at = new Date()): Promise<{ id: number; 
   const rows = (await heatRows(at, behind)).filter((r) => Number(r.participants) >= MIN_PARTICIPANTS && Number(r.editorial_participants) >= 1);
   rows.sort((a, b) => Number(b.heat) - Number(a.heat) || (b.latest_at?.getTime() ?? 0) - (a.latest_at?.getTime() ?? 0));
 
+  // 先确认有可公开的精选报道，避免不能上榜的事件挤掉同车型的合格候选。
+  const eligible = new Set((rows.length === 0 ? [] : await sql<{ story_id: number }[]>`
+    SELECT DISTINCT f.story_id
+    FROM facts f JOIN fact_articles fa ON fa.fact_id = f.id JOIN publications p ON p.article_id = fa.article_id
+    JOIN sources s ON s.id = p.source_id
+    WHERE f.story_id = ANY(${rows.map((r) => r.story_id)}::bigint[]) AND p.selected AND ${evidenceCondition()} AND ${listedCondition(at)}`
+  ).map((r) => r.story_id));
+  const ranked = dedupByProduct(rows.filter((r) => eligible.has(r.story_id))
+    .map((r) => ({ row: r, productKey: r.product_key, majorNode: r.major_node })));
   const entries: HotEntry[] = [];
-  for (const r of rows) {
+  for (const { row: r } of ranked) {
     if (entries.length >= 10) break;
     const reports = await sql<Array<RepresentativeIdentity & { id: string; url: string; title: string; source_id: string; source_name: string; selected: boolean; score: number | null; at: Date; timeline_at: Date; body_mode: "full" | "summary"; fact_id: number }>>`
       SELECT DISTINCT ON (p.article_id) p.article_id AS id, p.url, p.title, s.id AS source_id, s.name AS source_name, p.selected, p.score, p.timeline_at, p.body_mode,
