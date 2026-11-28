@@ -15683,6 +15683,7 @@
       "id": "web-hexun-auto",
       "name": "和讯汽车",
       "kind": "web_list",
+      "enabled": false,
       "config": {
         "url": "https://auto.hexun.com/",
         "parseMode": "html",
