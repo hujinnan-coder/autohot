@@ -2,18 +2,21 @@
 // Wordmark 是 AUTOHOT 的字母变形（SVG）；换站名时重新画一份，保持同样的参数。
 import { SITE } from "../site.ts";
 
-/** 字标：AUTOHOT 七个粗体字母，A 去掉横杠成 Λ，第二个 O 里的圆点是“热点”。字母随文字颜色，圆点用强调色。 */
+/** 字标：AUTOHOT 宽扁几何字形（参考埃安字母标），笔画顶端斜切，A 平顶带横杠，HOT 的 O 内嵌“热点”圆点。字母随文字颜色，圆点用强调色。 */
 export function Wordmark({ size = 24, className = "", title = SITE.name }: { size?: number; className?: string; title?: string }) {
+  const glyphs: Record<string, string> = {
+    A: "M0 86L34 0H46L80 86H58L40 40.4L22 86ZM16 56H64V76H16Z",
+    U: "M0 4V46A40 40 0 0 0 80 46V0L60 4V46A20 20 0 0 1 40 66A20 20 0 0 1 20 46V0Z",
+    T: "M0 0H80L76 20H4ZM30 10H50V86H30Z",
+    O: "M34 0H46A34 34 0 0 1 80 34V52A34 34 0 0 1 46 86H34A34 34 0 0 1 0 52V34A34 34 0 0 1 34 0ZM34 20H46A14 14 0 0 1 60 34V52A14 14 0 0 1 46 66H34A14 14 0 0 1 20 52V34A14 14 0 0 1 34 20Z",
+    H: "M0 4L20 0V86H0ZM60 4L80 0V86H60ZM18 37H62V55H18Z",
+  };
   return (
-    <svg viewBox="-8 -8 632 116" height={size} width={Math.round((size * 632) / 116)} className={className} aria-label={title} role="img">
-      <path d="M0 100L28 0H48L76 100H54L38 30L22 100Z" fill="currentColor" />
-      <path
-        d="M101 0V63A27 27 0 0 0 155 63V0M180 11H256M218 0V100M308 11H308A27 27 0 0 1 335 38V62A27 27 0 0 1 308 89H308A27 27 0 0 1 281 62V38A27 27 0 0 1 308 11ZM371 0V100M425 0V100M371 50H425M488 11H488A27 27 0 0 1 515 38V62A27 27 0 0 1 488 89H488A27 27 0 0 1 461 62V38A27 27 0 0 1 488 11ZM540 11H616M578 0V100"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="22"
-      />
-      <circle cx="488" cy="50" r="12" className="fill-accent" />
+    <svg viewBox="-8 -8 630 102" height={size} width={Math.round((size * 630) / 102)} className={className} aria-label={title} role="img">
+      {["A", "U", "T", "O", "H", "O", "T"].map((l, i) => (
+        <path key={i} transform={`translate(${i * 89} 0)`} d={glyphs[l]} fill="currentColor" fillRule={l === "O" ? "evenodd" : undefined} />
+      ))}
+      <circle cx="485" cy="43" r="11.5" className="fill-accent" />
     </svg>
   );
 }

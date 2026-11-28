@@ -9,7 +9,7 @@ import sharp from "sharp";
 import { config, REPO_ROOT } from "../config.ts";
 import { SITE } from "@aihot/site";
 
-export const OG_TEMPLATE_VERSION = "og-2026-11-28.1";
+export const OG_TEMPLATE_VERSION = "og-2026-11-28.2";
 const WIDTH = 1200;
 const HEIGHT = 630;
 const CACHE_DIR = path.join(config.dataDir, "ogcache");
