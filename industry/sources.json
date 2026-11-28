@@ -3883,7 +3883,8 @@
         "微信公众号"
       ],
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false
     },
     {
       "id": "mp-xinhua-auto",
@@ -3901,7 +3902,8 @@
         "微信公众号"
       ],
       "site_fulltext": false,
-      "syndicate_fulltext": false
+      "syndicate_fulltext": false,
+      "enabled": false
     },
     {
       "id": "mp-cctv-caijing",
